@@ -1,0 +1,13 @@
+{
+  "name": "crypto-wallet-frontend",
+  "version": "1.0.0",
+  "description": "Crypto wallet frontend",
+  "main": "index.html",
+ "scripts": {
+	"start": "live-server frontend --open=index.html",
+	"dev": "live-server frontend --open=index.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}
