@@ -232,7 +232,7 @@ body {
 /* Crypto table. */
 .coin-table {
     width: 100%;
-    min-width: 600px;
+    min-width: 1200px;
     border-collapse: separate;
     border-spacing: 0;
     background: #fff;
@@ -246,6 +246,7 @@ body {
     padding: 0.7em 1em;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
+	white-space: nowrap;
 }
 
 .coin-table th {

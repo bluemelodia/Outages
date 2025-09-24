@@ -1,7 +1,8 @@
 # Outages
 
-Front-end:
-cd frontend
-npm i
-npm start
+To set-up the front end, call:
+
+	cd frontend
+	npm i
+	npm start
 

@@ -45,6 +45,13 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
+function formatLargeNumber(num) {
+    if (num === null || num === undefined) return '—';
+    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(2) + 'B';
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M';
+    return num.toLocaleString('en-US');
+}
+
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
