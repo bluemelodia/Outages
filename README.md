@@ -34,8 +34,8 @@ You should now have a demo API key.
 
 # Setup instructions
 
-To set-up the front end, call:
+To set-up the front end, run the following commands:
 
-    cd frontend
+    cd crypto-wallet
     npm i
     npm start
