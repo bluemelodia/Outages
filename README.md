@@ -34,6 +34,8 @@ You should now have a demo API key.
 
 # Setup instructions
 
+API keys have been added to config.js.
+
 To set-up the front end, run the following commands:
 
     cd crypto-wallet

@@ -15,9 +15,9 @@ let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
 
 function loadCoinMarketTable() {
-    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd', {
+    fetch(config.coinGecko.url, {
         headers: {
-            'x_cg_demo_api_key': '<YOUR_API_KEY>'
+            'x_cg_demo_api_key': config.coinGecko.apiKey
         }
     })
     .then(res => res.json())

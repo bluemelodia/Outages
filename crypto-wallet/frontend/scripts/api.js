@@ -1,5 +1,7 @@
 // API utility functions
 async function apiCall(endpoint, options = {}) {
+	logger.info(`API Call: ${endpoint}`, { method: options.method || 'GET' });
+
     try {
         const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, {
             headers: {
