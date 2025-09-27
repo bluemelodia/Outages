@@ -2,11 +2,6 @@
 
 # Pre-requisites
 
-## Dependencies
-
-	Node: https://nodejs.org/en/download
-
-## API Keys
 To use the Crypto API, you need to create a demo account and get an API key.
 
     1) Navigate to https://www.coingecko.com/en/api/pricing.
