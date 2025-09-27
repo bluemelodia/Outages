@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize any startup logic
     initializeApp();
-	loadCoinMarketTable();
+    loadCoinMarketTable();
 });
 
 let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
 
-function loadCoinMarketTable() {
+async function loadCoinMarketTable() {
     fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd', {
         headers: {
             'x_cg_demo_api_key': '<YOUR_API_KEY>'
@@ -51,17 +51,14 @@ function renderCoinTable() {
     const { key, dir } = coinTableSort;
     sorted.sort((a, b) => {
         let v1 = a[key], v2 = b[key];
-        // Handle null/undefined
         v1 = v1 ?? 0;
         v2 = v2 ?? 0;
-        // String comparison for name/symbol
         if (typeof v1 === "string" && typeof v2 === "string") {
             return dir === 'asc' ? v1.localeCompare(v2) : v2.localeCompare(v1);
         }
         return dir === 'asc' ? v1 - v2 : v2 - v1;
     });
 
-    // Column definitions: key, label, isNumeric
     const columns = [
         { key: 'name', label: 'Coin', isNumeric: false },
         { key: 'current_price', label: 'Price', isNumeric: true },
@@ -75,20 +72,17 @@ function renderCoinTable() {
         { key: 'max_supply', label: 'Max Supply', isNumeric: true }
     ];
 
-    // Sort indicator
     function sortIndicator(colKey) {
         if (colKey !== key) return '';
         return dir === 'asc' ? ' ▲' : ' ▼';
     }
 
-    // Table header
     let thead = `<thead><tr>`;
     columns.forEach(col => {
         thead += `<th class="sortable" data-key="${col.key}" style="cursor:pointer;">${col.label}${sortIndicator(col.key)}</th>`;
     });
     thead += `</tr></thead>`;
 
-    // Table rows
     let rows = sorted.map(coin => {
         const changeClass = coin.price_change_24h < 0 ? 'negative' : 'positive';
         return `
@@ -114,33 +108,28 @@ function renderCoinTable() {
     }).join('');
     table.innerHTML = `${thead}<tbody>${rows}</tbody>`;
 
-    // Add click handlers for sorting
     table.querySelectorAll('.sortable').forEach(th => {
-		th.onclick = () => {
-			const sortKey = th.getAttribute('data-key');
-			const colDef = columns.find(c => c.key === sortKey);
-			if (coinTableSort.key === sortKey) {
-				coinTableSort.dir = coinTableSort.dir === 'asc' ? 'desc' : 'asc';
-			} else {
-				coinTableSort.key = sortKey;
-				// Set default direction per column
-				if (sortKey === 'market_cap_rank') {
-					coinTableSort.dir = 'asc';
-				} else if (sortKey === 'name') {
-					coinTableSort.dir = 'asc';
-				} else if (colDef && colDef.isNumeric) {
-					coinTableSort.dir = 'desc';
-				} else {
-					coinTableSort.dir = 'asc';
-				}
-			}
-			renderCoinTable();
-		};
-	});
+        th.onclick = () => {
+            const sortKey = th.getAttribute('data-key');
+            const colDef = columns.find(c => c.key === sortKey);
+            if (coinTableSort.key === sortKey) {
+                coinTableSort.dir = coinTableSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                coinTableSort.key = sortKey;
+                if (sortKey === 'market_cap_rank' || sortKey === 'name') {
+                    coinTableSort.dir = 'asc';
+                } else if (colDef && colDef.isNumeric) {
+                    coinTableSort.dir = 'desc';
+                } else {
+                    coinTableSort.dir = 'asc';
+                }
+            }
+            renderCoinTable();
+        };
+    });
 }
 
 function initializeEventListeners() {
-    // Add Enter key support for verification modal
     const verificationInput = document.getElementById('verification-code');
     if (verificationInput) {
         verificationInput.addEventListener('keypress', function(e) {
@@ -150,17 +139,14 @@ function initializeEventListeners() {
         });
     }
 
-    // Add form validation listeners
-    const forms = document.querySelectorAll('input');
-    forms.forEach(input => {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
         input.addEventListener('blur', validateField);
     });
 }
 
 function initializeApp() {
-    // Hide all pages
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    // Show only the login page
     document.getElementById('login-page').classList.add('active');
     console.log('Initialized');
 }
@@ -170,20 +156,17 @@ function loginUser() {
     const password = document.getElementById('login-password').value;
 
     if (username === "prodtest" && password === "Crypto1") {
-        // Hide login, show menu
         document.getElementById('login-page').classList.remove('active');
         document.getElementById('menu-page').classList.add('active');
-        document.getElementById('login-error').textContent = '';
-        document.getElementById('login-error').classList.remove('active');
+        clearLoginError();
     } else {
-        document.getElementById('login-error').textContent = 'Invalid username or password.';
-        document.getElementById('login-error').classList.add('active');
+        showLoginError('Invalid username or password.');
     }
 }
 
-// Add this after your initializeApp or inside initializeEventListeners
 document.getElementById('login-username').addEventListener('input', clearLoginError);
 document.getElementById('login-password').addEventListener('input', clearLoginError);
+document.getElementById('login-email').addEventListener('input', clearLoginError);
 
 function clearLoginError() {
     const errorDiv = document.getElementById('login-error');
@@ -191,14 +174,44 @@ function clearLoginError() {
     errorDiv.classList.remove('active');
 }
 
+function showLoginError(message) {
+    const errorDiv = document.getElementById('login-error');
+    errorDiv.textContent = message;
+    errorDiv.classList.add('active');
+}
+
 function validateField(event) {
     const input = event.target;
     const value = input.value;
-    
-    // Basic validation logic
     if (input.required && !value) {
         input.style.borderColor = '#dc2626';
     } else {
         input.style.borderColor = '#e5e7eb';
+    }
+}
+
+// Social & email login handlers
+function googleLogin() {
+    // Placeholder: integrate Google OAuth here
+    document.getElementById('login-page').classList.remove('active');
+    document.getElementById('menu-page').classList.add('active');
+    clearLoginError();
+}
+
+function appleLogin() {
+    // Placeholder: integrate Apple Sign-In here
+    document.getElementById('login-page').classList.remove('active');
+    document.getElementById('menu-page').classList.add('active');
+    clearLoginError();
+}
+
+function loginWithEmail() {
+    const email = document.getElementById('login-email').value.trim();
+    if (email && email.includes('@')) {
+        document.getElementById('login-page').classList.remove('active');
+        document.getElementById('menu-page').classList.add('active');
+        clearLoginError();
+    } else {
+        showLoginError('Invalid email address.');
     }
 }
