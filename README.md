@@ -1,5 +1,8 @@
 # Outages
 
+Loki dashboard (logs):
+https://outages.grafana.net/public-dashboards/4bbb6af5bef74ce6832a474fbb9b496f
+
 # Pre-requisites
 
 To use the Crypto API, you need to create a demo account and get an API key.

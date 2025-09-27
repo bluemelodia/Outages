@@ -17,7 +17,7 @@ async function apiCall(endpoint, options = {}) {
 
         return await response.json();
     } catch (error) {
-        console.error('API call failed:', error);
+        logger.info('API call failed:', error);
         throw error;
     }
 }

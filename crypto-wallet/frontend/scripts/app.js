@@ -15,6 +15,8 @@ let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
 
 function loadCoinMarketTable() {
+	logger.info('Fetch crypto');
+
     fetch(config.coinGecko.url, {
         headers: {
             'x_cg_demo_api_key': config.coinGecko.apiKey

@@ -2,6 +2,7 @@
 
 class GrafanaLogger {
 	constructor() {
+		console.log("Initializing Grafana Logger...");
 		this.config = window.config?.grafana || config?.grafana;
 		
 		if (!this.config) {
@@ -47,7 +48,7 @@ class GrafanaLogger {
 					})
 				]
 			]
-	};
+		};
 
 		this.logQueue.push(logEntry);
 
@@ -63,22 +64,25 @@ class GrafanaLogger {
 		const streams = [...this.logQueue];
 		this.logQueue = []; // Clear queue
 
+		// Prepare Basic auth credentials
+		const b64Credentials = btoa(this.config.username + ':' + this.config.apiKey);
+
 		try {
-			const response = await fetch(this.config.lokiUrl, {
+			const response = await fetch(this.config.url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.config.apiKey}`
+					'Authorization': 'Basic ' + b64Credentials
 				},
 				body: JSON.stringify({ streams })
 			});
 
 			if (!response.ok) {
-			console.error('Failed to send logs to Grafana:', response.status, response.statusText);
-			// Put logs back in queue for retry
-			this.logQueue.unshift(...streams);
+				console.error('Failed to send logs to Grafana:', response.status, response.statusText);
+				// Put logs back in queue for retry
+				this.logQueue.unshift(...streams);
 			} else {
-			console.log(`✅ Sent ${streams.length} log entries to Grafana`);
+				console.log(`✅ Sent ${streams.length} log entries to Grafana`);
 			}
 		} catch (error) {
 			console.error('Error sending logs to Grafana:', error);
