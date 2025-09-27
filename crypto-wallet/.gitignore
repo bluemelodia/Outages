@@ -1,0 +1,6 @@
+# API Keys and Configuration
+crypto-wallet/frontend/api/config.js
+
+# Node modules and package files
+node_modules/
+package-lock.json
