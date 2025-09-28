@@ -12,16 +12,17 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0 2rem; /* Add horizontal padding */
+	padding: 0; /* Add horizontal padding */
 }
 
 .main-flex {
 	display: flex;
 	align-items: flex-start;
-	gap: 2rem;
+	gap: 16px;
 	width: 100%;
 	max-width: 1200px;
 	margin: 0 auto;
+	padding: 16px;
 	height: calc(100vh - 4rem); /* fill almost full viewport minus body padding */
 }
 
@@ -31,7 +32,6 @@ body {
 }
 
 .card-container {
-	flex: 0 0 400px;
 	display: flex;
 	align-items: stretch;
 }
@@ -53,21 +53,41 @@ body {
 @media (max-width: 768px) {
     .main-flex {
         flex-direction: column;
-        align-items: center;   /* center cards */
+        align-items: center;
         gap: 1rem;
         height: auto;
     }
 
+	.card-container .container {
+		width: 100%;
+		max-width: 100%;
+	}
+
     .card-container,
     .table-container {
-        width: 90%;
-        max-width: 400px;
+        width: 100%;
+		min-width: 300px;
         flex: unset;
+        height: auto;
+        box-sizing: border-box;
     }
 
-    /* Scrollable table height matches card */
+    /* Add consistent internal padding without breaking sticky table */
+    .table-container::before {
+        content: "";
+        display: block;
+        height: 1rem; /* top padding */
+    }
+
     .table-scroll-wrapper {
-        max-height: 400px;      /* same as card height */
+        height: 400px;         /* show only as many rows as fit card height */
+        overflow-y: auto;      /* vertical scroll for overflow */
+        overflow-x: auto;      /* horizontal scroll */
+    }
+
+    /* Instead of padding on scroll-wrapper, add margin to table */
+    .coin-table {
+        margin: 0 0.75rem;     /* left/right spacing matching card */
     }
 }
 
