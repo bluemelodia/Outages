@@ -1,173 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoWallet Pro</title>
-    <link rel="stylesheet" href="styles/main.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CryptoWallet Pro</title>
+	<link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <!-- Main Flex Container -->
-    <div class="main-flex">
-        <!-- Card Area -->
-        <div class="card-container">
-            <div class="container">
-                <div class="logo">
-                    <h1>🚀 CryptoWallet Pro</h1>
-                </div>
+	<!-- Main Flex Container -->
+	<div class="main-flex">
+		<!-- Card Area -->
+		<div class="card-container">
+			<div class="container">
+				<div class="logo">
+					<h1>🚀 CryptoWallet Pro</h1>
+				</div>
 
-                <div id="login-page" class="page active">
-                    <h2>Login</h2>
-                    <div class="error-message" id="login-error"></div>
-                    <div class="form-group">
-                        <label for="login-username">Username</label>
-                        <input type="text" id="login-username" autocomplete="username">
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="login-password" autocomplete="current-password">
-                            <span class="toggle-password" onclick="togglePassword('login-password', this)">
-                                <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
-                                </svg>
-                                <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="loginUser()">Login</button>
-                </div>
+				<div id="login-page" class="page active">
+					<h2>Login</h2>
+					<div class="error-message" id="login-error"></div>
+					<div class="form-group">
+						<label for="login-username">Username</label>
+						<input type="text" id="login-username" autocomplete="username">
+					</div>
+					<div class="form-group">
+						<label for="login-password">Password</label>
+						<div class="password-wrapper">
+							<input type="password" id="login-password" autocomplete="current-password">
+							<span class="toggle-password" onclick="togglePassword('login-password', this)">
+								<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
+								</svg>
+								<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12"/>
+								</svg>
+							</span>
+						</div>
+					</div>
+					<button class="btn btn-primary" onclick="loginUser()">Login</button>
+				</div>
 
-                <!-- Main Menu -->
-                <div id="menu-page" class="page active">
-                    <div class="balance-card">
-                        <div class="balance-amount" id="balance">$12,543.21</div>
-                        <div class="balance-label">Available Balance</div>
-                    </div>
+				<!-- Main Menu -->
+				<div id="menu-page" class="page active">
+					<div class="balance-card">
+						<div class="balance-amount" id="balance">$12,543.21</div>
+						<div class="balance-label">Available Balance</div>
+					</div>
 
-                    <div class="menu-item" onclick="navigateTo('send-crypto')">
-                        <span>Send Crypto</span>
-                        <div class="icon">💸</div>
-                    </div>
+					<div class="menu-item" onclick="navigateTo('send-crypto')">
+						<span>Send Crypto</span>
+						<div class="icon">💸</div>
+					</div>
 
-                    <div class="menu-item" onclick="navigateTo('transactions')">
-                        <span>View Transactions</span>
-                        <div class="icon">📊</div>
-                    </div>
+					<div class="menu-item" onclick="navigateTo('transactions')">
+						<span>View Transactions</span>
+						<div class="icon">📊</div>
+					</div>
 
-                    <div class="menu-item" onclick="navigateTo('credentials')">
-                        <span>Change Credentials</span>
-                        <div class="icon">🔐</div>
-                    </div>
+					<div class="menu-item" onclick="navigateTo('credentials')">
+						<span>Change Credentials</span>
+						<div class="icon">🔐</div>
+					</div>
 
 					<div class="menu-item" onclick="logoutUser()">
 						<span>Logout</span>
 						<div class="icon">🚪</div>
 					</div>
 
-                    <footer class="card-footer" style="margin-top:2rem; text-align:center; font-size:0.9rem; color:#888;">
-                        Icons by <a href="https://icons8.com/">Icons8</a>.
-                    </footer>
-                </div>
+					<footer class="card-footer" style="margin-top:2rem; text-align:center; font-size:0.9rem; color:#888;">
+						Icons by <a href="https://icons8.com/">Icons8</a>.
+					</footer>
+				</div>
 
-                <!-- Send Crypto Page -->
-                <div id="send-crypto-page" class="page">
-                    <h2>Send Crypto</h2>
-                    
-                    <div class="error-message" id="send-error"></div>
-                    
-                    <div class="form-group">
-                        <label for="recipient">Recipient Address</label>
-                        <input type="text" id="recipient" placeholder="0x742d35Cc6545C4532...">
-                    </div>
+				<!-- Send Crypto Page -->
+				<div id="send-crypto-page" class="page">
+					<h2>Send Crypto</h2>
+					
+					<div class="error-message" id="send-error"></div>
+					
+					<div class="form-group">
+						<label for="recipient">Recipient Address</label>
+						<input type="text" id="recipient" placeholder="0x742d35Cc6545C4532...">
+					</div>
 
-                    <div class="form-group">
-                        <label for="crypto-type">Cryptocurrency</label>
-                        <select id="crypto-type">
-                            <option value="BTC">Bitcoin (BTC)</option>
-                            <option value="ETH">Ethereum (ETH)</option>
-                            <option value="ADA">Cardano (ADA)</option>
-                        </select>
-                    </div>
+					<div class="form-group">
+						<label for="crypto-type">Cryptocurrency</label>
+						<select id="crypto-type">
+							<option value="BTC">Bitcoin (BTC)</option>
+							<option value="ETH">Ethereum (ETH)</option>
+							<option value="ADA">Cardano (ADA)</option>
+						</select>
+					</div>
 
-                    <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" id="amount" placeholder="0.00" step="0.01">
-                    </div>
+					<div class="form-group">
+						<label for="amount">Amount</label>
+						<input type="number" id="amount" placeholder="0.00" step="0.01">
+					</div>
 
-                    <button class="btn btn-primary" onclick="initiateSendCrypto()">
-                        Send Transaction
-                    </button>
-                    <button class="btn btn-secondary" onclick="navigateTo('menu')">
-                        Back to Menu
-                    </button>
+					<button class="btn btn-primary" onclick="initiateSendCrypto()">
+						Send Transaction
+					</button>
+					<button class="btn btn-secondary" onclick="navigateTo('menu')">
+						Back to Menu
+					</button>
 
-                    <div class="spinner" id="send-spinner"></div>
-                </div>
+					<div class="spinner" id="send-spinner"></div>
+				</div>
 
-                <!-- Transactions Page -->
-                <div id="transactions-page" class="page">
-                    <h2>Transaction History</h2>
-                    
-                    <div class="error-message" id="transactions-error"></div>
-                    <div class="spinner" id="transactions-spinner"></div>
-                    
-                    <div id="transactions-list">
-                        <!-- Transactions will be loaded here -->
-                    </div>
+				<!-- Transactions Page -->
+				<div id="transactions-page" class="page">
+					<h2>Transaction History</h2>
+					
+					<div class="error-message" id="transactions-error"></div>
+					<div class="spinner" id="transactions-spinner"></div>
+					
+					<div id="transactions-list">
+						<!-- Transactions will be loaded here -->
+					</div>
 
-                    <button class="btn btn-secondary" onclick="navigateTo('menu')">
-                        Back to Menu
-                    </button>
-                </div>
+					<button class="btn btn-secondary" onclick="navigateTo('menu')">
+						Back to Menu
+					</button>
+				</div>
 
-                <!-- Credentials Page -->
-                <div id="credentials-page" class="page">
-                    <h2>Change Credentials</h2>
-                    
-                    <div class="error-message" id="credentials-error"></div>
-                    
-                    <div class="form-group" id="current-password-field"></div>
-                    <div class="form-group" id="new-password-field"></div>
-                    <div class="form-group" id="confirm-password-field"></div>
+				<!-- Credentials Page -->
+				<div id="credentials-page" class="page">
+					<h2>Change Credentials</h2>
+					
+					<div class="error-message" id="credentials-error"></div>
+					
+					<div class="form-group" id="current-password-field"></div>
+					<div class="form-group" id="new-password-field"></div>
+					<div class="form-group" id="confirm-password-field"></div>
 
-                    <button class="btn btn-primary" onclick="initiateChangeCredentials()">
-                        Update Credentials
-                    </button>
-                    <button class="btn btn-secondary" onclick="navigateTo('menu')">
-                        Back to Menu
-                    </button>
+					<button class="btn btn-primary" onclick="initiateChangeCredentials()">
+						Update Credentials
+					</button>
+					<button class="btn btn-secondary" onclick="navigateTo('menu')">
+						Back to Menu
+					</button>
 
-                    <div class="spinner" id="credentials-spinner"></div>
-                </div>
+					<div class="spinner" id="credentials-spinner"></div>
+				</div>
 
-                <!-- Identity Verification Modal -->
-                <div id="verification-modal" class="modal">
-                    <div class="modal-content">
-                        <h3>Identity Verification Required</h3>
-                        <p>
-                            Please enter the one-time passcode sent to your registered device.
-                        </p>
-                        
-                        <div class="form-group">
-                            <input type="text" id="verification-code" placeholder="Enter 6-digit code" maxlength="6">
-                        </div>
+				<!-- Identity Verification Modal -->
+				<div id="verification-modal" class="modal">
+					<div class="modal-content">
+						<h3>Identity Verification Required</h3>
+						<p>
+							Please enter the one-time passcode sent to your registered device.
+						</p>
+						
+						<div class="form-group">
+							<input type="text" id="verification-code" placeholder="Enter 6-digit code" maxlength="6">
+						</div>
 
-                        <button class="btn btn-primary" onclick="verifyIdentity()">
-                            Verify
-                        </button>
-                        <button class="btn btn-secondary" onclick="cancelVerification()">
-                            Cancel
-                        </button>
+						<button class="btn btn-primary" onclick="verifyIdentity()">
+							Verify
+						</button>
+						<button class="btn btn-secondary" onclick="cancelVerification()">
+							Cancel
+						</button>
 
-                        <div class="spinner" id="verification-spinner"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Table Area -->
+						<div class="spinner" id="verification-spinner"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Table Area -->
 		<div class="table-container">
 			<div class="table-scroll-wrapper">
 				<table class="coin-table" id="coin-market-table">
@@ -175,17 +175,17 @@
 				</table>
 			</div>
 		</div>
-    </div>
+	</div>
 
 	<script src="scripts/keys.js"></script>
-    <script src="scripts/config.js"></script>
-    <script src="scripts/api.js"></script>
-    <script src="scripts/navigation.js"></script>
-    <script src="scripts/verification.js"></script>
-    <script src="scripts/transactions.js"></script>
-    <script src="scripts/credentials.js"></script>
-    <script src="scripts/utils.js"></script>
-    <script src="scripts/app.js"></script>
+	<script src="scripts/config.js"></script>
+	<script src="scripts/api.js"></script>
+	<script src="scripts/navigation.js"></script>
+	<script src="scripts/verification.js"></script>
+	<script src="scripts/transactions.js"></script>
+	<script src="scripts/credentials.js"></script>
+	<script src="scripts/utils.js"></script>
+	<script src="scripts/app.js"></script>
 
 	<script>
 	// -------------------- Tiny Logger --------------------
