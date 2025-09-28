@@ -43,6 +43,7 @@ To set-up the front end, run the following commands:
 
     cd crypto-wallet
     npm i
+	npm start
 
 If debugging locally, use a proxy server to avoid CORS issues: 
 

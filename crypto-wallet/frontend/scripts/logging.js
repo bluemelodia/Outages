@@ -1,5 +1,7 @@
 // grafana-logger.js - Simple logging to Grafana
 
+let config = window.config;
+
 class GrafanaLogger {
 	constructor() {
 		console.log("Initializing Grafana Logger...");

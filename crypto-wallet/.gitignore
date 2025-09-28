@@ -1,5 +1,5 @@
 # API Keys and Configuration
-.env
+frontend/scripts/keys.js
 
 # Node modules and package files
 node_modules/
