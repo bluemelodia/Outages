@@ -1,5 +1,5 @@
 # API Keys and Configuration
-crypto-wallet/frontend/scripts/keys.js
+.env
 
 # Node modules and package files
 node_modules/

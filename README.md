@@ -37,10 +37,17 @@ You should now have a demo API key.
 
 # Setup instructions
 
-API keys have been added to config.js.
+API keys should be added to keys.js.
 
 To set-up the front end, run the following commands:
 
     cd crypto-wallet
     npm i
-    npm start
+
+If debugging locally, use a proxy server to avoid CORS issues: 
+
+	npx lcp --proxyUrl http://localhost:3000
+
+The specified port is where requests will be forwarded to. 
+By default, lcp will start a server at http://localhost:8010.
+
