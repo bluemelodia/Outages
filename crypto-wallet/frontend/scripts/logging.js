@@ -1,25 +1,8 @@
-class PinoLogflareLogger {
-	constructor(options = {}) {
-		console.log("Initializing Pino Logflare Logger...");
+// pino-logflare-logger.js - Simplified Pino-style logging to Logflare
 
-		// Pino-style configuration
-		this.options = {
-			level: options.level || 'info',
-			name: options.name || 'webapp',
-			base: {
-				app: 'webapp',
-				environment: 'development',
-				url: window.location?.href || 'unknown',
-				...options.base
-			},
-			// Logflare configuration
-			logflare: {
-				sourceToken: options.logflare?.sourceToken || window.config?.logger?.sourceID,
-				apiKey: options.logflare?.apiKey || window.config?.logger?.apiKey,
-				endpoint: options.logflare?.endpoint || 'https://api.logflare.app/logs'
-			},
-			...options
-		};
+class PinoLogflareLogger {
+	constructor() {
+		console.log("Initializing Pino Logflare Logger...");
 
 		// Pino log levels (numeric values)
 		this.levels = {
@@ -35,19 +18,29 @@ class PinoLogflareLogger {
 			Object.entries(this.levels).map(([name, level]) => [level, name])
 		);
 
-		this.currentLevel = this.levels[this.options.level] || this.levels.info;
+		this.currentLevel = this.levels.info;
+
+		// Base metadata
+		this.baseMetadata = {
+			app: 'webapp',
+			environment: 'development',
+			url: window.location?.href || 'unknown'
+		};
 
 		// Batching configuration
 		this.logQueue = [];
-		this.batchSize = options.batchSize || 10;
-		this.flushInterval = options.flushInterval || 5000; // 5 seconds
+		this.batchSize = 10;
+		this.flushInterval = 5000; // 5 seconds
 
 		// Auto-flush logs periodically
 		this.flushTimer = setInterval(() => this.flush(), this.flushInterval);
 
-		// Validate Logflare configuration
-		if (!this.options.logflare.sourceToken) {
-			console.warn('Logflare sourceToken not configured. Logs will not be sent to Logflare.');
+		// Validate config
+		if (!window.config?.logger?.sourceID) {
+			console.warn('Logflare sourceID not configured in window.config.logger.sourceID');
+		}
+		if (!window.config?.logger?.apiKey) {
+			console.warn('Logflare apiKey not configured in window.config.logger.apiKey');
 		}
 	}
 
@@ -83,11 +76,11 @@ class PinoLogflareLogger {
 		const logEntry = {
 			level: levelValue,
 			time: Date.now(),
-			pid: 0, // Browser doesn't have process ID
+			pid: 0,
 			hostname: window.location.hostname,
-			name: this.options.name,
+			name: 'webapp',
 			msg: message,
-			...this.options.base,
+			...this.baseMetadata,
 			...logObj
 		};
 
@@ -100,7 +93,7 @@ class PinoLogflareLogger {
 		return this;
 	}
 
-	// Format message with interpolation (similar to util.format)
+	// Format message with interpolation
 	_formatMessage(template, args) {
 		let i = 0;
 		return template.replace(/%[sdj%]/g, (match) => {
@@ -123,7 +116,7 @@ class PinoLogflareLogger {
 
 	// Queue log for Logflare transmission
 	_queueForLogflare(level, logEntry) {
-		if (!this.options.logflare.sourceToken) return;
+		if (!window.config?.logger?.sourceID) return;
 
 		// Transform to Logflare format
 		const logflareEntry = {
@@ -156,39 +149,65 @@ class PinoLogflareLogger {
 
 	// Flush logs to Logflare
 	async flush() {
-		if (this.logQueue.length === 0 || !this.options.logflare.sourceToken) return;
+		if (this.logQueue.length === 0 || !window.config?.logger?.sourceID) return;
 
 		const logs = [...this.logQueue];
 		this.logQueue = []; // Clear queue
 
 		try {
+			// Use config values directly
+			const sourceID = window.config.logger.sourceID;
+			const apiKey = window.config.logger.apiKey;
+			const accessToken = window.config.logger.accessToken;
+
+			// Build URL
+			const url = `https://api.logflare.app/api/logs?source=${sourceID}`;
+
 			const headers = {
 				'Content-Type': 'application/json'
 			};
 
-			// Add API key if provided
-			if (this.options.logflare.apiKey) {
-				headers['X-API-KEY'] = this.options.logflare.apiKey;
+			// Add authentication headers
+			if (apiKey) {
+				headers['X-API-KEY'] = apiKey;
+			}
+			if (accessToken) {
+				headers['Authorization'] = `Bearer ${accessToken}`;
 			}
 
-			const url = `${this.options.logflare.endpoint}?source=${this.options.logflare.sourceToken}`;
-			
+			console.debug(`Sending ${logs.length} logs to: ${url}`);
+			console.debug('Headers:', headers);
+
+			// Send as batch
+			const batchPayload = {
+				batch: logs.map(log => ({
+					message: log.message,
+					metadata: log.metadata
+				}))
+			};
+
+			console.debug('Batch payload:', batchPayload);
+
 			const response = await fetch(url, {
 				method: 'POST',
 				headers: headers,
-				body: JSON.stringify({ batch: logs })
+				body: JSON.stringify(batchPayload)
 			});
 
 			if (response.ok) {
 				console.debug(`✅ Sent ${logs.length} log entries to Logflare`);
 			} else {
-				console.error('Failed to send logs to Logflare:', response.status, response.statusText);
+				const responseText = await response.text();
+				console.error(`Failed to send logs to Logflare: ${response.status} ${response.statusText}`);
+				console.error('Response body:', responseText);
+				console.error('Config used:', { sourceID, apiKey: apiKey ? '***' : 'missing', accessToken: accessToken ? '***' : 'missing' });
 				// Put logs back in queue for retry
 				this.logQueue.unshift(...logs);
 			}
+
 		} catch (error) {
-			console.error('Error sending logs to Logflare:', error);
-			// Put logs back in queue for retry
+			console.error('Error in flush operation:', error);
+			// Put all logs back in queue for retry
 			this.logQueue.unshift(...logs);
 		}
 	}
@@ -245,18 +264,6 @@ class PinoLogflareLogger {
 		}, `API call: ${method} ${endpoint}`);
 	}
 
-	// Pino-style child logger
-	child(bindings) {
-		const childOptions = {
-			...this.options,
-			base: {
-				...this.options.base,
-				...bindings
-			}
-		};
-		return new PinoLogflareLogger(childOptions);
-	}
-
 	// Set log level
 	level(newLevel) {
 		if (typeof newLevel === 'string' && this.levels[newLevel] !== undefined) {
@@ -282,25 +289,12 @@ class PinoLogflareLogger {
 	}
 }
 
-// Create logger instance with configuration
-const createLogger = (options = {}) => {
-	return new PinoLogflareLogger(options);
-};
-
-// Default logger instance
-const logger = createLogger({
-	level: 'info',
-	name: 'webapp',
-	logflare: {
-		sourceToken: window.config?.logger?.sourceID,
-		apiKey: window.config?.logger?.apiKey
-	}
-});
+// Create default logger instance
+const logger = new PinoLogflareLogger();
 
 // Export for use
 if (typeof module !== 'undefined' && module.exports) {
-	module.exports = { createLogger, PinoLogflareLogger };
+	module.exports = { PinoLogflareLogger };
 } else {
 	window.logger = logger;
-	window.createLogger = createLogger;
 }
