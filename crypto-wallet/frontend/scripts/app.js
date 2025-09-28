@@ -52,18 +52,14 @@ function renderCoinTable() {
     let sorted = [...coinTableData];
     const { key, dir } = coinTableSort;
     sorted.sort((a, b) => {
-        let v1 = a[key], v2 = b[key];
-        // Handle null/undefined
-        v1 = v1 ?? 0;
-        v2 = v2 ?? 0;
-        // String comparison for name/symbol
+        let v1 = a[key] ?? 0;
+        let v2 = b[key] ?? 0;
         if (typeof v1 === "string" && typeof v2 === "string") {
             return dir === 'asc' ? v1.localeCompare(v2) : v2.localeCompare(v1);
         }
         return dir === 'asc' ? v1 - v2 : v2 - v1;
     });
 
-    // Column definitions: key, label, isNumeric
     const columns = [
         { key: 'name', label: 'Coin', isNumeric: false },
         { key: 'current_price', label: 'Price', isNumeric: true },
@@ -77,7 +73,6 @@ function renderCoinTable() {
         { key: 'max_supply', label: 'Max Supply', isNumeric: true }
     ];
 
-    // Sort indicator
     function sortIndicator(colKey) {
         if (colKey !== key) return '';
         return dir === 'asc' ? ' ▲' : ' ▼';
@@ -96,8 +91,10 @@ function renderCoinTable() {
         return `
             <tr>
                 <td>
-                    <img src="${coin.image}" alt="${coin.name}" style="width:24px;vertical-align:middle;margin-right:8px;">
-                    ${coin.name} (${coin.symbol.toUpperCase()})
+                    <div>
+                        <img src="${coin.image}" alt="${coin.name}" class="coin-icon">
+                        <span class="coin-name">${coin.name} (${coin.symbol.toUpperCase()})</span>
+                    </div>
                 </td>
                 <td>${coin.current_price.toLocaleString('en-US', {style:'currency',currency:'USD'})}</td>
                 <td>${formatLargeNumber(coin.market_cap)}</td>
@@ -114,31 +111,24 @@ function renderCoinTable() {
             </tr>
         `;
     }).join('');
+
     table.innerHTML = `${thead}<tbody>${rows}</tbody>`;
 
     // Add click handlers for sorting
     table.querySelectorAll('.sortable').forEach(th => {
-		th.onclick = () => {
-			const sortKey = th.getAttribute('data-key');
-			const colDef = columns.find(c => c.key === sortKey);
-			if (coinTableSort.key === sortKey) {
-				coinTableSort.dir = coinTableSort.dir === 'asc' ? 'desc' : 'asc';
-			} else {
-				coinTableSort.key = sortKey;
-				// Set default direction per column
-				if (sortKey === 'market_cap_rank') {
-					coinTableSort.dir = 'asc';
-				} else if (sortKey === 'name') {
-					coinTableSort.dir = 'asc';
-				} else if (colDef && colDef.isNumeric) {
-					coinTableSort.dir = 'desc';
-				} else {
-					coinTableSort.dir = 'asc';
-				}
-			}
-			renderCoinTable();
-		};
-	});
+        th.onclick = () => {
+            const sortKey = th.getAttribute('data-key');
+            const colDef = columns.find(c => c.key === sortKey);
+            if (coinTableSort.key === sortKey) {
+                coinTableSort.dir = coinTableSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                coinTableSort.key = sortKey;
+                if (sortKey === 'market_cap_rank' || sortKey === 'name') coinTableSort.dir = 'asc';
+                else coinTableSort.dir = colDef?.isNumeric ? 'desc' : 'asc';
+            }
+            renderCoinTable();
+        };
+    });
 }
 
 function initializeEventListeners() {

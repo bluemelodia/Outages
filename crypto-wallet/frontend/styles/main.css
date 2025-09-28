@@ -87,11 +87,10 @@ body {
 /* Table wrapper for horizontal scrolling */
 .table-scroll-wrapper {
     width: 100%;
-    height: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
+    max-height: 100%;
+    overflow-y: auto;   /* vertical scroll */
+    overflow-x: auto;   /* horizontal scroll */
     border-radius: 16px;
-    position: relative;
 }
 
 .container {
@@ -288,16 +287,53 @@ body {
 /* -----------------------------
    Crypto Table
 ----------------------------- */
+
+/* Table container handles vertical scrolling */
+.table-container {
+    overflow-y: auto;  /* vertical scroll here */
+    overflow-x: hidden; /* horizontal scroll inside wrapper */
+}
+
+/* Scroll wrapper handles horizontal scrolling only */
+.table-scroll-wrapper {
+    overflow-x: auto;   /* horizontal scroll */
+    overflow-y: visible; /* allow sticky top to work */
+}
+
+/* Table header sticks vertically */
+.coin-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    color: #667eea;
+    font-weight: 600;
+    z-index: 3;
+}
+
+/* First column sticks horizontally */
+.coin-table th:first-child,
+.coin-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 2;          /* cells under top-left header */
+}
+
+.coin-table thead th:first-child {
+    z-index: 4;          /* above everything else */
+}
+
+/* Table */
 .coin-table {
     width: 100%;
     min-width: 1200px;
     border-collapse: separate;
     border-spacing: 0;
-    background: #fff;
     font-size: 0.97rem;
-    table-layout: auto; /* natural column sizing */
+    table-layout: auto;
 }
 
+/* Table cells */
 .coin-table th,
 .coin-table td {
     padding: 0.7em 1em;
@@ -308,31 +344,62 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Header row sticky */
+/* Table header sticky */
 .coin-table thead th {
     position: sticky;
     top: 0;
     background: #fff;
     color: #667eea;
     font-weight: 600;
-    z-index: 3;
+    z-index: 5; /* higher than first column cells */
 }
 
-/* First column (both header and cells) sticky horizontally */
+/* First column sticky both horizontally and vertically */
 .coin-table th:first-child,
 .coin-table td:first-child {
     position: sticky;
     left: 0;
+    top: 0;               /* aligns with header */
     background: #fff;
     min-width: 150px;
-    max-width: 200px;
-    white-space: normal;     /* allow wrapping */
-    word-break: break-word;
-    z-index: 4;              /* top-left cell above others */
+    max-width: 200px;     /* enforce max width */
+    white-space: normal;  /* allow wrapping */
+    word-break: break-word; /* wrap long text */
+    z-index: 4;           /* under top-left header */
     box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1);
 }
 
-/* Positive / negative styling */
+/* First column wrapper */
+.coin-table th:first-child > div,
+.coin-table td:first-child > div {
+    display: flex;
+    align-items: center;   /* vertically center icon + text */
+    gap: 0.5rem;           /* space between icon and text */
+    white-space: normal;   /* text can wrap */
+}
+
+/* Icon styling */
+.coin-table th:first-child > div .coin-icon,
+.coin-table td:first-child > div .coin-icon {
+    flex-shrink: 0;       /* icon never shrinks */
+    width: 24px;
+    height: 24px;
+}
+
+/* Text styling */
+.coin-table th:first-child > div .coin-name,
+.coin-table td:first-child > div .coin-name {
+    flex: 1;              /* take remaining space */
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Top-left corner (header + first column) */
+.coin-table thead th:first-child {
+    z-index: 6; /* above everything else */
+}
+
+/* Positive / negative coloring */
 .coin-table td.positive {
     color: #16a34a;
     font-weight: 600;
@@ -347,7 +414,6 @@ body {
 .coin-table tr:last-child td {
     border-bottom: none;
 }
-
 
 /* Password field with toggle icon */
 .password-wrapper {
