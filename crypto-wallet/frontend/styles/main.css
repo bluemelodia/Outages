@@ -84,12 +84,14 @@ body {
     }
 }
 
+/* Table wrapper for horizontal scrolling */
 .table-scroll-wrapper {
     width: 100%;
     height: 100%;
     overflow-x: auto;
     overflow-y: auto;
     border-radius: 16px;
+    position: relative;
 }
 
 .container {
@@ -280,29 +282,57 @@ body {
     font-size: 0.97rem;
     margin: 0;
     box-shadow: none;
+    table-layout: auto; /* let columns size naturally */
 }
 
-.coin-table th, .coin-table td {
+/* -----------------------------
+   Crypto Table
+----------------------------- */
+.coin-table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    font-size: 0.97rem;
+    table-layout: auto; /* natural column sizing */
+}
+
+.coin-table th,
+.coin-table td {
     padding: 0.7em 1em;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
-	white-space: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.coin-table th {
+/* Header row sticky */
+.coin-table thead th {
+    position: sticky;
+    top: 0;
     background: #fff;
     color: #667eea;
     font-weight: 600;
+    z-index: 3;
+}
+
+/* First column (both header and cells) sticky horizontally */
+.coin-table th:first-child,
+.coin-table td:first-child {
     position: sticky;
-    top: 0;
-    z-index: 2;
-    box-shadow: 0 2px 4px rgba(102,126,234,0.07);
+    left: 0;
+    background: #fff;
+    min-width: 150px;
+    max-width: 200px;
+    white-space: normal;     /* allow wrapping */
+    word-break: break-word;
+    z-index: 4;              /* top-left cell above others */
+    box-shadow: 2px 0 4px -2px rgba(0,0,0,0.1);
 }
 
-.coin-table tr:last-child td {
-    border-bottom: none;
-}
-
+/* Positive / negative styling */
 .coin-table td.positive {
     color: #16a34a;
     font-weight: 600;
@@ -312,6 +342,12 @@ body {
     color: #dc2626;
     font-weight: 600;
 }
+
+/* Remove border on last row */
+.coin-table tr:last-child td {
+    border-bottom: none;
+}
+
 
 /* Password field with toggle icon */
 .password-wrapper {
