@@ -45,19 +45,24 @@ You should now have a demo API key.
 
 # Setup instructions
 
-API keys should be added to keys.js.
+API keys should be added to keys.js. Format:
 
-To set-up the front end, run the following commands:
+    window.keys = {
+    	GRAFANA_API_KEY: "YOUR_KEY_HERE",
+    	COINGECKO_API_KEY: "YOUR_KEY_HERE"
+    };
+
+To run the front-end code locally, run the following:
 
     cd crypto-wallet
     npm i
-	npm start
+    npm start
 
-If debugging locally, use a proxy server to avoid CORS issues: 
+In a separate terminal tab/window, run the following:
 
-	npx lcp --proxyUrl https://logs-prod-036.grafana.net --port 8010
+    npx lcp --proxyUrl https://logs-prod-036.grafana.net --port 8010
 
 where proxyUrl is the remote server that we want to forward requests to (Grafana).
 where port is the local port your proxy listens on.
 
-This means that requests to 
+This proxy acts as a middleman: when your browser makes requests to http://localhost:8010, the proxy forwards them to Grafana. Because the browser sees the request as going to localhost (same origin), it bypasses CORS restrictions during local development. In production, this proxy is not needed, because requests go directly to the allowed API.
