@@ -1,8 +1,5 @@
 # Outages
 
-Loki dashboard (logs):
-https://outages.grafana.net/public-dashboards/4bbb6af5bef74ce6832a474fbb9b496f
-
 # Background
 
 CORS (Cross-Origin Resource Sharing) is a security feature built into web browsers. It prevents a website from making requests to a different domain (origin) unless that server explicitly allows it. For example, if your app is running at http://localhost:3000 and tries to fetch data from https://logs-prod-036.grafana.net, the browser will block the request unless Grafana allows your origin through CORS headers.

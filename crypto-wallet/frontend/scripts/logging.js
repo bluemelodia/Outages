@@ -1,20 +1,10 @@
-// grafana-logger.js - Simple logging to Grafana
-
-let config = window.config;
-
-class GrafanaLogger {
+class BetterStackLogger {
 	constructor() {
-		console.log("Initializing Grafana Logger...");
-		this.config = window.config?.grafana || config?.grafana;
-		
-		if (!this.config) {
-			console.error('Grafana config not found. Make sure config.js is loaded.');
-			return;
-		}
+		console.log("Initializing Better Stack Logger...");
 
 		this.baseLabels = {
 			app: 'webapp',
-			environment: this.config.environment || 'development',
+			environment: 'development',
 			url: window.location?.href || 'unknown'
 		};
 
@@ -27,22 +17,13 @@ class GrafanaLogger {
 	}
 
 	log(level, message, labels = {}) {
-		if (!this.config) return;
-
-		const timestamp = Date.now();
+		const timestamp = new Date().toISOString();
 		const logEntry = {
-			stream: { ...this.baseLabels, level, ...labels },
-			values: [
-				[
-					(timestamp * 1000000).toString(), // Loki expects nanoseconds
-					JSON.stringify({
-						level,
-						message,
-						timestamp: new Date(timestamp).toISOString(),
-						...labels
-					})
-				]
-			]
+			dt: timestamp,
+			level: level,
+			message: message,
+			...this.baseLabels,
+			...labels
 		};
 
 		this.logQueue.push(logEntry);
@@ -54,35 +35,34 @@ class GrafanaLogger {
 	}
 
 	async flush() {
-		if (this.logQueue.length === 0 || !this.config) return;
+		if (this.logQueue.length === 0) return;
 
-		const streams = [...this.logQueue];
+		const logs = [...this.logQueue];
 		this.logQueue = []; // Clear queue
 
-		// Prepare Basic auth credentials
-		const b64Credentials = btoa(this.config.username + ':' + this.config.apiKey);
+		let config = window.config.betterStack;
 
 		try {
-			const response = await fetch(this.config.url, {
+			const response = await fetch(config.url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': 'Basic ' + b64Credentials
+					'Authorization': `Bearer ${config.bearer}`
 				},
-				body: JSON.stringify({ streams })
+				body: JSON.stringify(logs)
 			});
 
-			if (!response.ok) {
-				console.error('Failed to send logs to Grafana:', response.status, response.statusText);
-				// Put logs back in queue for retry
-				this.logQueue.unshift(...streams);
+			if (response.status === 202) {
+				console.log(`✅ Sent ${logs.length} log entries to Better Stack`);
 			} else {
-				console.log(`✅ Sent ${streams.length} log entries to Grafana`);
+				console.error('Failed to send logs to Better Stack:', response.status, response.statusText);
+				// Put logs back in queue for retry
+				this.logQueue.unshift(...logs);
 			}
 		} catch (error) {
-			console.error('Error sending logs to Grafana:', error);
+			console.error('Error sending logs to Better Stack:', error);
 			// Put logs back in queue for retry
-			this.logQueue.unshift(...streams);
+			this.logQueue.unshift(...logs);
 		}
 	}
 
@@ -138,4 +118,4 @@ class GrafanaLogger {
 }
 
 // Create global logger instance
-const logger = new GrafanaLogger();
+const logger = new BetterStackLogger();
