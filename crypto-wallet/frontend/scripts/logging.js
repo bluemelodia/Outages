@@ -26,19 +26,12 @@ class GrafanaLogger {
 		setInterval(() => this.flush(), this.flushInterval);
 	}
 
-	formatLabels(labels) {
-		const combined = { ...this.baseLabels, ...labels };
-		return '{' + Object.entries(combined)
-			.map(([key, value]) => `${key}="${value}"`)
-			.join(',') + '}';
-	}
-
 	log(level, message, labels = {}) {
 		if (!this.config) return;
 
 		const timestamp = Date.now();
 		const logEntry = {
-			stream: this.formatLabels({ level, ...labels }),
+			stream: { ...this.baseLabels, level, ...labels },
 			values: [
 				[
 					(timestamp * 1000000).toString(), // Loki expects nanoseconds

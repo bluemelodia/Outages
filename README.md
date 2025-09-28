@@ -3,6 +3,14 @@
 Loki dashboard (logs):
 https://outages.grafana.net/public-dashboards/4bbb6af5bef74ce6832a474fbb9b496f
 
+# Background
+
+CORS (Cross-Origin Resource Sharing) is a security feature built into web browsers. It prevents a website from making requests to a different domain (origin) unless that server explicitly allows it. For example, if your app is running at http://localhost:3000 and tries to fetch data from https://logs-prod-036.grafana.net, the browser will block the request unless Grafana allows your origin through CORS headers.
+
+Not every request triggers CORS: requests to the same origin, requests from server-side code, or requests to APIs that allow your origin will succeed. But if the API disallows CORS, your request will fail in the browser even if it works in Postman or server-side scripts.
+
+A common solution during development is to use a local CORS proxy like lcp. The proxy runs on your machine (e.g., http://localhost:8010, which is a domain that is not always allowed by APIs) and forwards requests to the real API. Because the browser sees the request as going to localhost (same origin), it doesn’t block it. In production, your app can call the real API directly without the proxy.
+
 # Pre-requisites
 
 To use the Crypto API, you need to create a demo account and get an API key.
@@ -47,8 +55,9 @@ To set-up the front end, run the following commands:
 
 If debugging locally, use a proxy server to avoid CORS issues: 
 
-	npx lcp --proxyUrl http://localhost:3000
+	npx lcp --proxyUrl https://logs-prod-036.grafana.net --port 8010
 
-The specified port is where requests will be forwarded to. 
-By default, lcp will start a server at http://localhost:8010.
+where proxyUrl is the remote server that we want to forward requests to (Grafana).
+where port is the local port your proxy listens on.
 
+This means that requests to 
