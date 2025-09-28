@@ -182,45 +182,40 @@
     <script src="scripts/utils.js"></script>
     <script src="scripts/app.js"></script>
 
-	<!-- Pino -->
-	<script src="https://cdn.jsdelivr.net/npm/pino@8/dist/pino.umd.js"></script>
-
-	<!-- Logflare browser transport -->
-	<script src="https://cdn.jsdelivr.net/npm/pino-logflare@0.5.2/dist/logflare-pino-browser.umd.js"></script>
-
 	<script>
-		// Grab your API keys from window.config
-		const { apiKey, sourceID } = window.config.logger;
-
-		// Create Logflare browser sender
-		const send = LogflarePinoBrowser.createPinoBrowserSend({
-			apiKey: apiKey,
-			sourceToken: sourceID,
-		});
-
-		// Create Pino logger
-		const logger = pino({
-			level: "debug",
-			browser: {
-			transmit: {
-				level: "info",
-				send: send
-			}
+	// -------------------- Tiny Logger --------------------
+		window.logger = {
+		log: (level, message, metadata = {}) => {
+			fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-API-KEY": window.config.logger.apiKey,
+				"Authorization": `Bearer ${window.config.logger.accessToken}`
 			},
-			base: {
-			env: window.config?.ENV || "development"
-			}
-		});
+			body: JSON.stringify({
+				message,
+				metadata: {
+				level,
+				time: new Date().toISOString(),
+				...metadata
+				}
+			})
+			})
+			.then(r => r.text())
+			.then(console.log)
+			.catch(err => console.error("Logger error:", err));
+		},
+		info: (msg, meta) => window.logger.log("info", msg, meta),
+		warn: (msg, meta) => window.logger.log("warn", msg, meta),
+		error: (msg, meta) => window.logger.log("error", msg, meta)
+		};
 
-		// Usage
-		logger.info("🚀 Logger initialized");
-		logger.debug("Fetching crypto...");
+		// -------------------- Usage --------------------
+		window.logger.info("🚀 Logger initialized");
+		window.logger.warn("⚠️ Test warning");
+		window.logger.error("❌ Test error");
 
-		// Example metadata
-		logger.info({ action_type: "user_action", action: "click_button" }, "User clicked a button");
-
-		// Expose globally if needed
-		window.logger = logger;
 	</script>
 </body>
 </html>

@@ -57,7 +57,7 @@ To run the front-end code locally, run the following:
 
 In a separate terminal tab/window, run the following:
 
-    npx lcp --proxyUrl https://api.logflare.app --port 8010 --proxyPartial /logs/json
+    npx lcp --proxyUrl https://api.logflare.app
 
 where proxyUrl is the remote server that we want to forward requests to (Grafana).
 
