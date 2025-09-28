@@ -57,9 +57,8 @@ To run the front-end code locally, run the following:
 
 In a separate terminal tab/window, run the following:
 
-    npx lcp --proxyUrl https://logs-prod-036.grafana.net --port 8010
+    npx lcp --proxyUrl https://api.logflare.app --port 8010 --proxyPartial /logs/json
 
 where proxyUrl is the remote server that we want to forward requests to (Grafana).
-where port is the local port your proxy listens on.
 
 This proxy acts as a middleman: when your browser makes requests to http://localhost:8010, the proxy forwards them to Grafana. Because the browser sees the request as going to localhost (same origin), it bypasses CORS restrictions during local development. In production, this proxy is not needed, because requests go directly to the allowed API.

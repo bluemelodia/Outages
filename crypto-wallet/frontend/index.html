@@ -175,12 +175,52 @@
 	<script src="scripts/keys.js"></script>
     <script src="scripts/config.js"></script>
     <script src="scripts/api.js"></script>
-	<script src="scripts/logging.js"></script>
     <script src="scripts/navigation.js"></script>
     <script src="scripts/verification.js"></script>
     <script src="scripts/transactions.js"></script>
     <script src="scripts/credentials.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/app.js"></script>
+
+	<!-- Pino -->
+	<script src="https://cdn.jsdelivr.net/npm/pino@8/dist/pino.umd.js"></script>
+
+	<!-- Logflare browser transport -->
+	<script src="https://cdn.jsdelivr.net/npm/pino-logflare@0.5.2/dist/logflare-pino-browser.umd.js"></script>
+
+	<script>
+		// Grab your API keys from window.config
+		const { apiKey, sourceID } = window.config.logger;
+
+		// Create Logflare browser sender
+		const send = LogflarePinoBrowser.createPinoBrowserSend({
+			apiKey: apiKey,
+			sourceToken: sourceID,
+		});
+
+		// Create Pino logger
+		const logger = pino({
+			level: "debug",
+			browser: {
+			transmit: {
+				level: "info",
+				send: send
+			}
+			},
+			base: {
+			env: window.config?.ENV || "development"
+			}
+		});
+
+		// Usage
+		logger.info("🚀 Logger initialized");
+		logger.debug("Fetching crypto...");
+
+		// Example metadata
+		logger.info({ action_type: "user_action", action: "click_button" }, "User clicked a button");
+
+		// Expose globally if needed
+		window.logger = logger;
+	</script>
 </body>
 </html>

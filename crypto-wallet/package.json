@@ -15,7 +15,7 @@
 		"node": ">=16.0.0"
 	},
 	"dependencies": {
-		"pino": "^9.12.0",
-		"pino-logflare": "^0.5.2"
+		"pino": "9.12.0",
+		"pino-logflare": "0.5.2"
 	}
 }
