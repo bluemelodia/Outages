@@ -208,8 +208,9 @@ body {
     opacity: 0.8;
 }
 
+
 .card-footer {
-    margin-top: 2rem;
+    margin-top: auto; /* ⬅️ pushes footer to bottom */
     text-align: center;
     font-size: 0.95rem;
     color: #667eea;
@@ -273,22 +274,31 @@ body {
     font-weight: 600;
 }
 
-/* Password Toggle */
+/* Password field with toggle icon */
 .password-wrapper {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .password-wrapper input[type="password"],
 .password-wrapper input[type="text"] {
     flex: 1;
-    padding-right: 2em;
+    width: 100%;
+    padding-right: 2.5rem; /* space for the eye icon */
+    box-sizing: border-box;
 }
 
+/* Eye toggle button */
 .toggle-password {
+    position: absolute;
+    right: 0.75rem;
     cursor: pointer;
-    margin-left: -2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     user-select: none;
 }
 

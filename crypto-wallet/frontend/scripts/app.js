@@ -152,6 +152,16 @@ function initializeEventListeners() {
         });
     }
 
+    // Add Enter key support for login form
+    const loginInputs = document.querySelectorAll('#login-username, #login-password');
+    loginInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginUser();
+            }
+        });
+    });
+
     // Add form validation listeners
     const forms = document.querySelectorAll('input');
     forms.forEach(input => {
@@ -168,19 +178,49 @@ function initializeApp() {
 }
 
 function loginUser() {
-    const username = document.getElementById('login-username').value.trim();
-    const password = document.getElementById('login-password').value;
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+    const errorEl = document.getElementById("login-error");
 
-    if (username === "prodtest" && password === "Crypto1") {
-        // Hide login, show menu
-        document.getElementById('login-page').classList.remove('active');
-        document.getElementById('menu-page').classList.add('active');
-        document.getElementById('login-error').textContent = '';
-        document.getElementById('login-error').classList.remove('active');
-    } else {
-        document.getElementById('login-error').textContent = 'Invalid username or password.';
-        document.getElementById('login-error').classList.add('active');
+    // Allowed users
+    const allowedUsers = Array.from({ length: 8 }, (_, i) => `test_user${i + 1}`);
+    const validPassword = "crypto";
+
+    // Validation
+    if (!allowedUsers.includes(username) || password !== validPassword) {
+        errorEl.textContent = "❌ Invalid username or password.";
+        errorEl.classList.add("active");
+        window.logger.warn("Failed login attempt", { username });
+        return;
     }
+
+    // Success
+    errorEl.classList.remove("active");
+    errorEl.textContent = "";
+
+    localStorage.setItem("loggedInUser", username);
+    window.logger.info("✅ User logged in", { username });
+
+    // Navigate to menu
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("menu-page").classList.add("active");
+}
+
+function logoutUser() {
+    // Clear stored user
+    localStorage.removeItem("loggedInUser");
+    window.logger.info("👋 User logged out");
+
+    // Hide all pages
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+	// Reset login form fields
+    document.getElementById("login-username").value = "";
+    document.getElementById("login-password").value = "";
+
+    // Reset UI
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("login-page").classList.add("active");
 }
 
 // Add this after your initializeApp or inside initializeEventListeners
