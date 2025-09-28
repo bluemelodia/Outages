@@ -5,8 +5,9 @@ window.config = {
     VERIFICATION_CODE_LENGTH: 6,
     MAX_VERIFICATION_ATTEMPTS: 3,
 	logger: { 
-		bearer: window.tokens.BETTERSTACK_BEARER_TOKEN,
-		url: "https://s1533225.eu-nbg-2.betterstackdata.com"
+		accessToken: window.keys.LOGGER_API_ACCESS_TOKEN,
+		apiKey: window.keys.LOGGER_API_KEY,
+		sourceID: window.keys.LOGGER_API_SOURCEID
 	},
 	coinGecko: {
 		apiKey: window.keys.COINGECKO_API_KEY,
