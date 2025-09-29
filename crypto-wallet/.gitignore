@@ -1,0 +1,6 @@
+# API Keys and Configuration
+frontend/scripts/keys.js
+
+# Node modules and package files
+node_modules/
+package-lock.json
