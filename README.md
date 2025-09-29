@@ -1,5 +1,13 @@
 # Outages
 
+Note: This codebase is <b>intentionally</b> a spaghetti code-base, to reflect real-life scenarios where:
+    - the code base is old and has accumulated significant amounts of tech debt
+		ex. code was hastily added to meet deadlines, tactical fixes were added to minimize production impact but no strategic fix was ever done, best practices are implemented inconsistently (sometimes not at all)
+	- the code is not scalable / reusable
+		ex. code is tightly coupled to third-party libraries / dependencies
+
+All of these factors complicate efforts to debug issues in prod.
+
 # Background
 
 CORS (Cross-Origin Resource Sharing) is a security feature built into web browsers. It prevents a website from making requests to a different domain (origin) unless that server explicitly allows it. For example, if your app is running at http://localhost:3000 and tries to fetch data from https://logs-prod-036.grafana.net, the browser will block the request unless Grafana allows your origin through CORS headers.

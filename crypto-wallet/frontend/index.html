@@ -188,39 +188,57 @@
 	<script src="scripts/app.js"></script>
 
 	<script>
-	// -------------------- Tiny Logger --------------------
-		window.logger = {
-		log: (level, message, metadata = {}) => {
+		// Force logout on page load
+		localStorage.removeItem("loggedInUser");
+
+		// Determine environment
+		const hostname = window.location.hostname;
+		const ENVIRONMENT = (
+		hostname === "localhost" ||
+		hostname === "127.0.0.1" ||
+		hostname.endsWith(".local") ||
+		hostname.startsWith("192.168.") // optional for local network
+		) ? "development" : "production";
+		
+		// -------------------- Tiny Logger --------------------
+		window.logger = (() => {
+		const originalLogger = {
+			log: (level, message, metadata = {}) => {
+			const user = localStorage.getItem("loggedInUser") || "pre-login";
+
 			fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-API-KEY": window.config.logger.apiKey,
-				"Authorization": `Bearer ${window.config.logger.accessToken}`
-			},
-			body: JSON.stringify({
-				message,
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-API-KEY": window.config.logger.apiKey,
+					"Authorization": `Bearer ${window.config.logger.accessToken}`
+				},
+				body: JSON.stringify({
+				message: `[${user}][${ENVIRONMENT}] ${message}`,
 				metadata: {
-				level,
-				time: new Date().toISOString(),
-				...metadata
+					level,
+					time: new Date().toISOString(),
+					user,
+					...metadata
 				}
-			})
+				})
 			})
 			.then(r => r.text())
 			.then(console.log)
 			.catch(err => console.error("Logger error:", err));
-		},
-		info: (msg, meta) => window.logger.log("info", msg, meta),
-		warn: (msg, meta) => window.logger.log("warn", msg, meta),
-		error: (msg, meta) => window.logger.log("error", msg, meta)
+			}
 		};
 
-		// -------------------- Usage --------------------
-		window.logger.info("🚀 Logger initialized");
-		window.logger.warn("⚠️ Test warning");
-		window.logger.error("❌ Test error");
+		return {
+			log: originalLogger.log,
+			info: (msg, meta) => originalLogger.log("info", msg, meta),
+			warn: (msg, meta) => originalLogger.log("warn", msg, meta),
+			error: (msg, meta) => originalLogger.log("error", msg, meta)
+		};
+		})();
 
+		// Example usage
+		window.logger.info("🚀 Logger initialized"); // user: "pre-login" if no one is logged in
 	</script>
 </body>
 </html>
