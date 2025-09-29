@@ -1,10 +1,17 @@
 # Outages
 
-Note: This codebase is <b>intentionally</b> a spaghetti code-base, to reflect real-life scenarios where:
+Note: This codebase is <b>intentionally</b> a spaghetti code-base, to reflect real-life scenarios such as:
+
     - the code base is old and has accumulated significant amounts of tech debt
-		ex. code was hastily added to meet deadlines, tactical fixes were added to minimize production impact but no strategic fix was ever done, best practices are implemented inconsistently (sometimes not at all)
-	- the code is not scalable / reusable
-		ex. code is tightly coupled to third-party libraries / dependencies
+    	- code was hastily added to meet deadlines
+    	- tactical fixes were added to minimize production impact but no strategic fix was ever done
+    - the code is not scalable / reusable
+    	- code is tightly coupled to third-party libraries / dependencies
+    - coding best practices / standards are implemented inconsistently (or not at all)
+    	- poor/inconsistent code organization
+    	- poor/inconsistent naming of functions and variables
+    	- poor/inconsistent logging
+    - etc.
 
 All of these factors complicate efforts to debug issues in prod.
 

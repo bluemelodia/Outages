@@ -106,7 +106,15 @@ function renderCoinTable() {
 	let rows = sorted.map(coin => {
 		const changeClass = coin.price_change_24h < 0 ? 'negative' : 'positive';
 
-		console.debug(`Rendering row for coin: ${coin.name} (${coin.symbol}) with data: ${coin}...`);
+		console.debug(`Rendering row for coin: ${coin.name} (${coin.symbol}) with data: ${JSON.stringify(coin)}...`);
+
+		let priceChangeElement = '';
+		if (coin.price_change_24h != null && coin.price_change_percentage_24h != null) {
+			priceChangeElement = `<td class="${changeClass}">
+				${coin.price_change_24h.toLocaleString('en-US', {style:'currency',currency:'USD', minimumFractionDigits: 2, maximumFractionDigits: 2})}
+				(${coin.price_change_percentage_24h?.toFixed(2) ?? '0.00'}%)
+			</td>`;
+		}
 
 		return `
 			<tr>
@@ -118,14 +126,11 @@ function renderCoinTable() {
 				</td>
 				<td>${coin.current_price != null ? coin.current_price.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
 				<td>${formatLargeNumber(coin.market_cap)}</td>
-				<td>${coin.market_cap_rank}</td>
+				<td>${coin.market_cap_rank != null ? coin.market_cap_rank : 'N/A'}</td>
 				<td>${formatLargeNumber(coin.total_volume)}</td>
 				<td>${coin.high_24h != null ? coin.high_24h.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
 				<td>${coin.low_24h != null? coin.low_24h.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
-				<td class="${changeClass}">
-					${coin.price_change_24h.toLocaleString('en-US', {style:'currency',currency:'USD', minimumFractionDigits: 2, maximumFractionDigits: 2})}
-					(${coin.price_change_percentage_24h?.toFixed(2) ?? '0.00'}%)
-				</td>
+				${priceChangeElement}
 				<td>${formatLargeNumber(coin.circulating_supply)}</td>
 				<td>${formatLargeNumber(coin.max_supply)}</td>
 			</tr>
