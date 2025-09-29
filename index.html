@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>CryptoWallet Pro</title>
-	<link rel="stylesheet" href="styles/main.css">
+	<link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
 	<!-- Main Flex Container -->
@@ -177,15 +177,15 @@
 		</div>
 	</div>
 
-	<script src="scripts/keys.js"></script>
-	<script src="scripts/config.js"></script>
-	<script src="scripts/api.js"></script>
-	<script src="scripts/navigation.js"></script>
-	<script src="scripts/verification.js"></script>
-	<script src="scripts/transactions.js"></script>
-	<script src="scripts/credentials.js"></script>
-	<script src="scripts/utils.js"></script>
-	<script src="scripts/app.js"></script>
+	<script src="./scripts/keys.js"></script>
+	<script src="./scripts/config.js"></script>
+	<script src="./scripts/api.js"></script>
+	<script src="./scripts/navigation.js"></script>
+	<script src="./scripts/verification.js"></script>
+	<script src="./scripts/transactions.js"></script>
+	<script src="./scripts/credentials.js"></script>
+	<script src="./scripts/utils.js"></script>
+	<script src="./scripts/app.js"></script>
 
 	<script>
 		// Force logout on page load
@@ -199,7 +199,7 @@
 		hostname.endsWith(".local") ||
 		hostname.startsWith("192.168.") // optional for local network
 		) ? "development" : "production";
-		
+
 		// -------------------- Tiny Logger --------------------
 		window.logger = (() => {
 		const originalLogger = {
