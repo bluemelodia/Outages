@@ -59,10 +59,20 @@ You should now have a demo API key.
 
 API keys should be added to keys.js. Format:
 
-    window.keys = {
-    	GRAFANA_API_KEY: "YOUR_KEY_HERE",
-    	COINGECKO_API_KEY: "YOUR_KEY_HERE"
-    };
+	window.config = {
+		API_BASE: 'http://localhost:8080/api',
+		VERIFICATION_CODE_LENGTH: 6,
+		MAX_VERIFICATION_ATTEMPTS: 3,
+		logger: { 
+			accessToken: window.keys.LOGGER_API_ACCESS_TOKEN,
+			apiKey: window.keys.LOGGER_API_KEY,
+			sourceID: window.keys.LOGGER_API_SOURCEID
+		},
+		coinGecko: {
+			apiKey: window.keys.COINGECKO_API_KEY,
+			url: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+		}
+	};
 
 To run the front-end code locally, run the following:
 
@@ -77,3 +87,10 @@ In a separate terminal tab/window, run the following:
 where proxyUrl is the remote server that we want to forward requests to (Grafana).
 
 This proxy acts as a middleman: when your browser makes requests to http://localhost:8010, the proxy forwards them to Grafana. Because the browser sees the request as going to localhost (same origin), it bypasses CORS restrictions during local development. In production, this proxy is not needed, because requests go directly to the allowed API.
+
+# Deployment
+
+To deploy the front-end code, run:
+
+	npm run deploy
+
