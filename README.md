@@ -4,11 +4,13 @@ Note: For the purposes of the workshop, the codebase was <b>intentionally</b> cr
 
     - the code base is old and has accumulated significant amounts of tech debt
     	- code was hastily added to meet deadlines
-    	- tactical fixes were added to minimize production impact but no strategic fix was ever done
+    	- tactical fixes were added to minimize production impact, but was never replaced by a strategic fix
     	- old / unused code is never cleaned up
+    	- duplicate code in multiple places
     - the code is not scalable / reusable
     	- code is tightly coupled to third-party libraries / dependencies
-    - coding best practices / standards are implemented inconsistently (or not at all)
+    	- code isn't modular
+    - coding best practices are implemented inconsistently (or not at all)
     	- poor/inconsistent code organization
     	- poor/inconsistent naming of functions and variables
     	- poor/inconsistent logging
