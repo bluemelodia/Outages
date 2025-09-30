@@ -92,6 +92,10 @@
 
 				<!-- Main Menu -->
 				<div id="menu-page" class="page active">
+					<div class="welcome-banner">
+						<h2 id="welcome-message"></h2>
+					</div>
+
 					<div class="balance-card">
 						<div class="balance-amount" id="balance">$12,543.21</div>
 						<div class="balance-label">Available Balance</div>
@@ -321,6 +325,27 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+
+	auth.onAuthStateChanged((user) => {
+		if (user) {
+			// User is signed in → show menu page
+			document.getElementById("login-page").classList.remove("active");
+			document.getElementById("menu-page").classList.add("active");
+
+			// Show welcome message
+			const welcomeEl = document.getElementById("welcome-message");
+			const nameOrEmail = user.displayName || user.email || "User";
+			welcomeEl.textContent = `Welcome, ${nameOrEmail}`;
+			
+			logger.info("User logged in", { user: nameOrEmail });
+		} else {
+			// No user → show login page
+			document.getElementById("menu-page").classList.remove("active");
+			document.getElementById("login-page").classList.add("active");
+
+			logger.info("No user logged in");
+		}
+	});
 
     // EMAIL AUTHENTICATION
     function sendEmailLink() {

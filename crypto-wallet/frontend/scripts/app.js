@@ -224,6 +224,19 @@ function loginUser() {
 }
 
 function logoutUser() {
+	auth.signOut()
+		.then(() => {
+			// Hide menu page, show login
+			document.getElementById("menu-page").classList.remove("active");
+			document.getElementById("login-page").classList.add("active");
+
+			logger.info("User logged out");
+		})
+		.catch((error) => {
+			console.error("Logout error:", error);
+			alert("Logout failed: " + error.message);
+		});
+
 	// Clear stored user
 	localStorage.removeItem("loggedInUser");
 	window.logger.info("👋 User logged out");

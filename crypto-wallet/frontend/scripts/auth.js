@@ -26,6 +26,10 @@ function loginUser() {
       const user = userCredential.user;
       console.log("Logged in as:", user.email);
       navigateTo("menu"); // ✅ show menu after login
+
+	  // Show welcome message
+      const welcomeMessage = document.getElementById("welcome-message");
+      welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}`;
     })
     .catch((error) => {
 		showAuthError('login-error', error.message);
