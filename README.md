@@ -1,16 +1,20 @@
 # Outages
 
-Note: This codebase is <b>intentionally</b> a spaghetti code-base, to reflect real-life scenarios such as:
+Note: For the purposes of the workshop, the codebase was <b>intentionally</b> created to be sloppy / disorganized to reflect real-life scenarios such as:
 
     - the code base is old and has accumulated significant amounts of tech debt
     	- code was hastily added to meet deadlines
     	- tactical fixes were added to minimize production impact but no strategic fix was ever done
+    	- old / unused code is never cleaned up
     - the code is not scalable / reusable
     	- code is tightly coupled to third-party libraries / dependencies
     - coding best practices / standards are implemented inconsistently (or not at all)
     	- poor/inconsistent code organization
     	- poor/inconsistent naming of functions and variables
     	- poor/inconsistent logging
+    - developers aren't implementing good security practices
+    	- API keys are hardcoded on the front-end
+    	- UI directly presents backend errors as-is
     - etc.
 
 All of these factors complicate efforts to debug issues in prod.
@@ -59,29 +63,29 @@ You should now have a demo API key.
 
 API keys should be added to keys.js. Format:
 
-	window.keys = {
-		COINGECKO_API_KEY: "...",
-		LOGGER_API_KEY: "...",
-		LOGGER_API_ACCESS_TOKEN: "...",
-		LOGGER_API_SOURCEID: "..."
-	};
+    window.keys = {
+    	COINGECKO_API_KEY: "...",
+    	LOGGER_API_KEY: "...",
+    	LOGGER_API_ACCESS_TOKEN: "...",
+    	LOGGER_API_SOURCEID: "..."
+    };
 
-They are consumed in config.js like this: 
+They are consumed in config.js like this:
 
-	window.config = {
-		API_BASE: 'http://localhost:8080/api',
-		VERIFICATION_CODE_LENGTH: 6,
-		MAX_VERIFICATION_ATTEMPTS: 3,
-		logger: { 
-			accessToken: window.keys.LOGGER_API_ACCESS_TOKEN,
-			apiKey: window.keys.LOGGER_API_KEY,
-			sourceID: window.keys.LOGGER_API_SOURCEID
-		},
-		coinGecko: {
-			apiKey: window.keys.COINGECKO_API_KEY,
-			url: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
-		}
-	};
+    window.config = {
+    	API_BASE: 'http://localhost:8080/api',
+    	VERIFICATION_CODE_LENGTH: 6,
+    	MAX_VERIFICATION_ATTEMPTS: 3,
+    	logger: {
+    		accessToken: window.keys.LOGGER_API_ACCESS_TOKEN,
+    		apiKey: window.keys.LOGGER_API_KEY,
+    		sourceID: window.keys.LOGGER_API_SOURCEID
+    	},
+    	coinGecko: {
+    		apiKey: window.keys.COINGECKO_API_KEY,
+    		url: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+    	}
+    };
 
 To run the front-end code locally, run the following:
 
@@ -101,8 +105,8 @@ This proxy acts as a middleman: when your browser makes requests to http://local
 
 To deploy the front-end code, run:
 
-	npm run deploy
+    npm run deploy
 
 Check for updates:
 
-	https://bluemelodia.github.io/Outages/
+    https://bluemelodia.github.io/Outages/

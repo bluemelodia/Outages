@@ -17,6 +17,21 @@ function switchAuthTab(tabName) {
 	});
 }
 
+function loginUser() {
+  const email = document.getElementById("login-username").value;
+  const password = document.getElementById("login-password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log("Logged in as:", user.email);
+      navigateTo("menu"); // ✅ show menu after login
+    })
+    .catch((error) => {
+		showAuthError('login-error', error.message);
+    });
+}
+
 // Helper to show errors
 function showAuthError(elementId, message) {
 	const el = document.getElementById(elementId);
@@ -115,16 +130,3 @@ function verifyPhoneCode(code, phoneNumber) {
 			showAuthError('register-error', 'Invalid verification code');
 		});
 }
-
-// Listen for auth state changes
-auth.onAuthStateChanged((user) => {
-	if (user) {
-		window.logger.info('Auth state: user signed in', { 
-			uid: user.uid, 
-			email: user.email,
-			phone: user.phoneNumber 
-		});
-	} else {
-		window.logger.info('Auth state: user signed out');
-	}
-});

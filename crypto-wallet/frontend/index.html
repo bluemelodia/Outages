@@ -29,7 +29,7 @@
 					<div class="error-message" id="login-error"></div>
 					
 					<div class="form-group">
-						<label for="login-username">Username</label>
+						<label for="login-username">E-mail</label>
 						<input type="text" id="login-username" autocomplete="username">
 					</div>
 					<div class="form-group">
@@ -259,7 +259,16 @@
 		window.logger = (() => {
 		const originalLogger = {
 			log: (level, message, metadata = {}) => {
-			const user = localStorage.getItem("loggedInUser") || "pre-login";
+			// TODO: clean up localStorage usage in the next release.
+			// const user = localStorage.getItem("loggedInUser") || "pre-login";
+			let user = auth.currentUser;
+
+			if (user) {
+				console.log("Current user:", user.email || user.phoneNumber);
+			} else {
+				console.log("No user logged in");
+				user = "pre-login"
+			}
 
 			fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
 				method: "POST",
