@@ -59,6 +59,15 @@ You should now have a demo API key.
 
 API keys should be added to keys.js. Format:
 
+	window.keys = {
+		COINGECKO_API_KEY: "...",
+		LOGGER_API_KEY: "...",
+		LOGGER_API_ACCESS_TOKEN: "...",
+		LOGGER_API_SOURCEID: "..."
+	};
+
+They are consumed in config.js like this: 
+
 	window.config = {
 		API_BASE: 'http://localhost:8080/api',
 		VERIFICATION_CODE_LENGTH: 6,
@@ -94,3 +103,6 @@ To deploy the front-end code, run:
 
 	npm run deploy
 
+Check for updates:
+
+	https://bluemelodia.github.io/Outages/

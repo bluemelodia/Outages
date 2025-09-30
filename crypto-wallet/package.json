@@ -8,8 +8,8 @@
 		"start": "live-server frontend --open=index.html",
 		"dev": "live-server frontend --open=index.html",
 		"predeploy": "npm run build",
-    	"deploy": "gh-pages -d frontend",
-    	"build": "echo 'Nothing to build, copying frontend as-is'"
+		"deploy": "gh-pages -d frontend",
+		"build": "echo 'Nothing to build, copying frontend as-is'"
 	},
 	"devDependencies": {
 		"gh-pages": "6.3.0",
@@ -20,6 +20,7 @@
 		"node": ">=16.0.0"
 	},
 	"dependencies": {
+		"firebase": "^12.3.0",
 		"pino": "9.12.0",
 		"pino-logflare": "0.5.2"
 	}
