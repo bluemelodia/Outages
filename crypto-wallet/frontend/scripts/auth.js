@@ -29,7 +29,7 @@ function loginUser() {
 
 	  // Show welcome message
       const welcomeMessage = document.getElementById("welcome-message");
-      welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}`;
+      welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
     })
     .catch((error) => {
 		showAuthError('login-error', error.message);

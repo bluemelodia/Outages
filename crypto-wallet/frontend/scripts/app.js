@@ -237,6 +237,9 @@ function logoutUser() {
 			alert("Logout failed: " + error.message);
 		});
 
+	// TODO: with the auth rewrite, some of this code
+	// is no longer needed. Clean it up in an upcoming release.
+	
 	// Clear stored user
 	localStorage.removeItem("loggedInUser");
 	window.logger.info("👋 User logged out");

@@ -335,7 +335,7 @@
 			// Show welcome message
 			const welcomeEl = document.getElementById("welcome-message");
 			const nameOrEmail = user.displayName || user.email || "User";
-			welcomeEl.textContent = `Welcome, ${nameOrEmail}`;
+			welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
 			
 			logger.info("User logged in", { user: nameOrEmail });
 		} else {
