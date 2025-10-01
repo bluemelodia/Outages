@@ -5,11 +5,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	// Initialize event listeners
 	initializeEventListeners();
-	
+
+	// Check if the URL contains Firebase email link parameters
+	if (auth.isSignInWithEmailLink(window.location.href)) {
+		// The user just clicked an email link and 
+		// returned to the page.
+		handleEmailLinkCompletion();
+	} else {
+		handleRegularPageLoad();
+	}
+});
+
+function handleRegularPageLoad() {
 	// Initialize any startup logic
 	initializeApp();
 	loadCoinMarketTable();
-});
+}
 
 let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
@@ -239,7 +250,7 @@ function logoutUser() {
 
 	// TODO: with the auth rewrite, some of this code
 	// is no longer needed. Clean it up in an upcoming release.
-	
+
 	// Clear stored user
 	localStorage.removeItem("loggedInUser");
 	window.logger.info("👋 User logged out");
