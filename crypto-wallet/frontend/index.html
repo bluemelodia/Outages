@@ -169,7 +169,6 @@
 					<div class="spinner" id="transactions-spinner"></div>
 					
 					<div id="transactions-list">
-						<!-- Transactions will be loaded here -->
 					</div>
 
 					<button class="btn btn-secondary" onclick="navigateTo('menu')">
@@ -366,7 +365,7 @@
     }
 
     // Check if user is returning from email link
-    if (auth.isSignInWithEmailLink(window.location.href)) {
+    /*if (auth.isSignInWithEmailLink(window.location.href)) {
       let email = window.localStorage.getItem('emailForSignIn');
       if (!email) {
         email = window.prompt('Please provide your email for confirmation');
@@ -380,7 +379,7 @@
         .catch((error) => {
           alert('Error: ' + error.message);
         });
-    }
+    }*/
 
     function verifyOTP() {
       const code = document.getElementById('otp').value;

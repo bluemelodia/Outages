@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	initializeEventListeners();
 
 	// Check if the URL contains Firebase email link parameters
-	if (auth.isSignInWithEmailLink(window.location.href)) {
-		// The user just clicked an email link and 
-		// returned to the page.
-		handleEmailLinkCompletion();
-	} else {
-		handleRegularPageLoad();
-	}
+	// if (auth.isSignInWithEmailLink(window.location.href)) {
+	// 	// The user just clicked an email link and 
+	// 	// returned to the page.
+	// 	handleEmailLinkCompletion();
+	// } else {
+	// 	handleRegularPageLoad();
+	// }
+	handleRegularPageLoad();
 });
 
 function handleRegularPageLoad() {

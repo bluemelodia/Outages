@@ -7,8 +7,9 @@ function navigateTo(pageId) {
 	// Show the selected page
 	document.getElementById(`${pageId}-page`).classList.add('active');
 
-	if (pageId === 'send-crypto') {
-		sendOneTimeEmailPasscode()
+	if (pageId === 'transactions') {
+		const transactions = loadTransactions();
+		document.getElementById('transactions-list').innerHTML = transactions;
 	}
 
 	// Only render password fields when navigating to credentials
