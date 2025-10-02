@@ -106,17 +106,17 @@ function formatTransactionDate(date) {
 	} else if (days < 7) {
 		return `${days} days ago`;
 	} else {
-		return date.toLocaleDateString('en-US', { 
-			month: 'short', 
-			day: 'numeric', 
-			year: 'numeric' 
+		return date.toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric'
 		});
 	}
 }
 
 // Render one transaction
 function renderTransaction(transaction) {
-	const statusBadge = transaction.status === 'pending' 
+	const statusBadge = transaction.status === 'pending'
 		? '<span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Pending</span>'
 		: '';
 
@@ -191,7 +191,7 @@ function addNewTransaction(crypto, amount, recipientAddress) {
 		usdValue: '0.00',
 		address: 'To: ' + recipientAddress,
 		date: new Date(),
-		hash: '0x' + Array.from({length: 64}, () => 
+		hash: '0x' + Array.from({ length: 64 }, () =>
 			Math.floor(Math.random() * 16).toString(16)
 		).join(''),
 		status: 'pending',

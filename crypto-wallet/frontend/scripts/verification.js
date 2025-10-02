@@ -12,7 +12,7 @@ function requireVerification(action) {
 async function verifyIdentity() {
 	const code = document.getElementById('verification-code').value;
 	const spinner = document.getElementById('verification-spinner');
-	
+
 	if (!code || code.length !== CONFIG.VERIFICATION_CODE_LENGTH) {
 		showError('verification', `Please enter a valid ${CONFIG.VERIFICATION_CODE_LENGTH}-digit code`);
 		return;
@@ -20,7 +20,7 @@ async function verifyIdentity() {
 
 	try {
 		spinner.classList.add('active');
-		
+
 		const result = await apiCall('/verify-identity', {
 			method: 'POST',
 			body: JSON.stringify({ code })

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>CryptoWallet Pro</title>
 	<link rel="stylesheet" href="./styles/main.css">
 </head>
+
 <body>
 	<!-- Main Flex Container -->
 	<div class="main-flex">
@@ -17,78 +19,91 @@
 				</div>
 
 				<div id="login-page" class="page active">
-				<!-- Tabs -->
-				<div class="auth-tabs">
-					<div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
-					<div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
-				</div>
+					<!-- Tabs -->
+					<div class="auth-tabs">
+						<div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
+						<div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
+					</div>
 
-				<!-- Login Tab Content -->
-				<div id="login-tab-content" class="auth-tab-content active">
-					<h2>Login</h2>
-					<div class="error-message" id="login-error"></div>
-					
-					<div class="form-group">
-						<label for="login-username">E-mail</label>
-						<input type="text" id="login-username" required autocomplete="username">
-					</div>
-					<div class="form-group">
-						<label for="login-password">Password</label>
-						<div class="password-wrapper">
-							<input type="password" id="login-password" required autocomplete="current-password">
-							<span class="toggle-password" onclick="togglePassword('login-password', this)">
-								<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
-								</svg>
-								<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12"/>
-								</svg>
-							</span>
-						</div>
-					</div>
-					<button class="btn btn-primary" onclick="loginUserV2()">Login</button>
-				</div>
+					<!-- Login Tab Content -->
+					<div id="login-tab-content" class="auth-tab-content active">
+						<h2>Login</h2>
+						<div class="error-message" id="login-error"></div>
 
-				<!-- Register Tab Content -->
-				<div id="register-tab-content" class="auth-tab-content">
-					<h2>Create Account</h2>
-					<div class="error-message" id="register-error"></div>
-					
-					<div class="form-group">
-						<label for="register-email">Email</label>
-						<input type="email" id="register-email" autocomplete="username">
-					</div>
-					<div class="form-group">
-						<label for="register-password">Password</label>
-						<div class="password-wrapper">
-							<input type="password" id="register-password" autocomplete="new-password">
-							<span class="toggle-password" onclick="togglePassword('register-password', this)">
-								<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
-								</svg>
-								<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12"/>
-								</svg>
-							</span>
+						<div class="form-group">
+							<label for="login-username">E-mail</label>
+							<input type="text" id="login-username" required autocomplete="username">
 						</div>
-					</div>
-					<div class="form-group">
-						<label for="register-confirm-password">Confirm Password</label>
-						<div class="password-wrapper">
-							<input type="password" id="register-confirm-password" autocomplete="new-password">
-							<span class="toggle-password" onclick="togglePassword('register-confirm-password', this)">
-								<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
-								</svg>
-								<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12"/>
-								</svg>
-							</span>
+						<div class="form-group">
+							<label for="login-password">Password</label>
+							<div class="password-wrapper">
+								<input type="password" id="login-password" required autocomplete="current-password">
+								<span class="toggle-password" onclick="togglePassword('login-password', this)">
+									<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z" />
+									</svg>
+									<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12" />
+									</svg>
+								</span>
+							</div>
 						</div>
+						<button class="btn btn-primary" onclick="loginUserV2()">Login</button>
 					</div>
-					<button class="btn btn-primary" onclick="registerUser()">Create Account</button>
+
+					<!-- Register Tab Content -->
+					<div id="register-tab-content" class="auth-tab-content">
+						<h2>Create Account</h2>
+						<div class="error-message" id="register-error"></div>
+
+						<div class="form-group">
+							<label for="register-email">Email</label>
+							<input type="email" id="register-email" autocomplete="username">
+						</div>
+						<div class="form-group">
+							<label for="register-password">Password</label>
+							<div class="password-wrapper">
+								<input type="password" id="register-password" autocomplete="new-password">
+								<span class="toggle-password" onclick="togglePassword('register-password', this)">
+									<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z" />
+									</svg>
+									<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12" />
+									</svg>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="register-confirm-password">Confirm Password</label>
+							<div class="password-wrapper">
+								<input type="password" id="register-confirm-password" autocomplete="new-password">
+								<span class="toggle-password"
+									onclick="togglePassword('register-confirm-password', this)">
+									<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z" />
+									</svg>
+									<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+										fill="none" viewBox="0 0 24 24" stroke="#667eea" style="display:none;">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M3 3l18 18M10.73 6.73A9.77 9.77 0 0121 12c-1.5 2.5-5 7-9 7a8.38 8.38 0 01-4.17-1.17M6.73 6.73A8.38 8.38 0 003 12c1.5 2.5 5 7 9 7a8.38 8.38 0 004.17-1.17M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12" />
+									</svg>
+								</span>
+							</div>
+						</div>
+						<button class="btn btn-primary" onclick="registerUser()">Create Account</button>
+					</div>
 				</div>
-			</div>
 
 				<!-- Main Menu -->
 				<div id="menu-page" class="page active">
@@ -117,7 +132,8 @@
 						<span>Logout</span>
 					</div>
 
-					<footer class="card-footer" style="margin-top:2rem; text-align:center; font-size:0.9rem; color:#888;">
+					<footer class="card-footer"
+						style="margin-top:2rem; text-align:center; font-size:0.9rem; color:#888;">
 						Icons by <a href="https://icons8.com/">Icons8</a>.
 					</footer>
 				</div>
@@ -125,9 +141,9 @@
 				<!-- Send Crypto Page -->
 				<div id="send-crypto-page" class="page">
 					<h2>Send Crypto</h2>
-					
+
 					<div class="error-message" id="send-error"></div>
-					
+
 					<div class="form-group">
 						<label for="recipient">Recipient Address</label>
 						<input type="text" id="recipient" placeholder="0x742d35Cc6545C4532...">
@@ -160,7 +176,7 @@
 				<!-- Transactions Page -->
 				<div id="transactions-page" class="page">
 					<h2>Transaction History</h2>
-					
+
 					<div class="error-message" id="transactions-error"></div>
 					<div class="spinner" id="transactions-spinner"></div>
 					<div id="transactions-list"></div>
@@ -173,9 +189,9 @@
 				<!-- Credentials Page -->
 				<div id="credentials-page" class="page">
 					<h2>Change Credentials</h2>
-					
+
 					<div class="error-message" id="credentials-error"></div>
-					
+
 					<div class="form-group" id="current-password-field"></div>
 					<div class="form-group" id="new-password-field"></div>
 					<div class="form-group" id="confirm-password-field"></div>
@@ -197,7 +213,7 @@
 						<p>
 							Please enter the one-time passcode sent to your registered device.
 						</p>
-						
+
 						<div class="form-group">
 							<input type="text" id="verification-code" placeholder="Enter 6-digit code" maxlength="6">
 						</div>
@@ -226,31 +242,45 @@
 
 	<!-- Branded alerts -->
 	<div id="custom-alert" class="modal">
-	<div class="modal-content">
-		<h3>Alert</h3>
-		<p id="custom-alert-message"></p>
-		<button id="custom-alert-ok" class="btn btn-primary">OK</button>
-	</div>
+		<div class="modal-content">
+			<h3>Alert</h3>
+			<p id="custom-alert-message"></p>
+			<button id="custom-alert-ok" class="btn btn-primary">OK</button>
+		</div>
 	</div>
 
 	<script>
-	(function() {
-	const modal = document.getElementById("custom-alert");
-	const messageEl = document.getElementById("custom-alert-message");
-	const okBtn = document.getElementById("custom-alert-ok");
+		(function () {
+			const modal = document.getElementById("custom-alert");
+			const titleEl = document.getElementById("custom-alert-title");
+			const messageEl = document.getElementById("custom-alert-message");
+			const okBtn = document.getElementById("custom-alert-ok");
 
-	// Override alert
-	window.alert = function(msg) {
-		messageEl.textContent = msg;
-		modal.classList.add("active");
-		return new Promise(resolve => {
-		okBtn.onclick = () => {
-			modal.classList.remove("active");
-			resolve();
-		};
-		});
-	};
-	})();
+			// Override alert
+			window.alert = function (input) {
+				let title = "Alert";
+				let message = "";
+
+				if (typeof input === "string") {
+					message = input; // simple string → message only
+				} else if (typeof input === "object" && input !== null) {
+					title = input.title || title;
+					message = input.message || "";
+				}
+
+				titleEl.textContent = title;
+				messageEl.textContent = message;
+
+				modal.classList.add("active");
+
+				return new Promise(resolve => {
+					okBtn.onclick = () => {
+						modal.classList.remove("active");
+						resolve();
+					};
+				});
+			};
+		})();
 	</script>
 
 	<script src="./scripts/keys.js"></script>
@@ -265,8 +295,8 @@
 	<script src="./scripts/auth.js"></script>
 
 	<!-- Firebase CDN Scripts -->
-  	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
 	<script>
 		// Force logout on page load
@@ -275,56 +305,56 @@
 		// Determine environment
 		const hostname = window.location.hostname;
 		const ENVIRONMENT = (
-		hostname === "localhost" ||
-		hostname === "127.0.0.1" ||
-		hostname.endsWith(".local") ||
-		hostname.startsWith("192.168.") // optional for local network
+			hostname === "localhost" ||
+			hostname === "127.0.0.1" ||
+			hostname.endsWith(".local") ||
+			hostname.startsWith("192.168.") // optional for local network
 		) ? "development" : "production";
 
 		// -------------------- Tiny Logger --------------------
 		window.logger = (() => {
-		const originalLogger = {
-			log: (level, message, metadata = {}) => {
-			// TODO: clean up localStorage usage in the next release.
-			// const user = localStorage.getItem("loggedInUser") || "pre-login";
-			let user = auth.currentUser;
+			const originalLogger = {
+				log: (level, message, metadata = {}) => {
+					// TODO: clean up localStorage usage in the next release.
+					// const user = localStorage.getItem("loggedInUser") || "pre-login";
+					let user = auth.currentUser;
 
-			if (user) {
-				console.log("Current user:", user.email || user.phoneNumber);
-			} else {
-				console.log("No user logged in");
-				user = "pre-login"
-			}
+					if (user) {
+						console.log("Current user:", user.email || user.phoneNumber);
+					} else {
+						console.log("No user logged in");
+						user = "pre-login"
+					}
 
-			fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-API-KEY": window.config.logger.apiKey,
-					"Authorization": `Bearer ${window.config.logger.accessToken}`
-				},
-				body: JSON.stringify({
-				message: `[${user}][${ENVIRONMENT}] ${message}`,
-				metadata: {
-					level,
-					time: new Date().toISOString(),
-					user,
-					...metadata
+					fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"X-API-KEY": window.config.logger.apiKey,
+							"Authorization": `Bearer ${window.config.logger.accessToken}`
+						},
+						body: JSON.stringify({
+							message: `[${user}][${ENVIRONMENT}] ${message}`,
+							metadata: {
+								level,
+								time: new Date().toISOString(),
+								user,
+								...metadata
+							}
+						})
+					})
+						.then(r => r.text())
+						.then(console.log)
+						.catch(err => console.error("Logger error:", err));
 				}
-				})
-			})
-			.then(r => r.text())
-			.then(console.log)
-			.catch(err => console.error("Logger error:", err));
-			}
-		};
+			};
 
-		return {
-			log: originalLogger.log,
-			info: (msg, meta) => originalLogger.log("info", msg, meta),
-			warn: (msg, meta) => originalLogger.log("warn", msg, meta),
-			error: (msg, meta) => originalLogger.log("error", msg, meta)
-		};
+			return {
+				log: originalLogger.log,
+				info: (msg, meta) => originalLogger.log("info", msg, meta),
+				warn: (msg, meta) => originalLogger.log("warn", msg, meta),
+				error: (msg, meta) => originalLogger.log("error", msg, meta)
+			};
 		})();
 
 		// Example usage
@@ -332,89 +362,89 @@
 	</script>
 
 	<script>
-    // Initialize Firebase
-	// It's fine to make this information public, as it
-	// acts as an identifier for the project.
-	const firebaseConfig = {
-		apiKey: "AIzaSyDHoK-BIvYRO-zzhsUZngj0tgxx9eq_yhg",
-		authDomain: "outages-85d7f.firebaseapp.com",
-		projectId: "outages-85d7f",
-		storageBucket: "outages-85d7f.firebasestorage.app",
-		messagingSenderId: "407900343819",
-		appId: "1:407900343819:web:5bb41148df166cfd63c10e",
-		measurementId: "G-YQ1MGNCBYZ"
-	};
+		// Initialize Firebase
+		// It's fine to make this information public, as it
+		// acts as an identifier for the project.
+		const firebaseConfig = {
+			apiKey: "AIzaSyDHoK-BIvYRO-zzhsUZngj0tgxx9eq_yhg",
+			authDomain: "outages-85d7f.firebaseapp.com",
+			projectId: "outages-85d7f",
+			storageBucket: "outages-85d7f.firebasestorage.app",
+			messagingSenderId: "407900343819",
+			appId: "1:407900343819:web:5bb41148df166cfd63c10e",
+			measurementId: "G-YQ1MGNCBYZ"
+		};
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+		firebase.initializeApp(firebaseConfig);
+		const auth = firebase.auth();
 
-	auth.onAuthStateChanged((user) => {
-		if (user) {
-			// User is signed in → show menu page
-			document.getElementById("login-page").classList.remove("active");
-			document.getElementById("menu-page").classList.add("active");
+		auth.onAuthStateChanged((user) => {
+			if (user) {
+				// User is signed in → show menu page
+				document.getElementById("login-page").classList.remove("active");
+				document.getElementById("menu-page").classList.add("active");
 
-			// Show welcome message
-			const welcomeEl = document.getElementById("welcome-message");
-			const nameOrEmail = user.displayName || user.email || "User";
-			welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
-			
-			logger.info("User logged in", { user: nameOrEmail });
-		} else {
-			// No user → show login page
-			document.getElementById("menu-page").classList.remove("active");
-			document.getElementById("login-page").classList.add("active");
+				// Show welcome message
+				const welcomeEl = document.getElementById("welcome-message");
+				const nameOrEmail = user.displayName || user.email || "User";
+				welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
 
-			logger.info("No user logged in");
+				logger.info("User logged in", { user: nameOrEmail });
+			} else {
+				// No user → show login page
+				document.getElementById("menu-page").classList.remove("active");
+				document.getElementById("login-page").classList.add("active");
+
+				logger.info("No user logged in");
+			}
+		});
+
+		// EMAIL AUTHENTICATION
+		function sendEmailLink() {
+			const email = document.getElementById('email').value;
+			const actionCodeSettings = {
+				url: window.location.href, // Return to this page
+				handleCodeInApp: true,
+			};
+
+			auth.sendSignInLinkToEmail(email, actionCodeSettings)
+				.then(() => {
+					window.localStorage.setItem('emailForSignIn', email);
+					alert('Check your email for the verification link!');
+				})
+				.catch((error) => {
+					alert('Error: ' + error.message);
+				});
 		}
-	});
 
-    // EMAIL AUTHENTICATION
-    function sendEmailLink() {
-      const email = document.getElementById('email').value;
-      const actionCodeSettings = {
-        url: window.location.href, // Return to this page
-        handleCodeInApp: true,
-      };
+		// Check if user is returning from email link
+		/*if (auth.isSignInWithEmailLink(window.location.href)) {
+		  let email = window.localStorage.getItem('emailForSignIn');
+		  if (!email) {
+			email = window.prompt('Please provide your email for confirmation');
+		  }
+		  
+		  auth.signInWithEmailLink(email, window.location.href)
+			.then((result) => {
+			  window.localStorage.removeItem('emailForSignIn');
+			  alert('Successfully signed in! User ID: ' + result.user.uid);
+			})
+			.catch((error) => {
+			  alert('Error: ' + error.message);
+			});
+		}*/
 
-      auth.sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-          window.localStorage.setItem('emailForSignIn', email);
-          alert('Check your email for the verification link!');
-        })
-        .catch((error) => {
-          alert('Error: ' + error.message);
-        });
-    }
+		function verifyOTP() {
+			const code = document.getElementById('otp').value;
 
-    // Check if user is returning from email link
-    /*if (auth.isSignInWithEmailLink(window.location.href)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      if (!email) {
-        email = window.prompt('Please provide your email for confirmation');
-      }
-      
-      auth.signInWithEmailLink(email, window.location.href)
-        .then((result) => {
-          window.localStorage.removeItem('emailForSignIn');
-          alert('Successfully signed in! User ID: ' + result.user.uid);
-        })
-        .catch((error) => {
-          alert('Error: ' + error.message);
-        });
-    }*/
-
-    function verifyOTP() {
-      const code = document.getElementById('otp').value;
-      
-      confirmationResult.confirm(code)
-        .then((result) => {
-          alert('Phone verified! User ID: ' + result.user.uid);
-        })
-        .catch((error) => {
-          alert('Invalid code: ' + error.message);
-        });
-    }
-  </script>
+			confirmationResult.confirm(code)
+				.then((result) => {
+					alert('Phone verified! User ID: ' + result.user.uid);
+				})
+				.catch((error) => {
+					alert('Invalid code: ' + error.message);
+				});
+		}
+	</script>
 </body>
 </html>

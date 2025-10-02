@@ -1,8 +1,8 @@
 // Main application initialization
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	console.log('Initialized');
-	
+
 	// Initialize event listeners
 	initializeEventListeners();
 
@@ -34,29 +34,29 @@ function loadCoinMarketTable() {
 			'x_cg_demo_api_key': config.coinGecko.apiKey
 		}
 	})
-	.then(async (res) => {
-        if (!res.ok) {
-            const errorText = await res.text(); // capture error response body
-            console.error('Error response from CoinGecko:', errorText);
-			throw new Error(`HTTP ${res.status} ${res.statusText}: ${errorText}`);
-        }
-        return res.json();
-    })
-	.then((data) => {
-        if (!Array.isArray(data)) {
-            throw new Error(`Unexpected response format: ${JSON.stringify(data).slice(0, 200)}...`);
-        }
+		.then(async (res) => {
+			if (!res.ok) {
+				const errorText = await res.text(); // capture error response body
+				console.error('Error response from CoinGecko:', errorText);
+				throw new Error(`HTTP ${res.status} ${res.statusText}: ${errorText}`);
+			}
+			return res.json();
+		})
+		.then((data) => {
+			if (!Array.isArray(data)) {
+				throw new Error(`Unexpected response format: ${JSON.stringify(data).slice(0, 200)}...`);
+			}
 
-        coinTableData = data;
-        logger.info(`Received crypto table data: ${data.length}`);
-        renderCoinTable();
-    })
-	.catch((error) => {
-		console.error('Error fetching crypto table data:', error);
-		logger.error(`Failed to load coin data: ${error}`);
+			coinTableData = data;
+			logger.info(`Received crypto table data: ${data.length}`);
+			renderCoinTable();
+		})
+		.catch((error) => {
+			console.error('Error fetching crypto table data:', error);
+			logger.error(`Failed to load coin data: ${error}`);
 
-		const table = document.getElementById('coin-market-table');
-		table.innerHTML = `
+			const table = document.getElementById('coin-market-table');
+			table.innerHTML = `
 			<thead>
 				<tr>
 					<th>Coin</th>
@@ -71,7 +71,7 @@ function loadCoinMarketTable() {
 				</tr>
 			</tbody>
 		`;
-	});
+		});
 }
 
 function renderCoinTable() {
@@ -123,7 +123,7 @@ function renderCoinTable() {
 		let priceChangeElement = '';
 		if (coin.price_change_24h != null && coin.price_change_percentage_24h != null) {
 			priceChangeElement = `<td class="${changeClass}">
-				${coin.price_change_24h.toLocaleString('en-US', {style:'currency',currency:'USD', minimumFractionDigits: 2, maximumFractionDigits: 2})}
+				${coin.price_change_24h.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 				(${coin.price_change_percentage_24h?.toFixed(2) ?? '0.00'}%)
 			</td>`;
 		}
@@ -136,12 +136,12 @@ function renderCoinTable() {
 						<span class="coin-name">${coin.name} (${coin.symbol.toUpperCase()})</span>
 					</div>
 				</td>
-				<td>${coin.current_price != null ? coin.current_price.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
+				<td>${coin.current_price != null ? coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : 'N/A'}</td>
 				<td>${formatLargeNumber(coin.market_cap)}</td>
 				<td>${coin.market_cap_rank != null ? coin.market_cap_rank : 'N/A'}</td>
 				<td>${formatLargeNumber(coin.total_volume)}</td>
-				<td>${coin.high_24h != null ? coin.high_24h.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
-				<td>${coin.low_24h != null? coin.low_24h.toLocaleString('en-US', {style:'currency',currency:'USD'}) : 'N/A'}</td>
+				<td>${coin.high_24h != null ? coin.high_24h.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : 'N/A'}</td>
+				<td>${coin.low_24h != null ? coin.low_24h.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : 'N/A'}</td>
 				${priceChangeElement}
 				<td>${formatLargeNumber(coin.circulating_supply)}</td>
 				<td>${formatLargeNumber(coin.max_supply)}</td>
@@ -173,7 +173,7 @@ function initializeEventListeners() {
 	// Add Enter key support for verification modal
 	const verificationInput = document.getElementById('verification-code');
 	if (verificationInput) {
-		verificationInput.addEventListener('keypress', function(e) {
+		verificationInput.addEventListener('keypress', function (e) {
 			if (e.key === 'Enter') {
 				verifyIdentity();
 			}
@@ -183,7 +183,7 @@ function initializeEventListeners() {
 	// Add Enter key support for login form
 	const loginInputs = document.querySelectorAll('#login-username, #login-password');
 	loginInputs.forEach(input => {
-		input.addEventListener('keypress', function(e) {
+		input.addEventListener('keypress', function (e) {
 			if (e.key === 'Enter') {
 				logger.info(`Initiate login for user: ${document.getElementById('login-username').value}`);
 				loginUserV2();
@@ -289,7 +289,7 @@ function validateField(event) {
 	const value = input.value;
 
 	window.logger.info(`Validating input field: ${input.id}...`);
-	
+
 	// Basic validation logic
 	if (input.required && !value) {
 		window.logger.error(`Validation failed: ${input.id} is required`);

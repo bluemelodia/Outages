@@ -3,13 +3,13 @@ function switchAuthTab(tabName) {
 	// Update tab buttons
 	document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
 	event.target.classList.add('active');
-	
+
 	// Update tab content
 	document.querySelectorAll('.auth-tab-content').forEach(content => {
 		content.classList.remove('active');
 	});
 	document.getElementById(tabName + '-tab-content').classList.add('active');
-	
+
 	// Clear error messages
 	document.querySelectorAll('.error-message').forEach(el => {
 		el.classList.remove('active');
@@ -18,8 +18,8 @@ function switchAuthTab(tabName) {
 }
 
 function loginUserV2() {
-  	const email = document.getElementById("login-username").value;
-  	const password = document.getElementById("login-password").value;
+	const email = document.getElementById("login-username").value;
+	const password = document.getElementById("login-password").value;
 
 	// Prevent empty fields
 	if (!email || !password) {
@@ -37,13 +37,13 @@ function loginUserV2() {
 
 	auth.signInWithEmailAndPassword(email, password)
 		.then((userCredential) => {
-		const user = userCredential.user;
-		console.log("Logged in as:", user.email);
-		navigateTo("menu"); // ✅ show menu after login
+			const user = userCredential.user;
+			console.log("Logged in as:", user.email);
+			navigateTo("menu"); // ✅ show menu after login
 
-		// Show welcome message
-		const welcomeMessage = document.getElementById("welcome-message");
-		welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
+			// Show welcome message
+			const welcomeMessage = document.getElementById("welcome-message");
+			welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
 		})
 		.catch((error) => {
 			showAuthError('login-error', error.message);
@@ -103,7 +103,7 @@ async function sendOneTimeEmailPasscode() {
 	console.debug(`Action code settings:`, actionCodeSettings);
 
 	const user = auth.currentUser;
-	
+
 	try {
 		let userEmail = ""
 		if (user) {
@@ -122,40 +122,40 @@ async function sendOneTimeEmailPasscode() {
 }
 
 async function handleEmailLinkCompletion() {
-  const auth = getAuth();
-  if (!isSignInWithEmailLink(auth, window.location.href)) {
-	console.log("Not an email link for sign-in or re-authentication.");
-	return;
-  }
-
-  let email = window.localStorage.getItem('emailForSignIn');
-  if (!email) {
-	email = window.prompt('Please provide your email for confirmation');
-	if (!email) {
-	  alert('Email is required to complete re-authentication.');
-	  return;
+	const auth = getAuth();
+	if (!isSignInWithEmailLink(auth, window.location.href)) {
+		console.log("Not an email link for sign-in or re-authentication.");
+		return;
 	}
-  }
 
-  try {
-	const credential = EmailAuthProvider.credentialWithLink(email, window.location.href);
+	let email = window.localStorage.getItem('emailForSignIn');
+	if (!email) {
+		email = window.prompt('Please provide your email for confirmation');
+		if (!email) {
+			alert('Email is required to complete re-authentication.');
+			return;
+		}
+	}
 
-	// Re-authenticate the current user with this credential
-	await auth.currentUser.reauthenticateWithCredential(credential);
+	try {
+		const credential = EmailAuthProvider.credentialWithLink(email, window.location.href);
 
-	window.localStorage.removeItem('emailForSignIn');
-	console.log('User successfully re-authenticated via email link!');
-	alert('You have successfully re-authenticated. You can now access the sensitive page.');
+		// Re-authenticate the current user with this credential
+		await auth.currentUser.reauthenticateWithCredential(credential);
 
-	// No need to store auth_time in sessionStorage here anymore.
-	// The next time we check for sensitive access, we'll fetch it live.
+		window.localStorage.removeItem('emailForSignIn');
+		console.log('User successfully re-authenticated via email link!');
+		alert('You have successfully re-authenticated. You can now access the sensitive page.');
 
-	// Immediately try to display sensitive content, as re-auth is fresh
-	displaySensitiveContent();
+		// No need to store auth_time in sessionStorage here anymore.
+		// The next time we check for sensitive access, we'll fetch it live.
 
-  } catch (error) {
-	console.error('Error during email link re-authentication:', error);
-	alert('Failed to re-authenticate. The link might be invalid or expired. Please try again.');
-	// Optionally, redirect to a different page or show an error state
-  }
+		// Immediately try to display sensitive content, as re-auth is fresh
+		displaySensitiveContent();
+
+	} catch (error) {
+		console.error('Error during email link re-authentication:', error);
+		alert('Failed to re-authenticate. The link might be invalid or expired. Please try again.');
+		// Optionally, redirect to a different page or show an error state
+	}
 }
