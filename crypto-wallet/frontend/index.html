@@ -30,12 +30,12 @@
 					
 					<div class="form-group">
 						<label for="login-username">E-mail</label>
-						<input type="text" id="login-username" autocomplete="username">
+						<input type="text" id="login-username" required autocomplete="username">
 					</div>
 					<div class="form-group">
 						<label for="login-password">Password</label>
 						<div class="password-wrapper">
-							<input type="password" id="login-password" autocomplete="current-password">
+							<input type="password" id="login-password" required autocomplete="current-password">
 							<span class="toggle-password" onclick="togglePassword('login-password', this)">
 								<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0s-3.5 7-10.5 7S2.5 12 2.5 12 6 5 12 5s9.5 7 9.5 7z"/>
@@ -46,7 +46,7 @@
 							</span>
 						</div>
 					</div>
-					<button class="btn btn-primary" onclick="loginUser()">Login</button>
+					<button class="btn btn-primary" onclick="loginUserV2()">Login</button>
 				</div>
 
 				<!-- Register Tab Content -->
@@ -223,6 +223,35 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Branded alerts -->
+	<div id="custom-alert" class="modal">
+	<div class="modal-content">
+		<h3>Alert</h3>
+		<p id="custom-alert-message"></p>
+		<button id="custom-alert-ok" class="btn btn-primary">OK</button>
+	</div>
+	</div>
+
+	<script>
+	(function() {
+	const modal = document.getElementById("custom-alert");
+	const messageEl = document.getElementById("custom-alert-message");
+	const okBtn = document.getElementById("custom-alert-ok");
+
+	// Override alert
+	window.alert = function(msg) {
+		messageEl.textContent = msg;
+		modal.classList.add("active");
+		return new Promise(resolve => {
+		okBtn.onclick = () => {
+			modal.classList.remove("active");
+			resolve();
+		};
+		});
+	};
+	})();
+	</script>
 
 	<script src="./scripts/keys.js"></script>
 	<script src="./scripts/config.js"></script>

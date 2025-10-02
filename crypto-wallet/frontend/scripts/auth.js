@@ -17,23 +17,37 @@ function switchAuthTab(tabName) {
 	});
 }
 
-function loginUser() {
-  const email = document.getElementById("login-username").value;
-  const password = document.getElementById("login-password").value;
+function loginUserV2() {
+  	const email = document.getElementById("login-username").value;
+  	const password = document.getElementById("login-password").value;
 
-  auth.signInWithEmailAndPassword(email, password)
-	.then((userCredential) => {
-	  const user = userCredential.user;
-	  console.log("Logged in as:", user.email);
-	  navigateTo("menu"); // ✅ show menu after login
+	// Prevent empty fields
+	if (!email || !password) {
+		showAuthError('login-error', "Please enter both username and password.");
+		window.logger.warn("Empty login attempt", { username });
+		return;
+	}
 
-	  // Show welcome message
-	  const welcomeMessage = document.getElementById("welcome-message");
-	  welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
-	})
-	.catch((error) => {
-		showAuthError('login-error', error.message);
-	});
+	// Password length validation
+	if (password.length <= 3) {
+		showAuthError('login-error', "Password must be at least 3 characters long.");
+		window.logger.warn("Weak password attempt", { username });
+		return;
+	}
+
+	auth.signInWithEmailAndPassword(email, password)
+		.then((userCredential) => {
+		const user = userCredential.user;
+		console.log("Logged in as:", user.email);
+		navigateTo("menu"); // ✅ show menu after login
+
+		// Show welcome message
+		const welcomeMessage = document.getElementById("welcome-message");
+		welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
+		})
+		.catch((error) => {
+			showAuthError('login-error', error.message);
+		});
 }
 
 // Helper to show errors

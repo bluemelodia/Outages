@@ -186,7 +186,7 @@ function initializeEventListeners() {
 		input.addEventListener('keypress', function(e) {
 			if (e.key === 'Enter') {
 				logger.info(`Initiate login for user: ${document.getElementById('login-username').value}`);
-				loginUser();
+				loginUserV2();
 			}
 		});
 	});
@@ -211,15 +211,19 @@ function loginUser() {
 	const password = document.getElementById("login-password").value.trim();
 	const errorEl = document.getElementById("login-error");
 
-	// Allowed users
-	const allowedUsers = Array.from({ length: 8 }, (_, i) => `test_user${i + 1}`);
-	const validPassword = "crypto";
-
-	// Validation
-	if (!allowedUsers.includes(username) || password !== validPassword) {
-		errorEl.textContent = "❌ Invalid username or password.";
+	// Prevent empty fields
+	if (!username || !password) {
+		errorEl.textContent = "⚠️ Please enter both username and password.";
 		errorEl.classList.add("active");
-		window.logger.warn("Failed login attempt", { username });
+		window.logger.warn("Empty login attempt", { username });
+		return;
+	}
+
+	// Password length validation
+	if (password.length <= 3) {
+		errorEl.textContent = "⚠️ Password must be at least 3 characters long.";
+		errorEl.classList.add("active");
+		window.logger.warn("Weak password attempt", { username });
 		return;
 	}
 
