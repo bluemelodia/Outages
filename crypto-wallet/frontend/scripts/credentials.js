@@ -60,26 +60,45 @@ async function processChangeCredentials() {
 
 	try {
 		spinner.classList.add('active');
-		
-		const result = await apiCall('/change-credentials', {
-			method: 'PUT',
-			body: JSON.stringify({
-				currentPassword,
-				newPassword
-			})
-		});
-
-		if (result.success) {
-			alert('Credentials updated successfully!');
-			clearCredentialsForm();
-			navigateTo('menu');
-		} else {
-			showError('credentials', result.message || 'Failed to update credentials');
-		}
+		changePassword(newPassword);
 	} catch (error) {
 		showError('credentials', 'Failed to update credentials. Please try again.');
+		console.error("Error details:", error);
 	} finally {
 		spinner.classList.remove('active');
+	}
+}
+
+function changePassword(newPassword) {
+	const user = auth.currentUser;
+
+	if (user) {
+		user.updatePassword(newPassword)
+			.then(() => {
+				// Password updated successfully!
+				console.log("Password updated!");
+				alert("Your password has been changed successfully.");
+			})
+			.catch((error) => {
+				// An error occurred.
+				console.error("Error updating password:", error.code, error.message);
+
+				if (error.code === "auth/requires-recent-login") {
+					// The user's sign-in session is too old.
+					// Prompt the user to re-authenticate before trying again.
+					alert("For security, please sign in again to change your password.");
+					// Redirect to a re-authentication flow or show a modal.
+					logoutUser();
+				} else if (error.code === "auth/weak-password") {
+					alert("The new password is too weak. Please choose a stronger one.");
+				} else {
+					alert("Failed to update password. Please try again.");
+					console.error("Error details:", error);
+				}
+			});
+	} else {
+		console.log("No user is signed in.");
+		alert("You must be signed in to change your password.");
 	}
 }
 
