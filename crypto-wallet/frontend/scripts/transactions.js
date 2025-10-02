@@ -156,8 +156,7 @@ function loadTransactions() {
 	const errorEl = document.getElementById('transactions-error');
 
 	// Clear previous
-	container.innerHTML = '';
-	errorEl.classList.remove('active');
+	container.innerHTML = 'Loading...';
 	spinner.classList.add('active');
 
 	setTimeout(() => {
