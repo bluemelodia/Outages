@@ -114,10 +114,10 @@ async function sendOneTimeEmailPasscode() {
 
 		await firebase.auth().sendSignInLinkToEmail(userEmail, actionCodeSettings);
 		window.localStorage.setItem('emailForSignIn', userEmail); // Store email for later verification
-		alert('A one-time access link has been sent to your email. Check your inbox!');
+		alert('Verification Sent', 'A one-time access link has been sent to your email. Check your inbox!');
 	} catch (error) {
 		console.error('Error sending email link:', error);
-		alert('Failed to send access link. Please try again.');
+		alert('Verification Failed', 'Failed to send access link. Please try again.');
 	}
 }
 
@@ -132,7 +132,7 @@ async function handleEmailLinkCompletion() {
 	if (!email) {
 		email = window.prompt('Please provide your email for confirmation');
 		if (!email) {
-			alert('Email is required to complete re-authentication.');
+			alert('Missing Email', 'Email is required to complete re-authentication.');
 			return;
 		}
 	}
@@ -145,7 +145,7 @@ async function handleEmailLinkCompletion() {
 
 		window.localStorage.removeItem('emailForSignIn');
 		console.log('User successfully re-authenticated via email link!');
-		alert('You have successfully re-authenticated. You can now access the sensitive page.');
+		alert('Authentication Success', 'You have successfully re-authenticated. You can now access the sensitive page.');
 
 		// No need to store auth_time in sessionStorage here anymore.
 		// The next time we check for sensitive access, we'll fetch it live.
@@ -155,7 +155,7 @@ async function handleEmailLinkCompletion() {
 
 	} catch (error) {
 		console.error('Error during email link re-authentication:', error);
-		alert('Failed to re-authenticate. The link might be invalid or expired. Please try again.');
+		alert('Authentication Error', 'Failed to re-authenticate. The link might be invalid or expired. Please try again.');
 		// Optionally, redirect to a different page or show an error state
 	}
 }

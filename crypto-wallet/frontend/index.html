@@ -243,7 +243,7 @@
 	<!-- Branded alerts -->
 	<div id="custom-alert" class="modal">
 		<div class="modal-content">
-			<h3>Alert</h3>
+			<h3 id="custom-alert-title">Alert</h3>
 			<p id="custom-alert-message"></p>
 			<button id="custom-alert-ok" class="btn btn-primary">OK</button>
 		</div>
@@ -257,15 +257,20 @@
 			const okBtn = document.getElementById("custom-alert-ok");
 
 			// Override alert
-			window.alert = function (input) {
-				let title = "Alert";
+			window.alert = function (inputTitle, inputMessage) {
+				let title = "";
 				let message = "";
 
-				if (typeof input === "string") {
-					message = input; // simple string → message only
-				} else if (typeof input === "object" && input !== null) {
-					title = input.title || title;
-					message = input.message || "";
+				if (typeof inputTitle === "string") {
+					title = inputTitle;
+				} else {
+					title = "Alert"
+				}
+
+				if (typeof inputMessage === "string") {
+					message = inputMessage;
+				} else {
+					message = ""
 				}
 
 				titleEl.textContent = title;
@@ -410,41 +415,13 @@
 			auth.sendSignInLinkToEmail(email, actionCodeSettings)
 				.then(() => {
 					window.localStorage.setItem('emailForSignIn', email);
-					alert('Check your email for the verification link!');
+					alert('Verification Sent', 'Check your email for the verification link!');
 				})
 				.catch((error) => {
-					alert('Error: ' + error.message);
-				});
-		}
-
-		// Check if user is returning from email link
-		/*if (auth.isSignInWithEmailLink(window.location.href)) {
-		  let email = window.localStorage.getItem('emailForSignIn');
-		  if (!email) {
-			email = window.prompt('Please provide your email for confirmation');
-		  }
-		  
-		  auth.signInWithEmailLink(email, window.location.href)
-			.then((result) => {
-			  window.localStorage.removeItem('emailForSignIn');
-			  alert('Successfully signed in! User ID: ' + result.user.uid);
-			})
-			.catch((error) => {
-			  alert('Error: ' + error.message);
-			});
-		}*/
-
-		function verifyOTP() {
-			const code = document.getElementById('otp').value;
-
-			confirmationResult.confirm(code)
-				.then((result) => {
-					alert('Phone verified! User ID: ' + result.user.uid);
-				})
-				.catch((error) => {
-					alert('Invalid code: ' + error.message);
+					alert('Verification Error', 'Error: ' + error.message);
 				});
 		}
 	</script>
 </body>
+
 </html>

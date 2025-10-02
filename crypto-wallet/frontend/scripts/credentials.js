@@ -77,7 +77,7 @@ function changePassword(newPassword) {
 			.then(() => {
 				// Password updated successfully!
 				console.log("Password updated!");
-				alert("Your password has been changed successfully.");
+				alert("Update Success", "Your password has been changed successfully.");
 			})
 			.catch((error) => {
 				// An error occurred.
@@ -86,19 +86,19 @@ function changePassword(newPassword) {
 				if (error.code === "auth/requires-recent-login") {
 					// The user's sign-in session is too old.
 					// Prompt the user to re-authenticate before trying again.
-					alert("For security, please sign in again to change your password.");
+					alert("Re-login Needed", "For security, please sign in again to change your password.");
 					// Redirect to a re-authentication flow or show a modal.
 					logoutUser();
 				} else if (error.code === "auth/weak-password") {
-					alert("The new password is too weak. Please choose a stronger one.");
+					alert("Invalid Password", "The new password is too weak. Please choose a stronger one.");
 				} else {
-					alert("Failed to update password. Please try again.");
+					alert("Update Failed", "Failed to update password. Please try again.");
 					console.error("Error details:", error);
 				}
 			});
 	} else {
 		console.log("No user is signed in.");
-		alert("You must be signed in to change your password.");
+		alert("Login Required", "You must be signed in to change your password.");
 	}
 }
 
