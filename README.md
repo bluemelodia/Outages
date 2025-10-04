@@ -1,27 +1,9 @@
 # Outages
 
-Note: For the purposes of the workshop, the codebase was <b>intentionally</b> created to be sloppy / disorganized to reflect real-life scenarios such as:
+## Note
+There is a LOT of tech debt in this code base. The developers and product owners who originally worked on the project have since left the team, and the original requirements document is old. Try to optimize the code and replace tactical fixes with maintainable code when you can, but production stability comes first.
 
-    - the code base is old and has accumulated significant amounts of tech debt
-    	- code was hastily added to meet deadlines
-    	- tactical fixes were added to minimize production impact, but was never replaced by a strategic fix
-    	- old / unused code is never cleaned up
-    	- duplicate code in multiple places
-    - the code is not scalable / reusable
-    	- code is tightly coupled to third-party libraries / dependencies
-    	- code isn't modular
-    - coding best practices are implemented inconsistently (or not at all)
-    	- poor/inconsistent code organization
-    	- poor/inconsistent naming of functions and variables
-    	- poor/inconsistent logging
-    - developers aren't implementing good security practices
-    	- API keys are hardcoded on the front-end
-    	- UI directly presents backend errors as-is
-    - etc.
-
-All of these factors complicate efforts to debug issues in prod.
-
-# Background
+## Background
 
 CORS (Cross-Origin Resource Sharing) is a security feature built into web browsers. It prevents a website from making requests to a different domain (origin) unless that server explicitly allows it. For example, if your app is running at http://localhost:3000 and tries to fetch data from https://logs-prod-036.grafana.net, the browser will block the request unless Grafana allows your origin through CORS headers.
 

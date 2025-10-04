@@ -1,3 +1,4 @@
+import { setupAlerts } from "./alerts.js";
 import { setupFirebase } from "./auth.js";
 import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
@@ -6,6 +7,7 @@ import { loadCoinMarketTable } from "./market-table.js";
 function initializeApp() {
 	console.log('Initializing app...');
 	initializeEventListeners();
+	setupAlerts();
 	setupLoginForm();
 	setupFirebase();
 	setupLogger();

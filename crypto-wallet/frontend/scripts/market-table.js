@@ -37,12 +37,6 @@ function loadCoinMarketTable() {
 			const table = document.getElementById('coin-market-table');
 			table.innerHTML = `
 			<thead>
-				<tr>
-					<th>Coin</th>
-					<th>Price</th>
-					<th>Rank</th>
-					<th>24h Change</th>
-				</tr>
 			</thead>
 			<tbody>
 				<tr>
