@@ -1,118 +1,4 @@
-const cryptoTypes = ['BTC', 'ETH', 'ADA', 'SOL', 'DOT', 'MATIC', 'LINK', 'UNI'];
-const cryptoNames = {
-	'BTC': 'Bitcoin',
-	'ETH': 'Ethereum',
-	'ADA': 'Cardano',
-	'SOL': 'Solana',
-	'DOT': 'Polkadot',
-	'MATIC': 'Polygon',
-	'LINK': 'Chainlink',
-	'UNI': 'Uniswap'
-};
-
-const transactionTypes = ['send', 'receive', 'exchange'];
-const addresses = [
-	'0x742d35Cc6634C0532925a3b844Bc9e7595f0bEe2',
-	'0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE',
-	'0xD551234Ae421e3BCBA99A0Da6d736074f22192FF',
-	'0x8e23Ee67d1332aD560396262C48ffbB273f626a1',
-	'0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed'
-];
-
-// Generate random transaction
-function generateRandomTransaction(index) {
-	const type = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
-	const crypto = cryptoTypes[Math.floor(Math.random() * cryptoTypes.length)];
-	const isPositive = type === 'receive';
-
-	// Generate amount
-	let amount;
-	if (crypto === 'BTC') {
-		amount = (Math.random() * 0.5).toFixed(8);
-	} else if (crypto === 'ETH') {
-		amount = (Math.random() * 5).toFixed(6);
-	} else {
-		amount = (Math.random() * 1000).toFixed(2);
-	}
-
-	// Date within last 30 days
-	const daysAgo = Math.floor(Math.random() * 30);
-	const date = new Date();
-	date.setDate(date.getDate() - daysAgo);
-
-	// Random address
-	const address = addresses[Math.floor(Math.random() * addresses.length)] || "0x000...";
-
-	// Hash
-	const hash = '0x' + Array.from({ length: 64 }, () =>
-		Math.floor(Math.random() * 16).toString(16)
-	).join('');
-
-	// Prices
-	const prices = {
-		'BTC': 43000,
-		'ETH': 2300,
-		'ADA': 0.45,
-		'SOL': 95,
-		'DOT': 6.5,
-		'MATIC': 0.85,
-		'LINK': 14.5,
-		'UNI': 6.2
-	};
-
-	const price = prices[crypto] || 0;
-	const usdValue = (parseFloat(amount) * price).toFixed(2);
-
-	return {
-		id: `tx-${Date.now()}-${index}`,
-		type: type,
-		crypto: crypto,
-		cryptoName: cryptoNames[crypto] || crypto,
-		amount: amount,
-		usdValue: usdValue,
-		address: type === 'receive' ? 'From: ' + address : 'To: ' + address,
-		date: date,
-		hash: hash,
-		status: Math.random() > 0.1 ? 'completed' : 'pending',
-		isPositive: isPositive
-	};
-}
-
-// Generate multiple transactions
-function generateTransactionList(count = 15) {
-	const transactions = [];
-	for (let i = 0; i < count; i++) {
-		transactions.push(generateRandomTransaction(i));
-	}
-	transactions.sort((a, b) => b.date - a.date);
-	return transactions;
-}
-
-// Format date
-function formatTransactionDate(date) {
-	const now = new Date();
-	const diff = now - date;
-	const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-	if (days === 0) {
-		const hours = Math.floor(diff / (1000 * 60 * 60));
-		if (hours === 0) {
-			const minutes = Math.floor(diff / (1000 * 60));
-			return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-		}
-		return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-	} else if (days === 1) {
-		return 'Yesterday';
-	} else if (days < 7) {
-		return `${days} days ago`;
-	} else {
-		return date.toLocaleDateString('en-US', {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric'
-		});
-	}
-}
+import { logger } from './logger';
 
 // Render one transaction
 function renderTransaction(transaction) {
@@ -150,7 +36,7 @@ function renderTransaction(transaction) {
 }
 
 // Load and display transactions
-function loadTransactions() {
+async function loadTransactions() {
 	const container = document.getElementById('transactions-list');
 	const spinner = document.getElementById('transactions-spinner');
 	const errorEl = document.getElementById('transactions-error');
@@ -159,48 +45,67 @@ function loadTransactions() {
 	container.innerHTML = 'Loading...';
 	spinner.classList.add('active');
 
-	setTimeout(() => {
-		try {
-			const transactions = generateTransactionList(15);
+	const user = auth.currentUser;
 
+	if (user) {
+		try {
+			let transactions = doLoadTransactions();
 			if (transactions.length === 0) {
 				container.innerHTML = `<div>📭 No transactions yet</div>`;
 			} else {
+				console.debug("Fetched transactions:", transactions);
 				container.innerHTML = transactions.map(tx => renderTransaction(tx)).join('');
 			}
 
-			window.logger?.info('Transactions loaded', { count: transactions.length });
+			logger?.info('Transactions loaded', { count: transactions.length });
 		} catch (error) {
-			window.logger?.error('Failed to load transactions', { error: error.message });
+			console.error('Error loading transactions:', error);
+			logger?.error('Failed to load transactions', { error: error.message });
 			errorEl.textContent = 'Failed to load transactions. Please try again.';
 			errorEl.classList.add('active');
 		} finally {
 			spinner.classList.remove('active');
 		}
-	}, 800);
+	} else {
+		alert("Not Signed In", "You must be signed in to view transactions.");
+		console.log("No user signed in. Cannot fetch transactions.");
+		logoutUser();
+	}
 }
 
-// Add new transaction
-function addNewTransaction(crypto, amount, recipientAddress) {
-	const newTransaction = {
-		id: `tx-${Date.now()}`,
-		type: 'send',
-		crypto: crypto,
-		cryptoName: cryptoNames[crypto] || crypto,
-		amount: amount.toString(),
-		usdValue: '0.00',
-		address: 'To: ' + recipientAddress,
-		date: new Date(),
-		hash: '0x' + Array.from({ length: 64 }, () =>
-			Math.floor(Math.random() * 16).toString(16)
-		).join(''),
-		status: 'pending',
-		isPositive: false
-	};
+async function doLoadTransactions() {
+	// Get the Firestore service instance
+	const db = firebase.firestore();
 
-	// Directly prepend it to DOM
-	const container = document.getElementById('transactions-list');
-	container.insertAdjacentHTML('afterbegin', renderTransaction(newTransaction));
+	const transactionsCollectionRef = db.collection("transactions");
 
-	window.logger?.info('New transaction added', { crypto, amount });
+	try {
+		// Get all documents from the 'transactions' data store.
+		const querySnapshot = await transactionsCollectionRef.get();
+
+		const transactions = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(doc.id, " => ", doc.data());
+
+			// Add the document data (and its ID) to our transactions array
+			transactions.push({
+				id: doc.id,
+				...doc.data()
+			});
+		});
+
+		console.log("All transactions:", transactions);
+		return transactions;
+	} catch (error) {
+		console.error("Error getting documents: ", error);
+		// Important: Handle 'permission denied' errors here if the user isn't authenticated
+		if (error.code === 'permission-denied') {
+			alert("Cannot Load Transactions", "Permission denied. Please ensure you are signed in and have access to view transactions.");
+		} else {
+			alert("Cannot Load Transactions", "Failed to retrieve transactions. Please try again.");
+		}
+
+		throw error; // Re-throw the error after handling
+	}
 }

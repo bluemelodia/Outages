@@ -1,4 +1,5 @@
-// API utility functions
+import { logger } from "./logger";
+
 async function apiCall(endpoint, options = {}) {
 	logger.info(`API Call: ${endpoint}`, { method: options.method || 'GET' });
 
@@ -21,3 +22,7 @@ async function apiCall(endpoint, options = {}) {
 		throw error;
 	}
 }
+
+export {
+	apiCall
+};

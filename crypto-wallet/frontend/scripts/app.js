@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 // Main application initialization
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -5,15 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Initialize event listeners
 	initializeEventListeners();
-
-	// Check if the URL contains Firebase email link parameters
-	// if (auth.isSignInWithEmailLink(window.location.href)) {
-	// 	// The user just clicked an email link and 
-	// 	// returned to the page.
-	// 	handleEmailLinkCompletion();
-	// } else {
-	// 	handleRegularPageLoad();
-	// }
 	handleRegularPageLoad();
 });
 
@@ -186,7 +179,7 @@ function initializeEventListeners() {
 		input.addEventListener('keypress', function (e) {
 			if (e.key === 'Enter') {
 				logger.info(`Initiate login for user: ${document.getElementById('login-username').value}`);
-				loginUserV2();
+				loginUser();
 			}
 		});
 	});
@@ -206,73 +199,6 @@ function initializeApp() {
 	console.log('Initialized');
 }
 
-function loginUser() {
-	const username = document.getElementById("login-username").value.trim();
-	const password = document.getElementById("login-password").value.trim();
-	const errorEl = document.getElementById("login-error");
-
-	// Prevent empty fields
-	if (!username || !password) {
-		errorEl.textContent = "⚠️ Please enter both username and password.";
-		errorEl.classList.add("active");
-		window.logger.warn("Empty login attempt", { username });
-		return;
-	}
-
-	// Password length validation
-	if (password.length <= 3) {
-		errorEl.textContent = "⚠️ Password must be at least 3 characters long.";
-		errorEl.classList.add("active");
-		window.logger.warn("Weak password attempt", { username });
-		return;
-	}
-
-	// Success
-	errorEl.classList.remove("active");
-	errorEl.textContent = "";
-
-	localStorage.setItem("loggedInUser", username);
-	window.logger.info("✅ User logged in", { username });
-
-	// Navigate to menu
-	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-	document.getElementById("menu-page").classList.add("active");
-}
-
-function logoutUser() {
-	auth.signOut()
-		.then(() => {
-			// Hide menu page, show login
-			document.getElementById("menu-page").classList.remove("active");
-			document.getElementById("login-page").classList.add("active");
-
-			logger.info("User logged out");
-		})
-		.catch((error) => {
-			console.error("Logout error:", error);
-			alert("Logout failed: " + error.message);
-		});
-
-	// TODO: with the auth rewrite, some of this code
-	// is no longer needed. Clean it up in an upcoming release.
-
-	// Clear stored user
-	localStorage.removeItem("loggedInUser");
-	window.logger.info("👋 User logged out");
-
-	// Hide all pages
-	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-
-	// Reset login form fields
-	document.getElementById("login-username").value = "";
-	document.getElementById("login-password").value = "";
-
-	// Reset UI
-	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-	document.getElementById("login-page").classList.add("active");
-	console.log("Logout completed.");
-}
-
 // Add this after your initializeApp or inside initializeEventListeners
 document.getElementById('login-username').addEventListener('input', clearLoginError);
 document.getElementById('login-password').addEventListener('input', clearLoginError);
@@ -288,14 +214,14 @@ function validateField(event) {
 	const input = event.target;
 	const value = input.value;
 
-	window.logger.info(`Validating input field: ${input.id}...`);
+	logger.info(`Validating input field: ${input.id}...`);
 
 	// Basic validation logic
 	if (input.required && !value) {
-		window.logger.error(`Validation failed: ${input.id} is required`);
+		logger.error(`Validation failed: ${input.id} is required`);
 		input.style.borderColor = '#dc2626';
 	} else {
-		window.logger.info(`Validation passed: ${input.id}`);
+		logger.info(`Validation passed: ${input.id}`);
 		input.style.borderColor = '#e5e7eb';
 	}
 }

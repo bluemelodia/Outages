@@ -20,7 +20,7 @@
 
 				<div id="login-page" class="page active">
 					<!-- Tabs -->
-					<div class="auth-tabs">
+					<div id="auth-tabs">
 						<div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
 						<div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
 					</div>
@@ -52,7 +52,7 @@
 								</span>
 							</div>
 						</div>
-						<button class="btn btn-primary" onclick="loginUserV2()">Login</button>
+						<button class="btn btn-primary" onclick="loginUser()">Login</button>
 					</div>
 
 					<!-- Register Tab Content -->
@@ -288,140 +288,39 @@
 		})();
 	</script>
 
-	<script src="./scripts/keys.js"></script>
-	<script src="./scripts/config.js"></script>
-	<script src="./scripts/api.js"></script>
-	<script src="./scripts/navigation.js"></script>
-	<script src="./scripts/verification.js"></script>
-	<script src="./scripts/transactions.js"></script>
-	<script src="./scripts/credentials.js"></script>
-	<script src="./scripts/utils.js"></script>
-	<script src="./scripts/app.js"></script>
-	<script src="./scripts/auth.js"></script>
+	<script type="module">
+		import {
+			setupLogger
+		} from "./logger.js"
+		import {
+			createAuthTabs,
+			loginUser,
+			logoutUser,
+			sendEmailLink,
+			setupFirebase,
+			showAuthError,
+			registerUser
+		} from "./auth.js";
+	</script>
+
+	<script type="module" src="./scripts/api.js"></script>
+	<script type="module" src="./scripts/app.js"></script>
+	<script type="module" src="./scripts/auth.js"></script>
+	<script type="module" src="./scripts/config.js"></script>
+	<script type="module" src="./scripts/credentials.js"></script>
+	<script type="module" src="./scripts/formatters.js"></script>
+	<script type="module" src="./scripts/keys.js"></script>
+	<script type="module" src="./scripts/logger.js"></script>
+	<script type="module" src="./scripts/navigation.js"></script>
+	<script type="module" src="./scripts/transactions.js"></script>
+	<script type="module" src="./scripts/utils.js"></script>
+	<script type="module" src="./scripts/verification.js"></script>
 
 	<!-- Firebase CDN Scripts -->
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-
-	<script>
-		// Force logout on page load
-		localStorage.removeItem("loggedInUser");
-
-		// Determine environment
-		const hostname = window.location.hostname;
-		const ENVIRONMENT = (
-			hostname === "localhost" ||
-			hostname === "127.0.0.1" ||
-			hostname.endsWith(".local") ||
-			hostname.startsWith("192.168.") // optional for local network
-		) ? "development" : "production";
-
-		// -------------------- Tiny Logger --------------------
-		window.logger = (() => {
-			const originalLogger = {
-				log: (level, message, metadata = {}) => {
-					// TODO: clean up localStorage usage in the next release.
-					// const user = localStorage.getItem("loggedInUser") || "pre-login";
-					let user = auth.currentUser;
-
-					if (user) {
-						console.log("Current user:", user.email || user.phoneNumber);
-					} else {
-						console.log("No user logged in");
-						user = "pre-login"
-					}
-
-					fetch(`http://localhost:8010/proxy/logs?source=${window.config.logger.sourceID}`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-							"X-API-KEY": window.config.logger.apiKey,
-							"Authorization": `Bearer ${window.config.logger.accessToken}`
-						},
-						body: JSON.stringify({
-							message: `[${user}][${ENVIRONMENT}] ${message}`,
-							metadata: {
-								level,
-								time: new Date().toISOString(),
-								user,
-								...metadata
-							}
-						})
-					})
-						.then(r => r.text())
-						.then(console.log)
-						.catch(err => console.error("Logger error:", err));
-				}
-			};
-
-			return {
-				log: originalLogger.log,
-				info: (msg, meta) => originalLogger.log("info", msg, meta),
-				warn: (msg, meta) => originalLogger.log("warn", msg, meta),
-				error: (msg, meta) => originalLogger.log("error", msg, meta)
-			};
-		})();
-
-		// Example usage
-		window.logger.info("🚀 Logger initialized"); // user: "pre-login" if no one is logged in
-	</script>
-
-	<script>
-		// Initialize Firebase
-		// It's fine to make this information public, as it
-		// acts as an identifier for the project.
-		const firebaseConfig = {
-			apiKey: "AIzaSyDHoK-BIvYRO-zzhsUZngj0tgxx9eq_yhg",
-			authDomain: "outages-85d7f.firebaseapp.com",
-			projectId: "outages-85d7f",
-			storageBucket: "outages-85d7f.firebasestorage.app",
-			messagingSenderId: "407900343819",
-			appId: "1:407900343819:web:5bb41148df166cfd63c10e",
-			measurementId: "G-YQ1MGNCBYZ"
-		};
-
-		firebase.initializeApp(firebaseConfig);
-		const auth = firebase.auth();
-
-		auth.onAuthStateChanged((user) => {
-			if (user) {
-				// User is signed in → show menu page
-				document.getElementById("login-page").classList.remove("active");
-				document.getElementById("menu-page").classList.add("active");
-
-				// Show welcome message
-				const welcomeEl = document.getElementById("welcome-message");
-				const nameOrEmail = user.displayName || user.email || "User";
-				welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
-
-				logger.info("User logged in", { user: nameOrEmail });
-			} else {
-				// No user → show login page
-				document.getElementById("menu-page").classList.remove("active");
-				document.getElementById("login-page").classList.add("active");
-
-				logger.info("No user logged in");
-			}
-		});
-
-		// EMAIL AUTHENTICATION
-		function sendEmailLink() {
-			const email = document.getElementById('email').value;
-			const actionCodeSettings = {
-				url: window.location.href, // Return to this page
-				handleCodeInApp: true,
-			};
-
-			auth.sendSignInLinkToEmail(email, actionCodeSettings)
-				.then(() => {
-					window.localStorage.setItem('emailForSignIn', email);
-					alert('Verification Sent', 'Check your email for the verification link!');
-				})
-				.catch((error) => {
-					alert('Verification Error', 'Error: ' + error.message);
-				});
-		}
-	</script>
+	<!-- Cloud Firestore -->
+	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </body>
 
 </html>

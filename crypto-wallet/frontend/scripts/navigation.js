@@ -24,3 +24,7 @@ function navigateTo(pageId) {
 		document.getElementById('confirm-password-field').innerHTML = '';
 	}
 }
+
+export { 
+	navigateTo
+};

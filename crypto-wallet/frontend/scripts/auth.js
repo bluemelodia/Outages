@@ -1,11 +1,92 @@
-// Tab switching function
+import { logger } from "./logger";
+import { createEnum } from "./utils";
+
+const tabs = createEnum([
+	'login',
+	'register'
+]);
+
+function setupFirebase() {
+	// Initialize Firebase
+	// It's fine to make this information public, as it
+	// acts as an identifier for the project.
+	const firebaseConfig = {
+		apiKey: "AIzaSyDHoK-BIvYRO-zzhsUZngj0tgxx9eq_yhg",
+		authDomain: "outages-85d7f.firebaseapp.com",
+		projectId: "outages-85d7f",
+		storageBucket: "outages-85d7f.firebasestorage.app",
+		messagingSenderId: "407900343819",
+		appId: "1:407900343819:web:5bb41148df166cfd63c10e",
+		measurementId: "G-YQ1MGNCBYZ"
+	};
+
+	firebase.initializeApp(firebaseConfig);
+	const auth = firebase.auth();
+
+	auth.onAuthStateChanged((user) => {
+		if (user) {
+			// User is signed in → show menu page
+			document.getElementById("login-page").classList.remove("active");
+			document.getElementById("menu-page").classList.add("active");
+
+			// Show welcome message
+			const welcomeEl = document.getElementById("welcome-message");
+			const nameOrEmail = user.displayName || user.email || "User";
+			welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
+
+			logger.info("User logged in", { user: nameOrEmail });
+		} else {
+			// No user → show login page
+			document.getElementById("menu-page").classList.remove("active");
+			document.getElementById("login-page").classList.add("active");
+
+			logger.info("No user logged in");
+		}
+	});
+}
+
+function createAuthTabs() {
+	let authTabs = document.getElementById('auth-tabs');
+
+	tabs.forEach(tab => {
+		const tabElement = document.createElement('div');
+		tabElement.className = 'auth-tab';
+		tabElement.textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+		if (tab === 'login') tabElement.classList.add('active');
+
+		tabElement.addEventListener('click', switchAuthTab.bind(null, tab));
+		authTabs.addChild(tabElement);
+	});
+}
+
+// E-mail authentication
+function sendEmailLink() {
+	const email = document.getElementById('email').value;
+	const actionCodeSettings = {
+		url: window.location.href, // Return to this page
+		handleCodeInApp: true,
+	};
+
+	auth.sendSignInLinkToEmail(email, actionCodeSettings)
+		.then(() => {
+			window.localStorage.setItem('emailForSignIn', email);
+			alert('Verification Sent', 'Check your email for the verification link!');
+		})
+		.catch((error) => {
+			alert('Verification Error', 'Error: ' + error.message);
+		});
+}
+
+// Tab switching
 function switchAuthTab(tabName) {
 	// Update tab buttons
-	document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
-	event.target.classList.add('active');
+	let tabs = document.querySelectorAll('.auth-tab');
+	tabs.forEach(tab => tab.classList.remove('active'));
+	document.querySelector(`.auth-tab:contains(${tabName.charAt(0).toUpperCase() + tabName.slice(1)})`).classList.add('active');
 
 	// Update tab content
-	document.querySelectorAll('.auth-tab-content').forEach(content => {
+	let tabContents = document.querySelectorAll('.auth-tab-content');
+	tabContents.forEach(content => {
 		content.classList.remove('active');
 	});
 	document.getElementById(tabName + '-tab-content').classList.add('active');
@@ -17,21 +98,21 @@ function switchAuthTab(tabName) {
 	});
 }
 
-function loginUserV2() {
+function loginUser() {
 	const email = document.getElementById("login-username").value;
 	const password = document.getElementById("login-password").value;
 
 	// Prevent empty fields
 	if (!email || !password) {
 		showAuthError('login-error', "Please enter both username and password.");
-		window.logger.warn("Empty login attempt", { username });
+		logger.warn("Empty login attempt", { username });
 		return;
 	}
 
 	// Password length validation
 	if (password.length <= 3) {
 		showAuthError('login-error', "Password must be at least 3 characters long.");
-		window.logger.warn("Weak password attempt", { username });
+		logger.warn("Weak password attempt", { username });
 		return;
 	}
 
@@ -50,14 +131,48 @@ function loginUserV2() {
 		});
 }
 
-// Helper to show errors
+function logoutUser() {
+	auth.signOut()
+		.then(() => {
+			// Hide menu page, show login
+			document.getElementById("menu-page").classList.remove("active");
+			document.getElementById("login-page").classList.add("active");
+
+			logger.info("User logged out");
+		})
+		.catch((error) => {
+			console.error("Logout error:", error);
+			alert("Logout failed: " + error.message);
+		});
+
+	// TODO: with the auth rewrite, some of this code
+	// is no longer needed. Clean it up in an upcoming release.
+
+	// Clear stored user
+	localStorage.removeItem("loggedInUser");
+	logger.info("👋 User logged out");
+
+	// Hide all pages
+	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+	// Reset login form fields
+	document.getElementById("login-username").value = "";
+	document.getElementById("login-password").value = "";
+
+	// Reset UI
+	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+	document.getElementById("login-page").classList.add("active");
+	console.log("Logout completed.");
+}
+
+// Helper to show errors,
 function showAuthError(elementId, message) {
 	const el = document.getElementById(elementId);
 	el.textContent = message;
 	el.classList.add('active');
 }
 
-// Register with email/password - NEW FUNCTION
+// Register with email/password.
 function registerUser() {
 	const email = document.getElementById('register-email').value;
 	const password = document.getElementById('register-password').value;
@@ -83,79 +198,23 @@ function registerUser() {
 
 	auth.createUserWithEmailAndPassword(email, password)
 		.then((userCredential) => {
-			window.logger.info('User registered successfully', { email });
+			logger.info('User registered successfully', { email });
 			// Store user and navigate to menu
 			localStorage.setItem('loggedInUser', email);
 			navigateTo('menu');
 		})
 		.catch((error) => {
-			window.logger.error('Registration failed', { error: error.message });
+			logger.error('Registration failed', { error: error.message });
 			showAuthError('register-error', error.message);
 		});
 }
 
-async function sendOneTimeEmailPasscode() {
-	const actionCodeSettings = {
-		url: window.location.href, // URL the user is redirected to after clicking the link
-		handleCodeInApp: true // Required for web apps
-	};
-	window.logger.info(`Sending one-time email passcode to: ${actionCodeSettings.url}`);
-	console.debug(`Action code settings:`, actionCodeSettings);
-
-	const user = auth.currentUser;
-
-	try {
-		let userEmail = ""
-		if (user) {
-			userEmail = user.email;
-		} else {
-			throw new Error('No authenticated user found');
-		}
-
-		await firebase.auth().sendSignInLinkToEmail(userEmail, actionCodeSettings);
-		window.localStorage.setItem('emailForSignIn', userEmail); // Store email for later verification
-		alert('Verification Sent', 'A one-time access link has been sent to your email. Check your inbox!');
-	} catch (error) {
-		console.error('Error sending email link:', error);
-		alert('Verification Failed', 'Failed to send access link. Please try again.');
-	}
-}
-
-async function handleEmailLinkCompletion() {
-	const auth = getAuth();
-	if (!isSignInWithEmailLink(auth, window.location.href)) {
-		console.log("Not an email link for sign-in or re-authentication.");
-		return;
-	}
-
-	let email = window.localStorage.getItem('emailForSignIn');
-	if (!email) {
-		email = window.prompt('Please provide your email for confirmation');
-		if (!email) {
-			alert('Missing Email', 'Email is required to complete re-authentication.');
-			return;
-		}
-	}
-
-	try {
-		const credential = EmailAuthProvider.credentialWithLink(email, window.location.href);
-
-		// Re-authenticate the current user with this credential
-		await auth.currentUser.reauthenticateWithCredential(credential);
-
-		window.localStorage.removeItem('emailForSignIn');
-		console.log('User successfully re-authenticated via email link!');
-		alert('Authentication Success', 'You have successfully re-authenticated. You can now access the sensitive page.');
-
-		// No need to store auth_time in sessionStorage here anymore.
-		// The next time we check for sensitive access, we'll fetch it live.
-
-		// Immediately try to display sensitive content, as re-auth is fresh
-		displaySensitiveContent();
-
-	} catch (error) {
-		console.error('Error during email link re-authentication:', error);
-		alert('Authentication Error', 'Failed to re-authenticate. The link might be invalid or expired. Please try again.');
-		// Optionally, redirect to a different page or show an error state
-	}
-}
+export {
+	createAuthTabs,
+	loginUser,
+	logoutUser,
+	sendEmailLink,
+	setupFirebase,
+	showAuthError,
+	registerUser
+};

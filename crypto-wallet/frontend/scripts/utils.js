@@ -1,5 +1,13 @@
 // Utility functions
 
+function createEnum(values) {
+	const enumObj = {};
+	values.forEach(value => {
+		enumObj[value] = value;
+	});
+	return Object.freeze(enumObj);
+}
+
 function togglePassword(inputId, iconElem) {
 	const input = document.getElementById(inputId);
 	const eyeOpen = iconElem.querySelector('.eye-open');
@@ -26,33 +34,8 @@ function showError(context, message) {
 	}
 }
 
-function debounce(func, wait) {
-	let timeout;
-	return function executedFunction(...args) {
-		const later = () => {
-			clearTimeout(timeout);
-			func(...args);
-		};
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-	};
-}
-
-function formatCurrency(amount) {
-	return new Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency: 'USD'
-	}).format(amount);
-}
-
-function formatLargeNumber(num) {
-	if (num === null || num === undefined) return '—';
-	if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(2) + 'B';
-	if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M';
-	return num.toLocaleString('en-US');
-}
-
-function validateEmail(email) {
-	const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return re.test(email);
-}
+export {
+	createEnum,
+	togglePassword,
+	showError,
+};
