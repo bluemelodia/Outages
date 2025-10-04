@@ -22,7 +22,7 @@ function setupLoginForm() {
 }
 
 function attachEventListeners() {
-	container.querySelectorAll('.toggle-password').forEach(toggle => {
+	document.querySelectorAll('.toggle-password').forEach(toggle => {
 		toggle.addEventListener('click', function () {
 			const inputId = this.dataset.inputId; // Get the specific input ID
 			togglePassword(inputId, this);
@@ -80,7 +80,7 @@ function createLoginContent() {
 		<button class="btn btn-primary" id="login-user-btn">Login</button>
 	`;
 
-	let button = container.getElementById("login-user-btn");
+	let button = document.getElementById("login-user-btn");
 	button.addEventListener('click', function () {
 		loginUser();
 	});
@@ -117,7 +117,7 @@ function createRegisterContent() {
 			<label for="register-confirm-password">Confirm Password</label>
 			<div class="password-wrapper">
 				<input type="password" id="register-confirm-password" autocomplete="new-password">
-				<span class="toggle-password" data-input=id="register-confirm-password">
+				<span class="toggle-password" data-input-id="register-confirm-password">
 					<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
 						fill="none" viewBox="0 0 24 24" stroke="#667eea">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -134,7 +134,7 @@ function createRegisterContent() {
 		<button class="btn btn-primary" id="register-user-button">Create Account</button>
 	`;
 
-	let button = container.getElementById("register-user-button");
+	let button = document.getElementById("register-user-button");
 	button.addEventListener('click', function () {
 		registerUser();
 	});

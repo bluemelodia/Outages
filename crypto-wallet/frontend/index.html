@@ -42,21 +42,7 @@
 						<div class="balance-label">Available Balance</div>
 					</div>
 
-					<div class="menu-item" onclick="navigateTo('send-crypto')">
-						<span>Send Crypto</span>
-					</div>
-
-					<div class="menu-item" onclick="navigateTo('transactions')">
-						<span>Transactions</span>
-					</div>
-
-					<div class="menu-item" onclick="navigateTo('credentials')">
-						<span>Change Credentials</span>
-					</div>
-
-					<div class="menu-item" onclick="logoutUser()">
-						<span>Logout</span>
-					</div>
+					<div id="menu-items"></div>
 
 					<footer class="card-footer"
 						style="margin-top:2rem; text-align:center; font-size:0.9rem; color:#888;">
@@ -65,39 +51,7 @@
 				</div>
 
 				<!-- Send Crypto Page -->
-				<div id="send-crypto-page" class="page">
-					<h2>Send Crypto</h2>
-
-					<div class="error-message" id="send-error"></div>
-
-					<div class="form-group">
-						<label for="recipient">Recipient Address</label>
-						<input type="text" id="recipient" placeholder="0x742d35Cc6545C4532...">
-					</div>
-
-					<div class="form-group">
-						<label for="crypto-type">Cryptocurrency</label>
-						<select id="crypto-type">
-							<option value="BTC">Bitcoin (BTC)</option>
-							<option value="ETH">Ethereum (ETH)</option>
-							<option value="ADA">Cardano (ADA)</option>
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="amount">Amount</label>
-						<input type="number" id="amount" placeholder="0.00" step="0.01">
-					</div>
-
-					<button class="btn btn-primary" onclick="initiateSendCrypto()">
-						Send Transaction
-					</button>
-					<button class="btn btn-secondary" onclick="navigateTo('menu')">
-						Back to Menu
-					</button>
-
-					<div class="spinner" id="send-spinner"></div>
-				</div>
+				<div id="send-crypto-page" class="page"></div>
 
 				<!-- Transactions Page -->
 				<div id="transactions-page" class="page">

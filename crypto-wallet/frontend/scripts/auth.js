@@ -1,4 +1,5 @@
 import { logger } from "./logger.js";
+import { hideMenu, showMenu } from "./navigation.js";
 
 let auth = null;
 
@@ -23,7 +24,7 @@ function setupFirebase() {
 		if (user) {
 			// User is signed in → show menu page
 			document.getElementById("login-page").classList.remove("active");
-			document.getElementById("menu-page").classList.add("active");
+			showMenu();
 
 			// Show welcome message
 			const welcomeEl = document.getElementById("welcome-message");
@@ -33,7 +34,7 @@ function setupFirebase() {
 			logger.info("User logged in", { user: nameOrEmail });
 		} else {
 			// No user → show login page
-			document.getElementById("menu-page").classList.remove("active");
+			hideMenu();
 			document.getElementById("login-page").classList.add("active");
 
 			logger.info("No user logged in");
@@ -96,7 +97,7 @@ function logoutUser() {
 	auth.signOut()
 		.then(() => {
 			// Hide menu page, show login
-			document.getElementById("menu-page").classList.remove("active");
+			hideMenu();
 			document.getElementById("login-page").classList.add("active");
 
 			logger.info("User logged out");
@@ -159,6 +160,7 @@ function registerUser() {
 
 	auth.createUserWithEmailAndPassword(email, password)
 		.then((userCredential) => {
+			alert("Registration success!");
 			logger.info('User registered successfully', { email });
 			// Store user and navigate to menu
 			localStorage.setItem('loggedInUser', email);

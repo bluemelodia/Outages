@@ -34,7 +34,7 @@ function loadCoinMarketTable() {
 			console.error('Error fetching crypto table data:', error);
 			logger.error(`Failed to load coin data: ${error}`);
 
-			const table = document.getElementById('coin-market-table');
+			const table = document.querySelector("table-container");
 			table.innerHTML = `
 			<thead>
 			</thead>
