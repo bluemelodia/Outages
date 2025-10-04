@@ -1,4 +1,4 @@
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 
 async function apiCall(endpoint, options = {}) {
 	logger.info(`API Call: ${endpoint}`, { method: options.method || 'GET' });

@@ -1,3 +1,5 @@
+import { renderPasswordField } from "./login-form.js";
+
 // Page navigation functionality
 let currentPage = 'menu';
 

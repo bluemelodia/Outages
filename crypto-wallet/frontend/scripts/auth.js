@@ -1,10 +1,6 @@
-import { logger } from "./logger";
-import { createEnum } from "./utils";
+import { logger } from "./logger.js";
 
-const tabs = createEnum([
-	'login',
-	'register'
-]);
+let auth = null;
 
 function setupFirebase() {
 	// Initialize Firebase
@@ -21,7 +17,7 @@ function setupFirebase() {
 	};
 
 	firebase.initializeApp(firebaseConfig);
-	const auth = firebase.auth();
+	auth = firebase.auth();
 
 	auth.onAuthStateChanged((user) => {
 		if (user) {
@@ -45,20 +41,6 @@ function setupFirebase() {
 	});
 }
 
-function createAuthTabs() {
-	let authTabs = document.getElementById('auth-tabs');
-
-	tabs.forEach(tab => {
-		const tabElement = document.createElement('div');
-		tabElement.className = 'auth-tab';
-		tabElement.textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
-		if (tab === 'login') tabElement.classList.add('active');
-
-		tabElement.addEventListener('click', switchAuthTab.bind(null, tab));
-		authTabs.addChild(tabElement);
-	});
-}
-
 // E-mail authentication
 function sendEmailLink() {
 	const email = document.getElementById('email').value;
@@ -75,27 +57,6 @@ function sendEmailLink() {
 		.catch((error) => {
 			alert('Verification Error', 'Error: ' + error.message);
 		});
-}
-
-// Tab switching
-function switchAuthTab(tabName) {
-	// Update tab buttons
-	let tabs = document.querySelectorAll('.auth-tab');
-	tabs.forEach(tab => tab.classList.remove('active'));
-	document.querySelector(`.auth-tab:contains(${tabName.charAt(0).toUpperCase() + tabName.slice(1)})`).classList.add('active');
-
-	// Update tab content
-	let tabContents = document.querySelectorAll('.auth-tab-content');
-	tabContents.forEach(content => {
-		content.classList.remove('active');
-	});
-	document.getElementById(tabName + '-tab-content').classList.add('active');
-
-	// Clear error messages
-	document.querySelectorAll('.error-message').forEach(el => {
-		el.classList.remove('active');
-		el.textContent = '';
-	});
 }
 
 function loginUser() {
@@ -210,7 +171,7 @@ function registerUser() {
 }
 
 export {
-	createAuthTabs,
+	auth,
 	loginUser,
 	logoutUser,
 	sendEmailLink,

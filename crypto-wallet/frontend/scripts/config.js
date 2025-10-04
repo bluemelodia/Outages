@@ -1,4 +1,4 @@
-import { keys } from './keys';
+import { keys } from './keys.js';
 
 const config = {
 	API_BASE: 'http://localhost:8080/api',

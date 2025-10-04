@@ -20,10 +20,7 @@
 
 				<div id="login-page" class="page active">
 					<!-- Tabs -->
-					<div id="auth-tabs">
-						<div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
-						<div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
-					</div>
+					<div id="auth-tabs"></div>
 
 					<!-- Login Tab Content -->
 					<div id="login-tab-content" class="auth-tab-content active">
@@ -288,39 +285,23 @@
 		})();
 	</script>
 
-	<script type="module">
-		import {
-			setupLogger
-		} from "./logger.js"
-		import {
-			createAuthTabs,
-			loginUser,
-			logoutUser,
-			sendEmailLink,
-			setupFirebase,
-			showAuthError,
-			registerUser
-		} from "./auth.js";
-	</script>
-
-	<script type="module" src="./scripts/api.js"></script>
-	<script type="module" src="./scripts/app.js"></script>
-	<script type="module" src="./scripts/auth.js"></script>
-	<script type="module" src="./scripts/config.js"></script>
-	<script type="module" src="./scripts/credentials.js"></script>
-	<script type="module" src="./scripts/formatters.js"></script>
-	<script type="module" src="./scripts/keys.js"></script>
-	<script type="module" src="./scripts/logger.js"></script>
-	<script type="module" src="./scripts/navigation.js"></script>
-	<script type="module" src="./scripts/transactions.js"></script>
-	<script type="module" src="./scripts/utils.js"></script>
-	<script type="module" src="./scripts/verification.js"></script>
-
 	<!-- Firebase CDN Scripts -->
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 	<!-- Cloud Firestore -->
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+	<script type="module">
+		import { initializeApp } from './scripts/app.js';
+
+		if (document.readyState === 'loading') {
+			console.log('About to add DOMContentLoaded event listener.');
+			document.addEventListener('DOMContentLoaded', initializeApp);
+		} else {
+			console.log('DOM content has already been loaded, initialize the app directly.');
+			initializeApp();
+		}
+	</script>
 </body>
 
 </html>

@@ -1,7 +1,8 @@
-import { config } from './config';
+import { auth } from './auth.js';
+import { config } from './config.js';
 
-const environment = getEnvironment();
-const logger = setupLogger();
+let environment = null;
+let logger = null;
 
 function getEnvironment() {
 	const hostname = window.location.hostname;
@@ -14,8 +15,10 @@ function getEnvironment() {
 }
 
 function setupLogger() {
+	environment = getEnvironment();
+
 	// -------------------- Tiny Logger --------------------
-	let logger = (() => {
+	logger = (() => {
 		const originalLogger = {
 			log: (level, message, metadata = {}) => {
 				// TODO: clean up localStorage usage in the next release.
@@ -62,9 +65,9 @@ function setupLogger() {
 
 	// Example usage
 	logger.info("🚀 Logger initialized"); // user: "pre-login" if no one is logged in
-	return logger;
 }
 
 export {
-	logger
+	logger,
+	setupLogger
 };

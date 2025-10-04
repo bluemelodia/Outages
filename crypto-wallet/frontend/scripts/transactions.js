@@ -1,4 +1,5 @@
-import { logger } from './logger';
+import { auth } from './auth.js';
+import { logger } from './logger.js';
 
 // Render one transaction
 function renderTransaction(transaction) {
