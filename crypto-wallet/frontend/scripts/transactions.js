@@ -1,5 +1,7 @@
 import { auth } from './auth.js';
+import { formatTransactionDate } from './formatters.js';
 import { logger } from './logger.js';
+import { navigateTo } from './navigation.js';
 
 // Render one transaction
 function renderTransaction(transaction) {
@@ -43,19 +45,29 @@ async function loadTransactions() {
 		console.error("Transactions container not found");
 		return;
 	}
+	container.innerHTML = 'Loading...';
 
+	const parent = document.getElementById('transactions-page');
 	const spinner = document.getElementById('transactions-spinner');
 	const errorEl = document.getElementById('transactions-error');
 
 	// Clear previous transactions list...
-	container.innerHTML = 'Loading...';
 	spinner.classList.add('active');
+
+	parent.querySelectorAll('.btn-secondary').forEach(el => {
+		el.remove();
+	});
+	const backBtn = document.createElement('button');
+	backBtn.className = 'btn btn-secondary';
+	backBtn.textContent = 'Back to Menu';
+	backBtn.onclick = () => navigateTo('menu');
+	parent.appendChild(backBtn);
 
 	const user = auth.currentUser;
 
 	if (user) {
 		try {
-			let transactions = doLoadTransactions();
+			let transactions = await doLoadTransactions();
 			if (transactions.length === 0) {
 				container.innerHTML = `<div>📭 No transactions yet</div>`;
 			} else {
@@ -112,3 +124,7 @@ async function doLoadTransactions() {
 		throw error;
 	}
 }
+
+export {
+	loadTransactions
+};

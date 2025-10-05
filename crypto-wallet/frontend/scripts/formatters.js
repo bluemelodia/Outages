@@ -22,7 +22,7 @@ function formatTransactionDate(date) {
 	} else if (days < 7) {
 		return `${days} days ago`;
 	} else {
-		return date.toLocaleDateString('en-US', {
+		return date.toLocaleString('en-US', {
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'

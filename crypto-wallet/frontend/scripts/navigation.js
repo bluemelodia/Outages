@@ -1,6 +1,7 @@
 import { logoutUser } from "./auth.js";
 import { loadChangeCredentialsPage } from "./credentials.js";
 import { loadSendCryptoPage } from "./send-crypto.js";
+import { loadTransactions } from "./transactions.js";
 
 let currentPage = 'menu';
 
