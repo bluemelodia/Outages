@@ -1,4 +1,5 @@
 import { auth, logoutUser } from "./auth.js";
+import { createPasswordField } from "./form-common.js";
 import { navigateTo } from "./navigation.js";
 
 function loadChangeCredentialsPage() {
@@ -20,13 +21,10 @@ function loadChangeCredentialsPage() {
 	errorDiv.id = 'credentials-error';
 	container.appendChild(errorDiv);
 
-	const fields = ['current-password', 'new-password', 'confirm-password'];
-	fields.forEach(id => {
-		const div = document.createElement('div');
-		div.className = 'form-group';
-		div.id = `${id}-field`;
-		container.appendChild(div);
-	});
+	// Create password fields programmatically
+	createPasswordField(container, 'Current Password', 'current-password');
+	createPasswordField(container, 'New Password', 'new-password');
+	createPasswordField(container, 'Confirm New Password', 'confirm-password');
 
 	const updateBtn = document.createElement('button');
 	updateBtn.className = 'btn btn-primary';

@@ -1,6 +1,5 @@
 import { logoutUser } from "./auth.js";
 import { loadChangeCredentialsPage } from "./credentials.js";
-import { renderPasswordField } from "./login-form.js";
 import { loadSendCryptoPage } from "./send-crypto.js";
 
 let currentPage = 'menu';
@@ -56,14 +55,6 @@ function navigateTo(pageId) {
 	// Only render password fields when navigating to credentials
 	if (pageId === 'credentials') {
 		loadChangeCredentialsPage();
-		renderPasswordField('current-password-field', 'Current Password', 'current-password');
-		renderPasswordField('new-password-field', 'New Password', 'new-password');
-		renderPasswordField('confirm-password-field', 'Confirm New Password', 'confirm-password');
-	} else {
-		// Optionally clear password fields when leaving credentials page
-		document.getElementById('current-password-field').innerHTML = '';
-		document.getElementById('new-password-field').innerHTML = '';
-		document.getElementById('confirm-password-field').innerHTML = '';
 	}
 }
 
