@@ -1,6 +1,7 @@
 import { auth, logoutUser } from "./auth.js";
 import { createPasswordField } from "./form-common.js";
 import { navigateTo } from "./navigation.js";
+import { showError } from "./utils.js";
 
 function loadChangeCredentialsPage() {
 	const container = document.getElementById('credentials-page');
@@ -65,8 +66,13 @@ async function processChangeCredentials() {
 		return;
 	}
 
-	if (newPassword.length < 8) {
-		showError('credentials', 'New password must be at least 8 characters long');
+	if (newPassword === currentPassword) {
+		showError('credentials', 'New password must be different from current password');
+		return;
+	}
+
+	if (newPassword.length < 6) {
+		showError('credentials', 'New password must be at least 6 characters long');
 		return;
 	}
 
@@ -90,6 +96,7 @@ function changePassword(newPassword) {
 				// Password updated successfully!
 				console.log("Password updated!");
 				alert("Update Success", "Your password has been changed successfully.");
+				navigateTo('menu')
 			})
 			.catch((error) => {
 				// An error occurred.
@@ -111,6 +118,7 @@ function changePassword(newPassword) {
 	} else {
 		console.log("No user is signed in.");
 		alert("Login Required", "You must be signed in to change your password.");
+		logoutUser();
 	}
 }
 

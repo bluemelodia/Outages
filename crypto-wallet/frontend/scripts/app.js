@@ -1,5 +1,5 @@
 import { setupAlerts } from "./alerts.js";
-import { setupFirebase } from "./auth.js";
+import { loginUser, setupFirebase } from "./auth.js";
 import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { loadCoinMarketTable } from "./market-table.js";

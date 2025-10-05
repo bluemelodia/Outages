@@ -17,7 +17,8 @@ function createPasswordField(container, labelText, inputId) {
 	passwordWrapper.appendChild(input);
 
 	const toggleSpan = document.createElement('span');
-	toggleSpan.id = `toggle-password-${inputId}`;
+	toggleSpan.className = 'toggle-password';
+	toggleSpan.setAttribute('data-input-id', `toggle-password-${inputId}`);
 	toggleSpan.style.cursor = 'pointer';
 	toggleSpan.innerHTML = `
 		<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#667eea">
