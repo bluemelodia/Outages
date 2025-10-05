@@ -39,6 +39,7 @@ function clearLoginError() {
 
 function createAuthTabs() {
 	let authTabs = document.getElementById('auth-tabs');
+	authTabs.innerHTML = ''; // Clear existing tabs
 
 	tabs.forEach(tab => {
 		const tabElement = document.createElement('div');
@@ -49,10 +50,17 @@ function createAuthTabs() {
 		tabElement.addEventListener('click', switchAuthTab.bind(null, tab));
 		authTabs.appendChild(tabElement);
 	});
+	
+	switchAuthTab('login'); // Default to login tab
 }
 
 function createLoginContent() {
 	const container = document.getElementById('login-tab-content');
+	if (container == null) {
+		console.error("Login tab container not found");
+		return;
+	}
+
 	container.innerHTML = `
 		<div class="error-message" id="login-error"></div>
 		<div class="form-group">
@@ -88,6 +96,11 @@ function createLoginContent() {
 
 function createRegisterContent() {
 	const container = document.getElementById('register-tab-content');
+	if (container == null) {
+		console.error("Register tab container not found");
+		return;
+	}
+	
 	container.innerHTML = `
 		<div class="error-message" id="register-error"></div>
 
@@ -142,6 +155,11 @@ function createRegisterContent() {
 
 function renderPasswordField(containerId, label, inputId) {
 	const container = document.getElementById(containerId);
+	if (container == null) {
+		console.error(`Container with id: ${containerId} not found`);
+		return;
+	}
+	
 	container.innerHTML = `
 		<label for="${inputId}">${label}</label>
 		<div class="password-wrapper">
@@ -168,9 +186,7 @@ function setupLoginInputs() {
 	document.getElementById('login-password').addEventListener('input', clearLoginError);
 }
 
-// Tab switching
 function switchAuthTab(tabName) {
-	// Update tab buttons
 	const allTabs = document.querySelectorAll('.auth-tab');
 	allTabs.forEach(tab => {
 		tab.classList.remove('active');

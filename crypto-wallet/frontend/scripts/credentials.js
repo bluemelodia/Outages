@@ -1,4 +1,51 @@
-import { auth } from "./auth";
+import { auth, logoutUser } from "./auth.js";
+import { navigateTo } from "./navigation.js";
+
+function loadChangeCredentialsPage() {
+	const container = document.getElementById('credentials-page');
+	if (container == null) {
+		console.error("Credentials page container not found");
+		return;
+	}
+
+	// Clear existing content
+	container.innerHTML = '';
+
+	const heading = document.createElement('h2');
+	heading.textContent = 'Change Credentials';
+	container.appendChild(heading);
+
+	const errorDiv = document.createElement('div');
+	errorDiv.className = 'error-message';
+	errorDiv.id = 'credentials-error';
+	container.appendChild(errorDiv);
+
+	const fields = ['current-password', 'new-password', 'confirm-password'];
+	fields.forEach(id => {
+		const div = document.createElement('div');
+		div.className = 'form-group';
+		div.id = `${id}-field`;
+		container.appendChild(div);
+	});
+
+	const updateBtn = document.createElement('button');
+	updateBtn.className = 'btn btn-primary';
+	updateBtn.textContent = 'Update Credentials';
+	updateBtn.onclick = initiateChangeCredentials;
+	container.appendChild(updateBtn);
+
+	const backBtn = document.createElement('button');
+	backBtn.className = 'btn btn-secondary';
+	backBtn.textContent = 'Back to Menu';
+	backBtn.onclick = () => navigateTo('menu');
+	container.appendChild(backBtn);
+
+	// Spinner
+	const spinner = document.createElement('div');
+	spinner.className = 'spinner';
+	spinner.id = 'credentials-spinner';
+	container.appendChild(spinner);
+}
 
 function initiateChangeCredentials() {
 	processChangeCredentials();
@@ -77,5 +124,6 @@ function clearCredentialsForm() {
 }
 
 export {
-	initiateChangeCredentials
+	initiateChangeCredentials,
+	loadChangeCredentialsPage
 };

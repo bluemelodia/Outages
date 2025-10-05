@@ -9,9 +9,7 @@
 </head>
 
 <body>
-	<!-- Main Flex Container -->
 	<div class="main-flex">
-		<!-- Card Area -->
 		<div class="card-container">
 			<div class="container">
 				<div class="logo">
@@ -19,14 +17,11 @@
 				</div>
 
 				<div id="login-page" class="page active">
-					<!-- Tabs -->
 					<div id="auth-tabs"></div>
 
-					<!-- Login Tab Content -->
 					<div id="login-tab-content" class="auth-tab-content active">
 					</div>
 
-					<!-- Register Tab Content -->
 					<div id="register-tab-content" class="auth-tab-content">
 					</div>
 				</div>
@@ -67,26 +62,9 @@
 				</div>
 
 				<!-- Credentials Page -->
-				<div id="credentials-page" class="page">
-					<h2>Change Credentials</h2>
+				<div id="credentials-page" class="page"></div>
 
-					<div class="error-message" id="credentials-error"></div>
-
-					<div class="form-group" id="current-password-field"></div>
-					<div class="form-group" id="new-password-field"></div>
-					<div class="form-group" id="confirm-password-field"></div>
-
-					<button class="btn btn-primary" onclick="initiateChangeCredentials()">
-						Update Credentials
-					</button>
-					<button class="btn btn-secondary" onclick="navigateTo('menu')">
-						Back to Menu
-					</button>
-
-					<div class="spinner" id="credentials-spinner"></div>
-				</div>
-
-				<!-- Identity Verification Modal -->
+				<!-- Identity Verification -->
 				<div id="verification-modal" class="modal">
 					<div class="modal-content">
 						<h3>Identity Verification Required</h3>
@@ -110,11 +88,9 @@
 				</div>
 			</div>
 		</div>
-		<!-- Table Area -->
 		<div class="table-container">
 			<div class="table-scroll-wrapper">
 				<table class="coin-table" id="coin-market-table">
-					<!-- JS will inject thead and tbody here -->
 				</table>
 			</div>
 		</div>
@@ -132,9 +108,9 @@
 	<!-- Firebase CDN Scripts -->
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-	<!-- Cloud Firestore -->
 	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
+	<!-- Initialization -->
 	<script type="module">
 		import { initializeApp } from './scripts/app.js';
 

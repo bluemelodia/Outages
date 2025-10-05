@@ -1,5 +1,3 @@
-// Utility functions
-
 function createEnum(values) {
 	const enumObj = {};
 	values.forEach(value => {

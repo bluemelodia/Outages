@@ -21,7 +21,7 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .main-flex {
@@ -31,6 +31,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
+  gap: 1rem;
   height: calc(100vh - 4rem); /* fill almost full viewport minus body padding */
 }
 
@@ -100,8 +101,6 @@ body {
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  max-width: 400px;
-  width: 90%;
   height: 100%; /* Fill card container */
   display: flex;
   flex-direction: column;
@@ -136,6 +135,17 @@ body {
 }
 
 /* Menu Items */
+.menu-page {
+	overflow-y: auto;
+	-ms-overflow-style: none;  /* IE and Edge */
+  	scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.menu-page::-webkit-scrollbar {
+  display: none;
+}
+
 .menu-item {
   background: #f8f9ff;
   border: 2px solid #e0e7ff;

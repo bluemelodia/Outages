@@ -35,6 +35,11 @@ function loadCoinMarketTable() {
 			logger.error(`Failed to load coin data: ${error}`);
 
 			const table = document.querySelector("table-container");
+			if (table == null) {
+				console.error("Crypto table container not found");
+				return;
+			}
+
 			table.innerHTML = `
 			<thead>
 			</thead>
@@ -51,6 +56,11 @@ function renderCoinTable() {
 	console.debug(`Successfully received crypto table data: ${coinTableData.count}`);
 
 	const table = document.getElementById('coin-market-table');
+	if (table == null) {
+		console.error("Crypto table container not found");
+		return;
+	}
+
 	let sorted = [...coinTableData];
 	const { key, dir } = coinTableSort;
 	sorted.sort((a, b) => {
@@ -80,14 +90,12 @@ function renderCoinTable() {
 		return dir === 'asc' ? ' ▲' : ' ▼';
 	}
 
-	// Table header
 	let thead = `<thead><tr>`;
 	columns.forEach(col => {
 		thead += `<th class="sortable" data-key="${col.key}" style="cursor:pointer;">${col.label}${sortIndicator(col.key)}</th>`;
 	});
 	thead += `</tr></thead>`;
 
-	// Table rows
 	let rows = sorted.map(coin => {
 		const changeClass = coin.price_change_24h < 0 ? 'negative' : 'positive';
 
@@ -124,7 +132,7 @@ function renderCoinTable() {
 
 	table.innerHTML = `${thead}<tbody>${rows}</tbody>`;
 
-	// Add click handlers for sorting
+	// Sorting
 	table.querySelectorAll('.sortable').forEach(th => {
 		th.onclick = () => {
 			const sortKey = th.getAttribute('data-key');

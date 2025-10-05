@@ -39,10 +39,15 @@ function renderTransaction(transaction) {
 // Load and display transactions
 async function loadTransactions() {
 	const container = document.getElementById('transactions-list');
+	if (container == null) {
+		console.error("Transactions container not found");
+		return;
+	}
+
 	const spinner = document.getElementById('transactions-spinner');
 	const errorEl = document.getElementById('transactions-error');
 
-	// Clear previous
+	// Clear previous transactions list...
 	container.innerHTML = 'Loading...';
 	spinner.classList.add('active');
 
@@ -75,9 +80,7 @@ async function loadTransactions() {
 }
 
 async function doLoadTransactions() {
-	// Get the Firestore service instance
 	const db = firebase.firestore();
-
 	const transactionsCollectionRef = db.collection("transactions");
 
 	try {
@@ -89,7 +92,6 @@ async function doLoadTransactions() {
 			// doc.data() is never undefined for query doc snapshots
 			console.log(doc.id, " => ", doc.data());
 
-			// Add the document data (and its ID) to our transactions array
 			transactions.push({
 				id: doc.id,
 				...doc.data()
@@ -100,13 +102,13 @@ async function doLoadTransactions() {
 		return transactions;
 	} catch (error) {
 		console.error("Error getting documents: ", error);
-		// Important: Handle 'permission denied' errors here if the user isn't authenticated
+		// User isn't authenticated
 		if (error.code === 'permission-denied') {
 			alert("Cannot Load Transactions", "Permission denied. Please ensure you are signed in and have access to view transactions.");
 		} else {
 			alert("Cannot Load Transactions", "Failed to retrieve transactions. Please try again.");
 		}
 
-		throw error; // Re-throw the error after handling
+		throw error;
 	}
 }

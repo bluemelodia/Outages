@@ -1,7 +1,25 @@
 import { logger } from "./logger.js";
-import { hideMenu, showMenu } from "./navigation.js";
+import { setupLoginForm } from "./login-form.js";
+import { hideMenu, navigateTo, showMenu } from "./navigation.js";
 
 let auth = null;
+
+// Maps Firebase error codes to user-friendly messages
+const authErrorMessageMap = {
+	'auth/invalid-email': 'The email address is not valid. Please check the format.',
+	'auth/user-disabled': 'Your account has been disabled. Please contact support.',
+	'auth/user-not-found': 'No account found with this email. Please check your email or sign up.',
+	'auth/wrong-password': 'The email or password you entered is incorrect. Please try again.',
+	'auth/invalid-login-credentials': 'The email or password you entered is incorrect. Please try again.', // This is the generic one you're seeing
+	'auth/too-many-requests': 'Too many unsuccessful login attempts. Please try again later.',
+	'auth/network-request-failed': 'Network error. Please check your internet connection.',
+
+	// Common errors that might occur
+	'auth/requires-recent-login': 'For security reasons, please re-authenticate before performing this action.',
+
+	// Default fallback message for unhandled errors
+	'default': 'An unexpected error occurred during login. Please try again.'
+};
 
 function setupFirebase() {
 	// Initialize Firebase
@@ -89,7 +107,13 @@ function loginUser() {
 			welcomeMessage.textContent = `Welcome, ${user.email || "Anonymous"}!`;
 		})
 		.catch((error) => {
-			showAuthError('login-error', error.message);
+			console.error("Firebase Auth Error:", error.code, error.message); // Log full error for debugging
+
+			// Get the custom message for the error code, or use the default
+			const customErrorMessage = authErrorMessageMap[error.code] || authErrorMessageMap['default'];
+
+			// Display the custom, user-friendly message
+			showAuthError('login-error', customErrorMessage);
 		});
 }
 
@@ -117,14 +141,12 @@ function logoutUser() {
 	// Hide all pages
 	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
 
-	// Reset login form fields
-	document.getElementById("login-username").value = "";
-	document.getElementById("login-password").value = "";
-
 	// Reset UI
-	document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
 	document.getElementById("login-page").classList.add("active");
 	console.log("Logout completed.");
+
+	// Reset the login form
+	setupLoginForm();
 }
 
 // Helper to show errors,

@@ -1,6 +1,5 @@
 import { navigateTo } from "./navigation.js";
 
-// Identity verification functionality
 let pendingAction = null;
 let verificationAttempts = 0;
 

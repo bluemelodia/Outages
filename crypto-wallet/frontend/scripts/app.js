@@ -6,12 +6,12 @@ import { loadCoinMarketTable } from "./market-table.js";
 
 function initializeApp() {
 	console.log('Initializing app...');
-	initializeEventListeners();
 	setupAlerts();
 	setupLoginForm();
 	setupFirebase();
 	setupLogger();
 	loadCoinMarketTable();
+	initializeEventListeners();
 
 	// Hide all pages
 	document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));

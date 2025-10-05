@@ -8,22 +8,24 @@ const cryptoOptions = [
 
 function loadSendCryptoPage() {
 	const container = document.getElementById('send-crypto-page');
+	if (container == null) {
+		console.error("Send crypto page container not found");
+		return;
+	}
 
 	// Clear existing content
 	container.innerHTML = '';
 
-	// Create heading
 	const heading = document.createElement('h2');
 	heading.textContent = 'Send Crypto';
 	container.appendChild(heading);
 
-	// Create error message div
 	const errorDiv = document.createElement('div');
 	errorDiv.className = 'error-message';
 	errorDiv.id = 'send-error';
 	container.appendChild(errorDiv);
 
-	// Create recipient form group
+	// Recipient
 	const recipientGroup = document.createElement('div');
 	recipientGroup.className = 'form-group';
 	const recipientLabel = document.createElement('label');
@@ -37,7 +39,7 @@ function loadSendCryptoPage() {
 	recipientGroup.appendChild(recipientInput);
 	container.appendChild(recipientGroup);
 
-	// Create crypto type form group
+	// Crypto type
 	const cryptoGroup = document.createElement('div');
 	cryptoGroup.className = 'form-group';
 	const cryptoLabel = document.createElement('label');
@@ -57,7 +59,6 @@ function loadSendCryptoPage() {
 	cryptoGroup.appendChild(cryptoSelect);
 	container.appendChild(cryptoGroup);
 
-	// Create amount form group
 	const amountGroup = document.createElement('div');
 	amountGroup.className = 'form-group';
 	const amountLabel = document.createElement('label');
@@ -72,21 +73,18 @@ function loadSendCryptoPage() {
 	amountGroup.appendChild(amountInput);
 	container.appendChild(amountGroup);
 
-	// Create send button
 	const sendButton = document.createElement('button');
 	sendButton.className = 'btn btn-primary';
 	sendButton.textContent = 'Send Transaction';
 	sendButton.addEventListener('click', initiateSendCrypto);
 	container.appendChild(sendButton);
 
-	// Create back button
 	const backButton = document.createElement('button');
 	backButton.className = 'btn btn-secondary';
 	backButton.textContent = 'Back to Menu';
 	backButton.addEventListener('click', () => navigateTo('menu'));
 	container.appendChild(backButton);
 
-	// Create spinner
 	const spinner = document.createElement('div');
 	spinner.className = 'spinner';
 	spinner.id = 'send-spinner';
