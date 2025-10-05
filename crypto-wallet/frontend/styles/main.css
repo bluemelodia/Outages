@@ -35,14 +35,17 @@ body {
   height: calc(100vh - 4rem); /* fill almost full viewport minus body padding */
 }
 
+.card-container {
+	width: 40%;
+}
+
+.table-container {
+	width: 60%;
+}
+
 .card-container,
 .table-container {
   height: 100%; /* inherit from main-flex */
-}
-
-.card-container {
-  display: flex;
-  align-items: stretch;
 }
 
 /* On mobile: center card/table and constrain height */
