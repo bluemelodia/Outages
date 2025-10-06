@@ -5,29 +5,20 @@ function formatLargeNumber(num) {
 	return num.toLocaleString('en-US');
 }
 
-function formatTransactionDate(date) {
-	const now = new Date();
-	const diff = now - date;
-	const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+function formatTransactionDate(xactionDate) {
+	const date = { seconds: xactionDate.seconds, nanoseconds: xactionDate.nanoseconds };
 
-	if (days === 0) {
-		const hours = Math.floor(diff / (1000 * 60 * 60));
-		if (hours === 0) {
-			const minutes = Math.floor(diff / (1000 * 60));
-			return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-		}
-		return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-	} else if (days === 1) {
-		return 'Yesterday';
-	} else if (days < 7) {
-		return `${days} days ago`;
-	} else {
-		return date.toLocaleString('en-US', {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric'
-		});
-	}
+	// Convert Firestore timestamp → JavaScript Date
+	const jsDate = new Date(date.seconds * 1000 + date.nanoseconds / 1e6);
+
+	// Format the date (MM/DD/YY)
+	return jsDate.toLocaleString('en-US', {
+		year: '2-digit',
+		month: 'numeric',
+		day: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit'
+	});
 }
 
 export {

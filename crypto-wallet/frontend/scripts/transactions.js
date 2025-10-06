@@ -5,33 +5,36 @@ import { navigateTo } from './navigation.js';
 
 // Render one transaction
 function renderTransaction(transaction) {
-	const statusBadge = transaction.status === 'pending'
-		? '<span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Pending</span>'
-		: '';
+	const statusBadge = `<span class="status-badge">${transaction.status}</span>`;
+	const amountClass = transaction.isPositive ? 'positive' : 'negative';
+	const amountPrefix = transaction.isPositive ? '+' : '-';
 
 	return `
 		<div class="transaction-item">
-			<div class="transaction-header">
-				<div>
-					<span class="transaction-amount ${transaction.isPositive ? 'positive' : 'negative'}">
-						${transaction.isPositive ? '+' : '-'}${transaction.amount} ${transaction.crypto}
-					</span>
-					${statusBadge}
+			<div class="transaction-main">
+				<div class="transaction-info">
+					<div class="transaction-type">
+						<span class="network-badge">${transaction.cryptoName}</span>
+						<span class="category-badge">${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</span>
+						${statusBadge}
+					</div>
+					<div class="transaction-address">${transaction.address}</div>
 				</div>
-				<span class="transaction-date">${formatTransactionDate(transaction.date)}</span>
+				
+				<div class="transaction-amount-section">
+					<div class="amount ${amountClass}">${amountPrefix}${transaction.amount} ${transaction.crypto}</div>
+					<div class="amount-usd">≈ $${transaction.usdValue} USD</div>
+				</div>
 			</div>
-			<div class="transaction-details">
-				<div style="margin-bottom: 0.25rem;">
-					<strong>${transaction.cryptoName}</strong> • ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+			
+			<div class="transaction-footer">
+				<div class="transaction-date">
+					<span>Date</span>
+					<span>${formatTransactionDate(transaction.date)}</span>
 				</div>
-				<div style="color: #9ca3af; font-size: 0.8rem;">
-					${transaction.address}
-				</div>
-				<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
-					<span style="color: #6b7280;">≈ $${transaction.usdValue} USD</span>
-					<span style="color: #9ca3af; font-size: 0.75rem; font-family: monospace;" title="${transaction.hash}">
-						${transaction.hash.substring(0, 10)}...
-					</span>
+				<div class="transaction-hash">
+					<span>Transaction ID</span>
+					<span class="transaction-id">${transaction.hash}...</span>
 				</div>
 			</div>
 		</div>
