@@ -47,8 +47,7 @@ function navigateTo(pageId) {
 	document.getElementById(`${pageId}-page`).classList.add('active');
 
 	if (pageId === 'transactions') {
-		const transactions = loadTransactions();
-		document.getElementById('transactions-list').innerHTML = transactions;
+		loadTransactions();
 	} else if (pageId === 'send-crypto') {
 		loadSendCryptoPage();
 	}

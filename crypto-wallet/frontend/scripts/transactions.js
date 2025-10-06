@@ -48,7 +48,7 @@ async function loadTransactions() {
 		console.error("Transactions container not found");
 		return;
 	}
-	container.innerHTML = 'Loading...';
+	container.innerHTML = '';
 
 	const parent = document.getElementById('transactions-page');
 	const spinner = document.getElementById('transactions-spinner');
