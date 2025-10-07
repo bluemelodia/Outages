@@ -1,85 +1,133 @@
-// Transaction-related functionality
+import { auth } from './auth.js';
+import { formatTransactionDate } from './formatters.js';
+import { logger } from './logger.js';
+import { navigateTo } from './navigation.js';
 
-function initiateSendCrypto() {
-	requireVerification(processSendCrypto);
+// Render one transaction
+function renderTransaction(transaction) {
+	const statusBadge = `<span class="status-badge">${transaction.status}</span>`;
+	const amountClass = transaction.isPositive ? 'positive' : 'negative';
+	const amountPrefix = transaction.isPositive ? '+' : '-';
+
+	return `
+		<div class="transaction-item">
+			<div class="transaction-main">
+				<div class="transaction-info">
+					<div class="transaction-type">
+						<span class="network-badge">${transaction.cryptoName}</span>
+						<span class="category-badge">${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</span>
+						${statusBadge}
+					</div>
+					<div class="transaction-address">${transaction.address}</div>
+				</div>
+				
+				<div class="transaction-amount-section">
+					<div class="amount ${amountClass}">${amountPrefix}${transaction.amount} ${transaction.crypto}</div>
+					<div class="amount-usd">≈ $${transaction.usdValue} USD</div>
+				</div>
+			</div>
+			
+			<div class="transaction-footer">
+				<div class="transaction-date">
+					<span>Date</span>
+					<span>${formatTransactionDate(transaction.date)}</span>
+				</div>
+				<div class="transaction-hash">
+					<span>Transaction ID</span>
+					<span class="transaction-id">${transaction.hash}...</span>
+				</div>
+			</div>
+		</div>
+	`;
 }
 
-async function processSendCrypto() {
-	const recipient = document.getElementById('recipient').value;
-	const cryptoType = document.getElementById('crypto-type').value;
-	const amount = document.getElementById('amount').value;
-	const spinner = document.getElementById('send-spinner');
-
-	if (!recipient || !amount || parseFloat(amount) <= 0) {
-		showError('send', 'Please fill in all fields with valid values');
+// Load and display transactions
+async function loadTransactions() {
+	const container = document.getElementById('transactions-list');
+	if (container == null) {
+		console.error("Transactions container not found");
 		return;
 	}
+	container.innerHTML = '';
+
+	const parent = document.getElementById('transactions-page');
+	const spinner = document.getElementById('transactions-spinner');
+	const errorEl = document.getElementById('transactions-error');
+
+	// Clear previous transactions list...
+	spinner.classList.add('active');
+
+	parent.querySelectorAll('.btn-secondary').forEach(el => {
+		el.remove();
+	});
+	const backBtn = document.createElement('button');
+	backBtn.className = 'btn btn-secondary';
+	backBtn.textContent = 'Back to Menu';
+	backBtn.onclick = () => navigateTo('menu');
+	parent.appendChild(backBtn);
+
+	const user = auth.currentUser;
+
+	if (user) {
+		try {
+			let transactions = await doLoadTransactions();
+			if (transactions.length === 0) {
+				container.innerHTML = `<div>📭 No transactions yet</div>`;
+			} else {
+				console.debug("Fetched transactions:", transactions);
+				container.innerHTML = transactions.map(tx => renderTransaction(tx)).join('');
+			}
+
+			logger?.info('Transactions loaded', { count: transactions.length });
+		} catch (error) {
+			console.error('Error loading transactions:', error);
+			logger?.error('Failed to load transactions', { error: error.message });
+			errorEl.textContent = 'Failed to load transactions. Please try again.';
+			errorEl.classList.add('active');
+		} finally {
+			spinner.classList.remove('active');
+		}
+	} else {
+		alert("Not Signed In", "You must be signed in to view transactions.");
+		console.log("No user signed in. Cannot fetch transactions.");
+		logoutUser();
+	}
+}
+
+async function doLoadTransactions() {
+	const db = firebase.firestore();
+	const transactionsCollectionRef = db.collection("transactions");
 
 	try {
-		spinner.classList.add('active');
-		
-		const result = await apiCall('/send-crypto', {
-			method: 'POST',
-			body: JSON.stringify({
-				recipient,
-				cryptoType,
-				amount: parseFloat(amount)
-			})
+		// Get all documents from the 'transactions' data store.
+		const querySnapshot = await transactionsCollectionRef.get();
+
+		const transactions = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(doc.id, " => ", doc.data());
+
+			transactions.push({
+				id: doc.id,
+				...doc.data()
+			});
 		});
 
-		if (result.success) {
-			alert('Transaction sent successfully!');
-			clearSendForm();
-			navigateTo('menu');
-		} else {
-			showError('send', result.message || 'Transaction failed');
-		}
+		console.log("All transactions:", transactions);
+		return transactions;
 	} catch (error) {
-		showError('send', 'Failed to send transaction. Please try again.');
-	} finally {
-		spinner.classList.remove('active');
+		console.error("Error getting documents: ", error);
+		// User isn't authenticated
+		if (error.code === 'permission-denied') {
+			alert("Cannot Load Transactions", "Permission denied. Please ensure you are signed in and have access to view transactions.");
+		} else {
+			alert("Cannot Load Transactions", "Failed to retrieve transactions. Please try again.");
+		}
+
+		throw error;
 	}
 }
 
-function clearSendForm() {
-	document.getElementById('recipient').value = '';
-	document.getElementById('amount').value = '';
-}
-
-async function loadTransactions() {
-	requireVerification(fetchTransactions);
-}
-
-async function fetchTransactions() {
-	const spinner = document.getElementById('transactions-spinner');
-	const list = document.getElementById('transactions-list');
-	
-	try {
-		spinner.classList.add('active');
-		
-		const transactions = await apiCall('/transactions');
-		
-		if (transactions && transactions.length > 0) {
-			list.innerHTML = transactions.map(tx => `
-				<div class="transaction-item">
-					<div class="transaction-header">
-						<div class="transaction-amount ${tx.type === 'received' ? 'positive' : 'negative'}">
-							${tx.type === 'received' ? '+' : '-'}$${tx.amount.toFixed(2)}
-						</div>
-						<div class="transaction-date">${new Date(tx.timestamp).toLocaleDateString()}</div>
-					</div>
-					<div class="transaction-details">
-						${tx.cryptoType} • ${tx.type === 'sent' ? 'To: ' + tx.recipient : 'From: ' + tx.sender}
-					</div>
-				</div>
-			`).join('');
-		} else {
-			list.innerHTML = '<p style="text-align: center; color: #6b7280; margin: 2rem 0;">No transactions found.</p>';
-		}
-	} catch (error) {
-		showError('transactions', 'Failed to load transactions');
-		list.innerHTML = '';
-	} finally {
-		spinner.classList.remove('active');
-	}
-}
+export {
+	loadTransactions
+};
