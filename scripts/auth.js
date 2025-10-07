@@ -1,3 +1,4 @@
+import { fetchPrivateLoggerApiKeys } from "./keys.js";
 import { logger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { hideMenu, navigateTo, showMenu } from "./navigation.js";
@@ -40,6 +41,8 @@ function setupFirebase() {
 
 	auth.onAuthStateChanged((user) => {
 		if (user) {
+			fetchPrivateLoggerApiKeys();
+
 			// User is signed in → show menu page
 			document.getElementById("login-page").classList.remove("active");
 			showMenu();
