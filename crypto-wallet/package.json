@@ -3,12 +3,12 @@
 	"version": "1.0.0",
 	"description": "Crypto wallet frontend",
 	"main": "index.html",
-	"homepage": "https://bluemelodia.github.io/outages",
+	"homepage": "https://bluemelodia.github.io/Outages",
 	"scripts": {
 		"start": "live-server frontend --open=index.html",
 		"dev": "live-server frontend --open=index.html",
 		"predeploy": "npm run build",
-		"deploy": "gh-pages -d frontend",
+		"deploy": "gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git",
 		"build": "echo 'Nothing to build, copying frontend as-is'"
 	},
 	"devDependencies": {
