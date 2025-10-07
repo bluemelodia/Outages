@@ -1,12 +1,14 @@
+import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
 
-const cryptoOptions = [
-	{ value: 'BTC', text: 'Bitcoin (BTC)' },
-	{ value: 'ETH', text: 'Ethereum (ETH)' },
-	{ value: 'ADA', text: 'Cardano (ADA)' }
-];
-
 function loadSendCryptoPage() {
+	loadCryptocurrencies()
+		.then(cryptoOptions => {
+			doLoadSendCryptoPage(cryptoOptions);
+		});
+}
+
+function doLoadSendCryptoPage(cryptoOptions) {
 	const container = document.getElementById('send-crypto-page');
 	if (container == null) {
 		console.error("Send crypto page container not found");
@@ -48,12 +50,17 @@ function loadSendCryptoPage() {
 	const cryptoSelect = document.createElement('select');
 	cryptoSelect.id = 'crypto-type';
 
-	cryptoOptions.forEach(opt => {
-		const option = document.createElement('option');
-		option.value = opt.value;
-		option.textContent = opt.text;
-		cryptoSelect.appendChild(option);
-	});
+	console.log("Crypto options:", cryptoOptions);
+	if (cryptoOptions.length === 0) {
+		cryptoSelect.disabled = true;
+	} else {
+		cryptoOptions.forEach(opt => {
+			const option = document.createElement('option');
+			option.value = opt.id;
+			option.textContent = opt.name;
+			cryptoSelect.appendChild(option);
+		});
+	}
 
 	cryptoGroup.appendChild(cryptoLabel);
 	cryptoGroup.appendChild(cryptoSelect);
