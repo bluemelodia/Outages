@@ -1,15 +1,22 @@
 import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
+import { showVerifyIdentityModal } from "./verify-identity.js";
 
 function loadSendCryptoPage() {
-	Promise.all([
-		loadCryptocurrencies(),
-		loadAddresses()
-	])
-		.then(([cryptoOptions, addresses]) => {
-			doLoadSendCryptoPage(cryptoOptions, addresses);
-		});
+    // Verify the user's identity.
+    showVerifyIdentityModal()
+        .then(() => {
+            // Once verified, load crypto/address data
+            return Promise.all([loadCryptocurrencies(), loadAddresses()]);
+        })
+        .then(([cryptoOptions, addresses]) => {
+            doLoadSendCryptoPage(cryptoOptions, addresses);
+        })
+        .catch(() => {
+            // If modal is dismissed or verification fails, go back to menu
+            navigateTo('menu');
+        });
 }
 
 function doLoadSendCryptoPage(cryptoOptions, addresses) {
