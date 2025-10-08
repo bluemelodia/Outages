@@ -44,8 +44,22 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	recipientInput.id = 'recipient';
 	recipientInput.placeholder = '0x742d35Cc6545C4532...';
 
+	// Create datalist for saved addresses
+	const datalist = document.createElement('datalist');
+	datalist.id = 'recipient-options';
+
+	addresses.forEach(addr => {
+		const option = document.createElement('option');
+		option.value = addr.address || addr.id;
+		datalist.appendChild(option);
+	});
+
+	// Link input to datalist
+	recipientInput.setAttribute('list', datalist.id);
+
 	recipientGroup.appendChild(recipientLabel);
 	recipientGroup.appendChild(recipientInput);
+	recipientGroup.appendChild(datalist); // attach datalist to DOM
 	container.appendChild(recipientGroup);
 
 	// Crypto type
@@ -103,50 +117,6 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	spinner.className = 'spinner';
 	spinner.id = 'send-spinner';
 	container.appendChild(spinner);
-
-	setupRecipientInlineAutocomplete(recipientInput, addresses);
-}
-
-function setupRecipientInlineAutocomplete(input, addresses) {
-    let ignoreNextInput = false;
-
-    input.addEventListener('input', () => {
-        if (ignoreNextInput) {
-            ignoreNextInput = false;
-            return;
-        }
-
-        const typed = input.value;
-        if (!typed) return;
-
-        // Find first address that starts with typed value
-        const match = addresses.find(a =>
-            (a.address || a.id || '').toLowerCase().startsWith(typed.toLowerCase())
-        );
-
-        if (match) {
-            const full = match.address || match.id;
-
-            if (full.toLowerCase() !== typed.toLowerCase()) {
-                // Fill input with full suggestion
-                ignoreNextInput = true; // prevent recursion
-                input.value = full;
-
-                // Select the remaining suggested part
-                input.setSelectionRange(typed.length, full.length);
-            }
-        }
-    });
-
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            // Accept suggestion by removing selection
-            const end = input.selectionEnd;
-            if (end && input.value) {
-                input.setSelectionRange(end, end);
-            }
-        }
-    });
 }
 
 function initiateSendCrypto() {
