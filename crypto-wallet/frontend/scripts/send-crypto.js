@@ -39,33 +39,13 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	recipientLabel.setAttribute('for', 'recipient');
 	recipientLabel.textContent = 'Recipient Address';
 
-	const wrapper = document.createElement('div');
-	wrapper.className = 'recipient-wrapper';
-
-	const ghost = document.createElement('div');
-	ghost.id = 'recipient-suggestion';
-
-	const input = document.createElement('input');
-	input.type = 'text';
-	input.id = 'recipient';
-	input.placeholder = '0x742d35Cc6545C4532...';
-	wrapper.appendChild(ghost);
-	wrapper.appendChild(input);
+	const recipientInput = document.createElement('input');
+	recipientInput.type = 'text';
+	recipientInput.id = 'recipient';
+	recipientInput.placeholder = '0x742d35Cc6545C4532...';
 
 	recipientGroup.appendChild(recipientLabel);
-	recipientGroup.appendChild(wrapper);
-	container.appendChild(recipientGroup);
-
-	// Suggestion container
-	const suggestionBox = document.createElement('div');
-	suggestionBox.className = 'suggestion-box';
-	suggestionBox.style.display = 'none';
-	suggestionBox.style.position = 'absolute';
-	suggestionBox.style.top = '100%';
-	suggestionBox.style.left = '0';
-	suggestionBox.style.width = '100%';
-	recipientGroup.appendChild(suggestionBox);
-
+	recipientGroup.appendChild(recipientInput);
 	container.appendChild(recipientGroup);
 
 	// Crypto type
@@ -124,39 +104,49 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	spinner.id = 'send-spinner';
 	container.appendChild(spinner);
 
-	setupRecipientInlineAutocomplete(input, ghost, addresses);
+	setupRecipientInlineAutocomplete(recipientInput, addresses);
 }
 
-function setupRecipientInlineAutocomplete(input, ghost, addresses) {
-	input.addEventListener('input', () => {
-		const value = input.value;
-		if (!value) {
-			ghost.textContent = '';
-			return;
-		}
+function setupRecipientInlineAutocomplete(input, addresses) {
+    let ignoreNextInput = false;
 
-		const match = addresses.find(a =>
-			(a.address || a.id || '').toLowerCase().startsWith(value.toLowerCase())
-		);
+    input.addEventListener('input', () => {
+        if (ignoreNextInput) {
+            ignoreNextInput = false;
+            return;
+        }
 
-		if (match) {
-			ghost.textContent = match.address || match.id; // full suggestion
-		} else {
-			ghost.textContent = '';
-		}
-	});
+        const typed = input.value;
+        if (!typed) return;
 
-	input.addEventListener('keydown', (e) => {
-		if (e.key === 'Enter') {
-			if (
-				ghost.textContent &&
-				ghost.textContent.toLowerCase().startsWith(input.value.toLowerCase())
-			) {
-				input.value = ghost.textContent;
-				ghost.textContent = '';
-			}
-		}
-	});
+        // Find first address that starts with typed value
+        const match = addresses.find(a =>
+            (a.address || a.id || '').toLowerCase().startsWith(typed.toLowerCase())
+        );
+
+        if (match) {
+            const full = match.address || match.id;
+
+            if (full.toLowerCase() !== typed.toLowerCase()) {
+                // Fill input with full suggestion
+                ignoreNextInput = true; // prevent recursion
+                input.value = full;
+
+                // Select the remaining suggested part
+                input.setSelectionRange(typed.length, full.length);
+            }
+        }
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            // Accept suggestion by removing selection
+            const end = input.selectionEnd;
+            if (end && input.value) {
+                input.setSelectionRange(end, end);
+            }
+        }
+    });
 }
 
 function initiateSendCrypto() {
