@@ -1,4 +1,5 @@
 @import url("./coin-table.css");
+@import url("./suggestions.css");
 @import url("./transactions.css");
 
 * {
@@ -129,7 +130,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .page h2 {

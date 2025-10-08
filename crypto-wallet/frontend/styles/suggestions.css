@@ -1,0 +1,30 @@
+/* Inline ghost suggestion overlay */
+.recipient-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+#recipient {
+  position: relative;
+  background: transparent;
+  z-index: 2;
+  color: #111827;
+}
+
+#recipient-suggestion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: #9ca3af;
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}

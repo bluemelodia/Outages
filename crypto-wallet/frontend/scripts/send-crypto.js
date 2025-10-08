@@ -1,14 +1,18 @@
+import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
 
 function loadSendCryptoPage() {
-	loadCryptocurrencies()
-		.then(cryptoOptions => {
-			doLoadSendCryptoPage(cryptoOptions);
+	Promise.all([
+		loadCryptocurrencies(),
+		loadAddresses()
+	])
+		.then(([cryptoOptions, addresses]) => {
+			doLoadSendCryptoPage(cryptoOptions, addresses);
 		});
 }
 
-function doLoadSendCryptoPage(cryptoOptions) {
+function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	const container = document.getElementById('send-crypto-page');
 	if (container == null) {
 		console.error("Send crypto page container not found");
@@ -30,15 +34,38 @@ function doLoadSendCryptoPage(cryptoOptions) {
 	// Recipient
 	const recipientGroup = document.createElement('div');
 	recipientGroup.className = 'form-group';
+
 	const recipientLabel = document.createElement('label');
 	recipientLabel.setAttribute('for', 'recipient');
 	recipientLabel.textContent = 'Recipient Address';
-	const recipientInput = document.createElement('input');
-	recipientInput.type = 'text';
-	recipientInput.id = 'recipient';
-	recipientInput.placeholder = '0x742d35Cc6545C4532...';
+
+	const wrapper = document.createElement('div');
+	wrapper.className = 'recipient-wrapper';
+
+	const ghost = document.createElement('div');
+	ghost.id = 'recipient-suggestion';
+
+	const input = document.createElement('input');
+	input.type = 'text';
+	input.id = 'recipient';
+	input.placeholder = '0x742d35Cc6545C4532...';
+	wrapper.appendChild(ghost);
+	wrapper.appendChild(input);
+
 	recipientGroup.appendChild(recipientLabel);
-	recipientGroup.appendChild(recipientInput);
+	recipientGroup.appendChild(wrapper);
+	container.appendChild(recipientGroup);
+
+	// Suggestion container
+	const suggestionBox = document.createElement('div');
+	suggestionBox.className = 'suggestion-box';
+	suggestionBox.style.display = 'none';
+	suggestionBox.style.position = 'absolute';
+	suggestionBox.style.top = '100%';
+	suggestionBox.style.left = '0';
+	suggestionBox.style.width = '100%';
+	recipientGroup.appendChild(suggestionBox);
+
 	container.appendChild(recipientGroup);
 
 	// Crypto type
@@ -96,6 +123,40 @@ function doLoadSendCryptoPage(cryptoOptions) {
 	spinner.className = 'spinner';
 	spinner.id = 'send-spinner';
 	container.appendChild(spinner);
+
+	setupRecipientInlineAutocomplete(input, ghost, addresses);
+}
+
+function setupRecipientInlineAutocomplete(input, ghost, addresses) {
+	input.addEventListener('input', () => {
+		const value = input.value;
+		if (!value) {
+			ghost.textContent = '';
+			return;
+		}
+
+		const match = addresses.find(a =>
+			(a.address || a.id || '').toLowerCase().startsWith(value.toLowerCase())
+		);
+
+		if (match) {
+			ghost.textContent = match.address || match.id; // full suggestion
+		} else {
+			ghost.textContent = '';
+		}
+	});
+
+	input.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') {
+			if (
+				ghost.textContent &&
+				ghost.textContent.toLowerCase().startsWith(input.value.toLowerCase())
+			) {
+				input.value = ghost.textContent;
+				ghost.textContent = '';
+			}
+		}
+	});
 }
 
 function initiateSendCrypto() {
