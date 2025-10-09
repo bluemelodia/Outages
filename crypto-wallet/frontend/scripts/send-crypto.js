@@ -2,7 +2,7 @@ import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
 import { addTransaction } from "./transactions.js";
-import { showError } from "./utils.js";
+import { hideSpinner, showError, showSpinner } from "./utils.js";
 import { showVerifyIdentityModal } from "./verify-identity.js";
 
 function loadSendCryptoPage() {
@@ -16,6 +16,7 @@ function loadSendCryptoPage() {
 			doLoadSendCryptoPage(cryptoOptions, addresses);
 		})
 		.catch(() => {
+			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
 			// If modal is dismissed or verification fails, go back to menu
 			navigateTo('menu');
 		});
@@ -121,18 +122,12 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	backButton.textContent = 'Back to Menu';
 	backButton.addEventListener('click', () => navigateTo('menu'));
 	container.appendChild(backButton);
-
-	const spinner = document.createElement('div');
-	spinner.className = 'spinner';
-	spinner.id = 'send-spinner';
-	container.appendChild(spinner);
 }
 
 function initiateSendCrypto() {
 	const recipientInput = document.getElementById('recipient');
 	const cryptoSelect = document.getElementById('crypto-type');
 	const amountInput = document.getElementById('amount');
-	const spinner = document.getElementById('send-spinner');
 
 	const address = recipientInput.value.trim();
 	const amount = amountInput.value.trim();
@@ -159,7 +154,7 @@ function initiateSendCrypto() {
 		return;
 	}
 
-	spinner.classList.add('active'); // show spinner
+	showSpinner();
 
 	// Create transaction object
 	const timestamp = new Date();
@@ -190,11 +185,13 @@ function initiateSendCrypto() {
 	};
 
 	console.log("Transaction to be submitted:", transaction);
+	doAddTransaction(transaction);
+}
 
+function doAddTransaction(transaction) {
 	addTransaction(transaction)
 		.then(docId => {
 			console.log("Transaction submitted successfully with ID:", docId);
-			spinner.classList.remove('active');
 
 			alert("Transaction Sent", "Your transaction was submitted successfully.")
 				.then(() => {
@@ -207,8 +204,10 @@ function initiateSendCrypto() {
 		})
 		.catch(err => {
 			console.error("Error submitting transaction:", err);
-			spinner.classList.remove('active');
 			alert("Transaction Failed", "Failed to send transaction. Please try again.");
+		})
+		.finally(() => {
+			hideSpinner();
 		});
 }
 

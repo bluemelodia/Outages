@@ -1,3 +1,4 @@
+import { withTimeout } from "./api.js";
 import { auth } from "./auth.js";
 
 async function loadAddresses() {
@@ -5,7 +6,7 @@ async function loadAddresses() {
 
 	if (user) {
 		try {
-			let addresses = await doLoadAddresses();
+			let addresses = await withTimeout(doLoadAddresses());
 			if (addresses.length === 0) {
 				return [];
 			} else {

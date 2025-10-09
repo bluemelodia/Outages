@@ -17,7 +17,19 @@ function showError(context, message) {
 	}
 }
 
+function showSpinner() {
+  const spinner = document.getElementById('global-spinner');
+  if (spinner) spinner.style.display = 'flex';
+}
+
+function hideSpinner() {
+  const spinner = document.getElementById('global-spinner');
+  if (spinner) spinner.style.display = 'none';
+}
+
 export {
 	createEnum,
 	showError,
+	showSpinner,
+	hideSpinner
 };

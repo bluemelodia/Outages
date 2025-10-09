@@ -23,6 +23,19 @@ async function apiCall(endpoint, options = {}) {
 	}
 }
 
+async function withTimeout(promise, timeoutMs = 10000) {
+  if (!navigator.onLine) {
+    throw new Error("No network connection. Please reconnect and try again.");
+  }
+
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out. Please try again.")), timeoutMs)
+  );
+
+  return Promise.race([promise, timeoutPromise]);
+}
+
 export {
-	apiCall
+	apiCall,
+	withTimeout
 };
