@@ -1,22 +1,24 @@
 import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
+import { addTransaction } from "./transactions.js";
+import { showError } from "./utils.js";
 import { showVerifyIdentityModal } from "./verify-identity.js";
 
 function loadSendCryptoPage() {
-    // Verify the user's identity.
-    showVerifyIdentityModal()
-        .then(() => {
-            // Once verified, load crypto/address data
-            return Promise.all([loadCryptocurrencies(), loadAddresses()]);
-        })
-        .then(([cryptoOptions, addresses]) => {
-            doLoadSendCryptoPage(cryptoOptions, addresses);
-        })
-        .catch(() => {
-            // If modal is dismissed or verification fails, go back to menu
-            navigateTo('menu');
-        });
+	// Verify the user's identity.
+	showVerifyIdentityModal()
+		.then(() => {
+			// Once verified, load crypto/address data
+			return Promise.all([loadCryptocurrencies(), loadAddresses()]);
+		})
+		.then(([cryptoOptions, addresses]) => {
+			doLoadSendCryptoPage(cryptoOptions, addresses);
+		})
+		.catch(() => {
+			// If modal is dismissed or verification fails, go back to menu
+			navigateTo('menu');
+		});
 }
 
 function doLoadSendCryptoPage(cryptoOptions, addresses) {
@@ -35,7 +37,7 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 
 	const errorDiv = document.createElement('div');
 	errorDiv.className = 'error-message';
-	errorDiv.id = 'send-error';
+	errorDiv.id = 'send-crypto-error';
 	container.appendChild(errorDiv);
 
 	// Recipient
@@ -127,6 +129,87 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 }
 
 function initiateSendCrypto() {
+	const recipientInput = document.getElementById('recipient');
+	const cryptoSelect = document.getElementById('crypto-type');
+	const amountInput = document.getElementById('amount');
+	const spinner = document.getElementById('send-spinner');
+
+	const address = recipientInput.value.trim();
+	const amount = amountInput.value.trim();
+	const selectedCrypto = cryptoSelect.options[cryptoSelect.selectedIndex];
+	const crypto = selectedCrypto ? selectedCrypto.value : '';
+	const cryptoName = selectedCrypto ? selectedCrypto.textContent : '';
+
+	// Basic validation
+	if (!address || !amount || !crypto) {
+		showError('send-crypto', 'Please fill in all fields before sending.');
+		return;
+	}
+
+	// Validate amount: must be numeric and up to 2 decimal places
+	const validAmountPattern = /^(?:\d+)(?:\.\d{1,2})?$/;
+	if (!validAmountPattern.test(amount)) {
+		showError('send-crypto', 'Please enter a valid dollar amount (e.g. 25 or 25.50).');
+		return;
+	}
+
+	const amountNum = parseFloat(amount);
+	if (isNaN(amountNum) || amountNum <= 0) {
+		showError('send-crypto', 'Amount must be a positive number.');
+		return;
+	}
+
+	spinner.classList.add('active'); // show spinner
+
+	// Create transaction object
+	const timestamp = new Date();
+	const formattedDate = timestamp.toLocaleString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		second: 'numeric',
+		timeZoneName: 'short'
+	});
+
+	const txId = `tx-${Date.now()}-${Math.floor(Math.random() * 10)}`;
+
+	const transaction = {
+		address: `To: ${address}`,
+		amount: amount.toString(),
+		crypto: crypto,
+		cryptoName: cryptoName,
+		date: formattedDate,
+		hash: address, // hash uses inputted address
+		id: txId,
+		isPositive: false,
+		status: "pending",
+		type: "send",
+		usdValue: amount.toString() // using amount entered directly
+	};
+
+	console.log("Transaction to be submitted:", transaction);
+
+	addTransaction(transaction)
+		.then(docId => {
+			console.log("Transaction submitted successfully with ID:", docId);
+			spinner.classList.remove('active');
+
+			alert("Transaction Sent", "Your transaction was submitted successfully.")
+				.then(() => {
+					// Reload fresh send crypto form
+					Promise.all([loadCryptocurrencies(), loadAddresses()])
+						.then(([cryptoOptions, addresses]) => {
+							doLoadSendCryptoPage(cryptoOptions, addresses);
+						});
+				})
+		})
+		.catch(err => {
+			console.error("Error submitting transaction:", err);
+			spinner.classList.remove('active');
+			alert("Transaction Failed", "Failed to send transaction. Please try again.");
+		});
 }
 
 export {

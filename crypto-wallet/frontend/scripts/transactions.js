@@ -128,6 +128,39 @@ async function doLoadTransactions() {
 	}
 }
 
+async function addTransaction(transactionData) {
+	const db = firebase.firestore();
+	const transactionsRef = db.collection("transactions");
+
+	// Generate document ID
+	const docId = `tx-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+	// Prepare data
+	const dataToStore = {
+		address: transactionData.address,
+		amount: transactionData.amount,
+		crypto: transactionData.crypto,
+		cryptoName: transactionData.cryptoName,
+		date: transactionData.date,
+		hash: transactionData.hash,
+		id: transactionData.id,
+		isPositive: transactionData.isPositive,
+		status: transactionData.status,
+		type: transactionData.type,
+		usdValue: transactionData.usdValue
+	};
+
+	try {
+		await transactionsRef.doc(docId).set(dataToStore);
+		console.log(`Transaction document added with ID: ${docId}`);
+		return docId;
+	} catch (err) {
+		console.error("Error adding transaction:", err);
+		throw err;
+	}
+}
+
 export {
-	loadTransactions
+	loadTransactions,
+	addTransaction
 };
