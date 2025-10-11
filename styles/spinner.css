@@ -1,0 +1,37 @@
+/* Global Spinner Overlay */
+.global-spinner-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0 */
+  background: rgba(0, 0, 0, 0.45); /* translucent dark overlay */
+  z-index: 9999; /* sits above everything */
+  justify-content: center;
+  align-items: center;
+  pointer-events: all; /* actively blocks clicks/touches */
+}
+
+/* When visible */
+.global-spinner-overlay.active {
+  display: flex;
+}
+
+/* Spinner */
+.spinner {
+  display: none;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto;
+}
+
+.spinner.active {
+  display: block;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -14,7 +14,7 @@ async function loadCryptocurrencies() {
 		} catch (error) {
 			console.error('Error loading cryptocurrencies:', error);
 			logger?.error('Failed to load cryptocurrencies', { error: error.message });
-			return [];
+			throw new Error("Failed to load cryptocurrencies.");
 		}
 	} else {
 		alert("Not Signed In", "You must be signed in to send crypto.");

@@ -17,7 +17,27 @@ function showError(context, message) {
 	}
 }
 
+function showSpinner() {
+  const overlay = document.getElementById('global-spinner-overlay');
+  const spinner = overlay?.querySelector('.spinner');
+  if (overlay && spinner) {
+    overlay.classList.add('active');
+    spinner.classList.add('active');
+  }
+}
+
+function hideSpinner() {
+  const overlay = document.getElementById('global-spinner-overlay');
+  const spinner = overlay?.querySelector('.spinner');
+  if (overlay && spinner) {
+    overlay.classList.remove('active');
+    spinner.classList.remove('active');
+  }
+}
+
 export {
 	createEnum,
 	showError,
+	showSpinner,
+	hideSpinner
 };

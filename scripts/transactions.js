@@ -1,7 +1,9 @@
+import { withTimeout } from './api.js';
 import { auth } from './auth.js';
 import { formatTransactionDate } from './formatters.js';
 import { logger } from './logger.js';
 import { navigateTo } from './navigation.js';
+import { hideSpinner, showSpinner } from './utils.js';
 
 // Render one transaction
 function renderTransaction(transaction) {
@@ -51,11 +53,10 @@ async function loadTransactions() {
 	container.innerHTML = '';
 
 	const parent = document.getElementById('transactions-page');
-	const spinner = document.getElementById('transactions-spinner');
 	const errorEl = document.getElementById('transactions-error');
 
 	// Clear previous transactions list...
-	spinner.classList.add('active');
+	showSpinner();
 
 	parent.querySelectorAll('.btn-secondary').forEach(el => {
 		el.remove();
@@ -70,7 +71,7 @@ async function loadTransactions() {
 
 	if (user) {
 		try {
-			let transactions = await doLoadTransactions();
+			const transactions = await withTimeout(doLoadTransactions());
 			if (transactions.length === 0) {
 				container.innerHTML = `<div>📭 No transactions yet</div>`;
 			} else {
@@ -85,7 +86,7 @@ async function loadTransactions() {
 			errorEl.textContent = 'Failed to load transactions. Please try again.';
 			errorEl.classList.add('active');
 		} finally {
-			spinner.classList.remove('active');
+			hideSpinner();
 		}
 	} else {
 		alert("Not Signed In", "You must be signed in to view transactions.");
@@ -128,6 +129,39 @@ async function doLoadTransactions() {
 	}
 }
 
+async function addTransaction(transactionData) {
+	const db = firebase.firestore();
+	const transactionsRef = db.collection("transactions");
+
+	// Generate document ID
+	const docId = `tx-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+	// Prepare data
+	const dataToStore = {
+		address: transactionData.address,
+		amount: transactionData.amount,
+		crypto: transactionData.crypto,
+		cryptoName: transactionData.cryptoName,
+		date: transactionData.date,
+		hash: transactionData.hash,
+		id: transactionData.id,
+		isPositive: transactionData.isPositive,
+		status: transactionData.status,
+		type: transactionData.type,
+		usdValue: transactionData.usdValue
+	};
+
+	try {
+		await withTimeout(transactionsRef.doc(docId).set(dataToStore));
+		console.log(`Transaction document added with ID: ${docId}`);
+		return docId;
+	} catch (err) {
+		console.error("Error adding transaction:", err);
+		throw err;
+	}
+}
+
 export {
-	loadTransactions
+	loadTransactions,
+	addTransaction
 };

@@ -1,7 +1,7 @@
 import { auth, logoutUser } from "./auth.js";
 import { createPasswordField } from "./form-common.js";
 import { navigateTo } from "./navigation.js";
-import { showError } from "./utils.js";
+import { hideSpinner, showError, showSpinner } from "./utils.js";
 
 function loadChangeCredentialsPage() {
 	const container = document.getElementById('credentials-page');
@@ -38,12 +38,6 @@ function loadChangeCredentialsPage() {
 	backBtn.textContent = 'Back to Menu';
 	backBtn.onclick = () => navigateTo('menu');
 	container.appendChild(backBtn);
-
-	// Spinner
-	const spinner = document.createElement('div');
-	spinner.className = 'spinner';
-	spinner.id = 'credentials-spinner';
-	container.appendChild(spinner);
 }
 
 function initiateChangeCredentials() {
@@ -54,7 +48,6 @@ async function processChangeCredentials() {
 	const currentPassword = document.getElementById('current-password').value;
 	const newPassword = document.getElementById('new-password').value;
 	const confirmPassword = document.getElementById('confirm-password').value;
-	const spinner = document.getElementById('credentials-spinner');
 
 	if (!currentPassword || !newPassword || !confirmPassword) {
 		showError('credentials', 'Please fill in all fields');
@@ -77,13 +70,13 @@ async function processChangeCredentials() {
 	}
 
 	try {
-		spinner.classList.add('active');
+		showSpinner();
 		changePassword(newPassword);
 	} catch (error) {
 		showError('credentials', 'Failed to update credentials. Please try again.');
 		console.error("Error details:", error);
 	} finally {
-		spinner.classList.remove('active');
+		hideSpinner();
 	}
 }
 
