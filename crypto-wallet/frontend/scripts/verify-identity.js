@@ -48,7 +48,7 @@ function showVerifyIdentityModal() {
             modal.remove();
             document.body.style.pointerEvents = ''; // re-enable page
             resolve(); // Resolve promise after verification
-        }, 1500); // e.g., 1.5s
+        }, 1000); // e.g., 1.5s
     });
 }
 

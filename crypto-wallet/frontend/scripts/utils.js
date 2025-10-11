@@ -18,13 +18,21 @@ function showError(context, message) {
 }
 
 function showSpinner() {
-  const spinner = document.getElementById('global-spinner');
-  if (spinner) spinner.style.display = 'flex';
+  const overlay = document.getElementById('global-spinner-overlay');
+  const spinner = overlay?.querySelector('.spinner');
+  if (overlay && spinner) {
+    overlay.classList.add('active');
+    spinner.classList.add('active');
+  }
 }
 
 function hideSpinner() {
-  const spinner = document.getElementById('global-spinner');
-  if (spinner) spinner.style.display = 'none';
+  const overlay = document.getElementById('global-spinner-overlay');
+  const spinner = overlay?.querySelector('.spinner');
+  if (overlay && spinner) {
+    overlay.classList.remove('active');
+    spinner.classList.remove('active');
+  }
 }
 
 export {

@@ -185,7 +185,10 @@ function initiateSendCrypto() {
 	};
 
 	console.log("Transaction to be submitted:", transaction);
-	doAddTransaction(transaction);
+	
+	setTimeout(() => {
+		doAddTransaction(transaction);
+	}, 5000);
 }
 
 function doAddTransaction(transaction) {
