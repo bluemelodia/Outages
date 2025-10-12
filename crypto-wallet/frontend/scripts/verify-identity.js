@@ -1,6 +1,7 @@
 import { apiCall, withTimeout } from "./api.js";
 import { getConfig } from "./config.js";
 import { logger } from "./logger.js";
+import { navigateTo } from "./navigation.js";
 
 function showVerifyIdentityModal() {
 	const modal = createVerifyIdentityModal();
@@ -31,7 +32,7 @@ function createVerifyIdentityModal() {
 	closeBtn.style.fontSize = '1.5rem';
 	closeBtn.addEventListener('click', () => {
 		removeModal(modal);
-		reject(); // Reject the promise if user closes modal
+		navigateTo("menu");
 	});
 
 	// Spinner

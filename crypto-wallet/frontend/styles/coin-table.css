@@ -25,6 +25,26 @@
   position: relative;
 }
 
+/* Purple scrollbar for coin table */
+.table-scroll-wrapper::-webkit-scrollbar {
+  height: 8px; /* horizontal scrollbar height */
+  width: 8px;  /* vertical scrollbar width if vertical scrolling is present */
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #5a67d8;
+}
+
 /* Scroll wrapper handles horizontal scrolling only */
 .table-scroll-wrapper {
   overflow-x: auto; /* horizontal scroll */
