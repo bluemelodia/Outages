@@ -5,8 +5,8 @@
 	"main": "index.html",
 	"homepage": "https://bluemelodia.github.io/Outages",
 	"scripts": {
-		"start": "live-server frontend --open=index.html",
-		"dev": "live-server frontend --open=index.html",
+		"start": "live-server frontend --open=index.html --port=3000 --host=localhost",
+		"dev": "live-server frontend --open=index.html --port=3000 --host=localhost",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git",
 		"build": "echo 'Nothing to build, copying frontend as-is'"
