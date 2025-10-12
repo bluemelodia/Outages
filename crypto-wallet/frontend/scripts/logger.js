@@ -41,7 +41,7 @@ function setupLogger() {
 				log: (level, message, metadata = {}) => {
 					const user = auth.currentUser?.email || "pre-login";
 
-					fetch(`${getLoggingURL()}/logs?source=${config.logger.sourceID}`, {
+					fetch(config.logger.url, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
@@ -74,14 +74,6 @@ function setupLogger() {
 
 		logger.info("🚀 Logger initialized");
 	});
-}
-
-function getLoggingURL() {
-	if (isProduction()) {
-		return "https://api.logflare.app";
-	} else {
-		return "http://localhost:8010/proxy";
-	}
 }
 
 export {
