@@ -2,14 +2,15 @@ import { keys, fetchAllKeys } from "./keys.js";
 import { isProduction } from "./logger.js";
 
 let cachedConfig = null;
+let ignoreCache = true;
 
 async function clearConfigCache() {
-	cachedConfig = null;
+	ignoreCache = true;
 }
 
 async function getConfig() {
   // Return cached config if it exists
-  if (cachedConfig) {
+  if (cachedConfig && !ignoreCache) {
     return cachedConfig;
   }
 
@@ -18,9 +19,9 @@ async function getConfig() {
 
   // Build config
   cachedConfig = {
-    VERIFY_IDENTITY_URL: getVerifyIdentityURL(),
-    VERIFICATION_CODE_LENGTH: 6,
-    MAX_VERIFICATION_ATTEMPTS: 3,
+	verifyIdentity: {
+		url: getVerifyIdentityURL()
+	},
     logger: {
       accessToken: keys.LOGGER_API_ACCESS_TOKEN,
       apiKey: keys.LOGGER_API_KEY,
@@ -32,6 +33,8 @@ async function getConfig() {
       url: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
     }
   };
+
+  ignoreCache = false;
 
   return cachedConfig;
 }
