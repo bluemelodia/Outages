@@ -5,6 +5,12 @@ import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { loadCoinMarketTable } from "./market-table.js";
 
+/**
+ * Tech debt: the initilization sequence is very
+ * tightly coupled. This will be refactored as
+ * part of the upcoming login rewrite, don't
+ * touch this for now.
+ */
 function initializeApp() {
 	console.log('Initializing app...');
 	setupAlerts();

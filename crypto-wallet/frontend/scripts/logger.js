@@ -1,8 +1,14 @@
 import { auth } from './auth.js';
 import { config } from './config.js';
+import { createEnum } from './utils.js';
 
-let environment = null;
 let logger = null;
+let environment = null;
+
+const environments = createEnum([
+	"development",
+	"production"
+])
 
 function getEnvironment() {
 	const hostname = window.location.hostname;
@@ -11,7 +17,12 @@ function getEnvironment() {
 		hostname === "127.0.0.1" ||
 		hostname.endsWith(".local") ||
 		hostname.startsWith("192.168.") // optional for local network
-	) ? "development" : "production";
+	) ? environments.development : environments.production;
+	return environment;
+}
+
+function isProduction() {
+	return environment === environments.production;
 }
 
 function setupLogger() {
@@ -68,6 +79,7 @@ function setupLogger() {
 }
 
 export {
+	isProduction,
 	logger,
 	setupLogger
 };

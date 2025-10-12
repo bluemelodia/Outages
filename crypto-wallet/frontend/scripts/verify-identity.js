@@ -1,3 +1,6 @@
+import { apiCall, withTimeout } from "./api.js";
+import { isProduction } from "./logger.js";
+
 function showVerifyIdentityModal() {
     return new Promise((resolve, reject) => {
         // Create modal
@@ -18,7 +21,7 @@ function showVerifyIdentityModal() {
         closeBtn.style.cursor = 'pointer';
         closeBtn.style.fontSize = '1.5rem';
         closeBtn.addEventListener('click', () => {
-            modal.remove();
+            removeModal(modal);
             reject(); // Reject the promise if user closes modal
         });
 
@@ -43,13 +46,31 @@ function showVerifyIdentityModal() {
         document.body.style.pointerEvents = 'none';
         modal.style.pointerEvents = 'auto';
 
-        // Simulate verification delay (replace with real auth check)
-        setTimeout(() => {
-            modal.remove();
-            document.body.style.pointerEvents = ''; // re-enable page
-            resolve(); // Resolve promise after verification
-        }, 1000); // e.g., 1.5s
+		// Call backend API with timeout
+        withTimeout(apiCall(getVerifyIdentityURL()), 5000)
+            .then(data => {
+				console.log("Identity verified:", data);
+                removeModal(modal);
+                resolve(data);
+            })
+			.catch(error => {
+				removeModal(modal);
+				reject(error);
+			});
     });
+}
+
+function getVerifyIdentityURL() {
+	if (isProduction()) {
+		return "https://api.crypto-wallet.com";
+	} else {
+		return "http://localhost:8080";
+	}
+}
+
+function removeModal(modal) {
+	modal.remove();
+	document.body.style.pointerEvents = '';
 }
 
 export {

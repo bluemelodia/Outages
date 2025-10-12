@@ -1,7 +1,7 @@
 import { keys } from './keys.js';
 
 const config = {
-	API_BASE: 'http://localhost:8080/api',
+	API_BASE: 'http://localhost:3000/api',
 	VERIFICATION_CODE_LENGTH: 6,
 	MAX_VERIFICATION_ATTEMPTS: 3,
 	logger: {
