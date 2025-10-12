@@ -11,20 +11,18 @@
     "start:logflare-proxy": "npx lcp --proxyUrl https://api.logflare.app --port 8010",
     "predeploy": "npm run build",
     "deploy": "npx gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git --message \"force deploy\"",
-	"build": "echo 'Nothing to build, copying frontend as-is'"
+    "build": "echo 'Nothing to build, copying frontend as-is'"
   },
   "devDependencies": {
+    "concurrently": "9.2.1",
     "gh-pages": "6.3.0",
     "live-server": "1.2.2",
-    "local-cors-proxy": "1.1.0",
-    "concurrently": "^9.2.1"
+    "local-cors-proxy": "1.1.0"
   },
   "engines": {
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "firebase": "^12.3.0",
-    "pino": "9.12.0",
-    "pino-logflare": "0.5.2"
+    "firebase": "^12.3.0"
   }
 }
