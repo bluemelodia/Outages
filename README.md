@@ -71,7 +71,7 @@ Check for updates at:
 
 ## Logging
 
-You can see development URLs at:
+You can see development logs at:
 https://logflare.app/sources/public/9t3K-rwLUo8Xzto7
 
 There is currently no support for logging in production.
