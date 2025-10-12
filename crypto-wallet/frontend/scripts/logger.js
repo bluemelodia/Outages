@@ -1,85 +1,91 @@
 import { auth } from './auth.js';
-import { config } from './config.js';
+import { getConfig } from './config.js';
 import { createEnum } from './utils.js';
 
 let logger = null;
 let environment = null;
+let config = null;
 
 const environments = createEnum([
 	"development",
 	"production"
-])
+]);
 
 function getEnvironment() {
+	if (environment) return environment;
+
 	const hostname = window.location.hostname;
 	environment = (
 		hostname === "localhost" ||
 		hostname === "127.0.0.1" ||
 		hostname.endsWith(".local") ||
-		hostname.startsWith("192.168.") // optional for local network
+		hostname.startsWith("192.168.")
 	) ? environments.development : environments.production;
+
 	return environment;
 }
 
 function isProduction() {
-	return environment === environments.production;
+	return getEnvironment() === environments.production;
 }
 
 function setupLogger() {
 	environment = getEnvironment();
 
-	// -------------------- Tiny Logger --------------------
-	logger = (() => {
-		const originalLogger = {
-			log: (level, message, metadata = {}) => {
-				// TODO: clean up localStorage usage in the next release.
-				// const user = localStorage.getItem("loggedInUser") || "pre-login";
-				let user = auth.currentUser;
+	// Wait for config to load, then initialize logger
+	getConfig().then(cfg => {
+		config = cfg;
 
-				if (user) {
-					console.log("Current user:", user.email || user.phoneNumber);
-				} else {
-					console.log("No user logged in");
-					user = "pre-login"
-				}
+		logger = (() => {
+			const originalLogger = {
+				log: (level, message, metadata = {}) => {
+					const user = auth.currentUser?.email || "pre-login";
 
-				fetch(`http://localhost:8010/proxy/logs?source=${config.logger.sourceID}`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-API-KEY": config.logger.apiKey,
-						"Authorization": `Bearer ${config.logger.accessToken}`
-					},
-					body: JSON.stringify({
-						message: `[${user}][${environment}] ${message}`,
-						metadata: {
-							level,
-							time: new Date().toISOString(),
-							user,
-							...metadata
-						}
+					fetch(`${getLoggingURL()}/logs?source=${config.logger.sourceID}`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"X-API-KEY": config.logger.apiKey,
+							"Authorization": `Bearer ${config.logger.accessToken}`
+						},
+						body: JSON.stringify({
+							message: `[${user}][${environment}] ${message}`,
+							metadata: {
+								level,
+								time: new Date().toISOString(),
+								user,
+								...metadata
+							}
+						})
 					})
-				})
-					.then(r => r.text())
-					.then(console.log)
-					.catch(err => console.error("Logger error:", err));
-			}
-		};
+						.then(r => r.text())
+						.then(console.log)
+						.catch(err => console.error("Logger error:", err));
+				}
+			};
 
-		return {
-			log: originalLogger.log,
-			info: (msg, meta) => originalLogger.log("info", msg, meta),
-			warn: (msg, meta) => originalLogger.log("warn", msg, meta),
-			error: (msg, meta) => originalLogger.log("error", msg, meta)
-		};
-	})();
+			return {
+				log: originalLogger.log,
+				info: (msg, meta) => originalLogger.log("info", msg, meta),
+				warn: (msg, meta) => originalLogger.log("warn", msg, meta),
+				error: (msg, meta) => originalLogger.log("error", msg, meta)
+			};
+		})();
 
-	// Example usage
-	logger.info("🚀 Logger initialized"); // user: "pre-login" if no one is logged in
+		logger.info("🚀 Logger initialized");
+	});
+}
+
+function getLoggingURL() {
+	if (isProduction()) {
+		return "https://api.logflare.app";
+	} else {
+		return "http://localhost:8010/proxy";
+	}
 }
 
 export {
 	isProduction,
-	logger,
-	setupLogger
+	setupLogger,
+	logger
 };

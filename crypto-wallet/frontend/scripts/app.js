@@ -1,6 +1,6 @@
 import { setupAlerts } from "./alerts.js";
 import { loginUser, setupFirebase } from "./auth.js";
-import { fetchCoinGeckoApiKey } from "./keys.js";
+import { fetchAllKeys } from "./keys.js";
 import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { loadCoinMarketTable } from "./market-table.js";
@@ -17,7 +17,7 @@ function initializeApp() {
 	setupLoginForm();
 	setupFirebase();
 	// Note: Must be called *after* Firebase is set up.
-	fetchCoinGeckoApiKey();
+	fetchAllKeys();
 	setupLogger();
 	loadCoinMarketTable();
 	initializeEventListeners();

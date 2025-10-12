@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { getConfig } from "./config.js";
 import { formatLargeNumber } from "./formatters.js";
 import { logger } from "./logger.js";
 
@@ -6,9 +6,14 @@ let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
 
 function loadCoinMarketTable() {
-	logger.info('Fetch crypto data');
+	getConfig().then(cfg => {
+		logger.info('Fetch crypto data');
+		doLoadCoinMarketTable(cfg);
+	});
+}
 
-	fetch(config.coinGecko.url, {
+function doLoadCoinMarketTable(config) {
+		fetch(config.coinGecko.url, {
 		headers: {
 			'x_cg_demo_api_key': config.coinGecko.apiKey
 		}
