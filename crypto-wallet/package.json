@@ -10,8 +10,8 @@
     "start:backend-proxy": "npx lcp --proxyUrl http://localhost:8080 --port 8011",
     "start:logflare-proxy": "npx lcp --proxyUrl https://api.logflare.app --port 8010",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git",
-    "build": "echo 'Nothing to build, copying frontend as-is'"
+    "deploy": "npx gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git --message \"force deploy\"",
+	"build": "echo 'Nothing to build, copying frontend as-is'"
   },
   "devDependencies": {
     "gh-pages": "6.3.0",
