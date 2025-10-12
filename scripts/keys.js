@@ -1,3 +1,5 @@
+import { auth } from "./auth.js";
+
 const keys = {
 	COINGECKO_API_KEY: "",
 	LOGGER_API_KEY: "",
@@ -5,62 +7,59 @@ const keys = {
 	LOGGER_API_SOURCEID: ""
 };
 
+// Fetch public CoinGecko key
 async function fetchCoinGeckoApiKey() {
-    const db = firebase.firestore();
+	const db = firebase.firestore();
 
-    try {
-        const publicKeysDocRef = db.collection("keys").doc("public_api_credentials");
-        const docSnapshot = await publicKeysDocRef.get();
-
-        if (docSnapshot.exists) {
-            const data = docSnapshot.data();
-            keys.COINGECKO_API_KEY = data.COINGECKO_API_KEY;
-        } else {
+	try {
+		const docSnapshot = await db.collection("keys").doc("public_api_credentials").get();
+		if (docSnapshot.exists) {
+			keys.COINGECKO_API_KEY = docSnapshot.data().COINGECKO_API_KEY;
+		} else {
 			console.error("Failed to retrieve CoinGecko API key.");
-            return;
-        }
-    } catch (error) {
-        console.error("Error fetching CoinGecko API Key:", error);
-        return;
-    }
+		}
+	} catch (error) {
+		console.error("Error fetching CoinGecko API Key:", error);
+	}
 }
 
+// Fetch private Logger keys
 async function fetchPrivateLoggerApiKeys() {
-    const authInstance = firebase.auth();
-    const db = firebase.firestore();
+	const authInstance = firebase.auth();
+	const db = firebase.firestore();
 
-    const currentUser = authInstance.currentUser;
+	const currentUser = authInstance.currentUser;
+	if (!currentUser) {
+		console.warn("User is not authenticated. Cannot fetch private Logger API keys.");
+		return null;
+	}
 
-    if (!currentUser) {
-        console.warn("User is not authenticated. Cannot fetch private Logger API keys.");
-        alert("Authentication Required", "You must be signed in to access post-auth API keys.");
-        return null;
-    }
-
-    try {
-        const privateKeysDocRef = db.collection("keys").doc("private_api_credentials");
-        const docSnapshot = await privateKeysDocRef.get();
-
-        if (docSnapshot.exists) {
-            const data = docSnapshot.data();
-
+	try {
+		const docSnapshot = await db.collection("keys").doc("private_api_credentials").get();
+		if (docSnapshot.exists) {
+			const data = docSnapshot.data();
 			keys.LOGGER_API_KEY = data.LOGGER_API_KEY;
 			keys.LOGGER_API_ACCESS_TOKEN = data.LOGGER_API_ACCESS_TOKEN;
 			keys.LOGGER_API_SOURCEID = data.LOGGER_API_SOURCEID;
-            return;
-        } else {
+		} else {
 			console.error("Failed to retrieve post-auth API keys.");
-            return;
-        }
-    } catch (error) {
-        console.error("Error fetching post-auth API Keys:", error);
-        alert("Error", `Failed to retrieve post-auth API keys: ${error.message}`);
-        return;
-    }
+		}
+	} catch (error) {
+		console.error("Error fetching post-auth API Keys:", error);
+	}
 }
 
-export {
+// Fetch all keys
+async function fetchAllKeys() {
+	await fetchCoinGeckoApiKey();
+
+	const user = auth.currentUser;
+	if (user) {
+		await fetchPrivateLoggerApiKeys();
+	}
+}
+
+export { 
 	keys,
-	fetchCoinGeckoApiKey,
-	fetchPrivateLoggerApiKeys
- };
+	fetchAllKeys
+};

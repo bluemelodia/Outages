@@ -1,18 +1,24 @@
 import { setupAlerts } from "./alerts.js";
 import { loginUser, setupFirebase } from "./auth.js";
-import { fetchCoinGeckoApiKey } from "./keys.js";
+import { fetchAllKeys } from "./keys.js";
 import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { loadCoinMarketTable } from "./market-table.js";
 
+/**
+ * Tech debt: the initilization sequence is very
+ * tightly coupled. This will be refactored as
+ * part of the upcoming login rewrite, don't
+ * touch this for now.
+ */
 function initializeApp() {
 	console.log('Initializing app...');
 	setupAlerts();
-	setupLoginForm();
 	setupFirebase();
-	// Note: Must be called *after* Firebase is set up.
-	fetchCoinGeckoApiKey();
 	setupLogger();
+	setupLoginForm();
+	// Note: Must be called *after* Firebase is set up.
+	fetchAllKeys();
 	loadCoinMarketTable();
 	initializeEventListeners();
 

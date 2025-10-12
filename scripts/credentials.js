@@ -1,3 +1,4 @@
+import { withTimeout } from "./api.js";
 import { auth, logoutUser } from "./auth.js";
 import { createPasswordField } from "./form-common.js";
 import { navigateTo } from "./navigation.js";
@@ -69,22 +70,21 @@ async function processChangeCredentials() {
 		return;
 	}
 
-	try {
-		showSpinner();
-		changePassword(newPassword);
-	} catch (error) {
-		showError('credentials', 'Failed to update credentials. Please try again.');
-		console.error("Error details:", error);
-	} finally {
-		hideSpinner();
-	}
+	withTimeout(changePassword(newPassword))
+		.catch(() => {
+			showError('credentials', 'Failed to update credentials. Please try again.');
+		})
+		.finally(() => {
+			hideSpinner();
+		});
 }
 
 function changePassword(newPassword) {
 	const user = auth.currentUser;
+	showSpinner();
 
 	if (user) {
-		user.updatePassword(newPassword)
+		return user.updatePassword(newPassword)
 			.then(() => {
 				// Password updated successfully!
 				console.log("Password updated!");
@@ -98,9 +98,10 @@ function changePassword(newPassword) {
 				if (error.code === "auth/requires-recent-login") {
 					// The user's sign-in session is too old.
 					// Prompt the user to re-authenticate before trying again.
-					alert("Re-login Needed", "For security, please sign in again to change your password.");
-					// Redirect to a re-authentication flow or show a modal.
-					logoutUser();
+					alert("Re-login Needed", "For security, please sign in again to change your password.")
+						.then(() => {
+							logoutUser();	
+						});
 				} else if (error.code === "auth/weak-password") {
 					alert("Invalid Password", "The new password is too weak. Please choose a stronger one.");
 				} else {
@@ -110,8 +111,12 @@ function changePassword(newPassword) {
 			});
 	} else {
 		console.log("No user is signed in.");
-		alert("Login Required", "You must be signed in to change your password.");
-		logoutUser();
+		alert("Login Required", "You must be signed in to change your password.")
+			.then(() => {
+				logoutUser();	
+			});
+		
+		return Promise.reject();
 	}
 }
 

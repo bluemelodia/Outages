@@ -1,38 +1,50 @@
 import { logger } from "./logger.js";
 
-async function apiCall(endpoint, options = {}) {
-	logger.info(`API Call: ${endpoint}`, { method: options.method || 'GET' });
+async function apiCall(url, options = {}) {
+	logger.info(`API Call: ${url}`, { method: options.method || 'GET' });
 
-	try {
-		const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, {
-			headers: {
-				'Content-Type': 'application/json',
-				...options.headers
-			},
-			...options
-		});
+	return new Promise(async (resolve, reject) => {
+		try {
+			const response = await fetch(url, {
+				headers: {
+					'Content-Type': 'application/json',
+					...options.headers
+				},
+				...options
+			});
 
-		if (!response.ok) {
-			throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+			if (!response.ok) {
+				logger.error(`HTTP ${response.status}: ${response.statusText}`);
+				return;
+			}
+
+			// Handle both JSON and text responses
+			const contentType = response.headers.get('content-type');
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json();
+				resolve(data);
+			} else {
+				const text = await response.text();
+				resolve(text);
+			}
+		} catch (error) {
+			logger.info('API call failed:', error);
+			reject(error);
 		}
-
-		return await response.json();
-	} catch (error) {
-		logger.info('API call failed:', error);
-		throw error;
-	}
+	});
 }
 
 async function withTimeout(promise, timeoutMs = 10000) {
-  if (!navigator.onLine) {
-    throw new Error("No network connection. Please reconnect and try again.");
-  }
+	if (!navigator.onLine) {
+		throw new Error("No network connection. Please reconnect and try again.");
+	}
 
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Request timed out. Please try again.")), timeoutMs)
-  );
+	const timeoutPromise = new Promise((_, reject) => setTimeout(
+		() => { reject },
+		timeoutMs
+	));
 
-  return Promise.race([promise, timeoutPromise]);
+	return Promise.race([promise, timeoutPromise]);
 }
 
 export {

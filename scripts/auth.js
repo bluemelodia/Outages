@@ -1,7 +1,9 @@
-import { fetchPrivateLoggerApiKeys } from "./keys.js";
+import { clearConfigCache } from "./config.js";
+import { fetchAllKeys } from "./keys.js";
 import { logger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { hideMenu, navigateTo, showMenu } from "./navigation.js";
+import { hideSpinner, showSpinner } from "./utils.js";
 
 let auth = null;
 
@@ -41,7 +43,8 @@ function setupFirebase() {
 
 	auth.onAuthStateChanged((user) => {
 		if (user) {
-			fetchPrivateLoggerApiKeys();
+			clearConfigCache();
+			fetchAllKeys();
 
 			// User is signed in → show menu page
 			document.getElementById("login-page").classList.remove("active");
@@ -51,14 +54,10 @@ function setupFirebase() {
 			const welcomeEl = document.getElementById("welcome-message");
 			const nameOrEmail = user.displayName || user.email || "User";
 			welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
-
-			logger.info("User logged in", { user: nameOrEmail });
 		} else {
 			// No user → show login page
 			hideMenu();
 			document.getElementById("login-page").classList.add("active");
-
-			logger.info("No user logged in");
 		}
 	});
 }
@@ -99,6 +98,8 @@ function loginUser() {
 		return;
 	}
 
+	showSpinner();
+
 	auth.signInWithEmailAndPassword(email, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
@@ -117,6 +118,9 @@ function loginUser() {
 
 			// Display the custom, user-friendly message
 			showAuthError('login-error', customErrorMessage);
+		})
+		.finally(() => {
+			hideSpinner();
 		});
 }
 

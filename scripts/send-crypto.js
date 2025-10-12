@@ -8,17 +8,18 @@ import { showVerifyIdentityModal } from "./verify-identity.js";
 function loadSendCryptoPage() {
 	// Verify the user's identity.
 	showVerifyIdentityModal()
-		.then(() => {
-			// Once verified, load crypto/address data
-			return Promise.all([loadCryptocurrencies(), loadAddresses()]);
-		})
+		.catch((error) => {
+			console.error("Error during identity verification or loading data:", error);
+			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
+				.then(() => {
+					navigateTo('menu');
+				});			
+		});
+
+	// At the same time, load the form in the background.
+	Promise.all([loadCryptocurrencies(), loadAddresses()])
 		.then(([cryptoOptions, addresses]) => {
 			doLoadSendCryptoPage(cryptoOptions, addresses);
-		})
-		.catch(() => {
-			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
-			// If modal is dismissed or verification fails, go back to menu
-			navigateTo('menu');
 		});
 }
 
@@ -185,10 +186,7 @@ function initiateSendCrypto() {
 	};
 
 	console.log("Transaction to be submitted:", transaction);
-	
-	setTimeout(() => {
-		doAddTransaction(transaction);
-	}, 5000);
+	doAddTransaction(transaction);
 }
 
 function doAddTransaction(transaction) {

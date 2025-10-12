@@ -18,9 +18,10 @@ async function loadAddresses() {
 			return [];
 		}
 	} else {
-		alert("Not Signed In", "You must be signed in to send crypto.");
-		console.log("No user signed in. Cannot fetch crypto addresses.");
-		logoutUser();
+		alert("Not Signed In", "You must be signed in to send crypto.")
+			.then(() => {
+				logoutUser();	
+			});
 	}
 }
 

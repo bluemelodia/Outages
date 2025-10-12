@@ -17,9 +17,10 @@ async function loadCryptocurrencies() {
 			throw new Error("Failed to load cryptocurrencies.");
 		}
 	} else {
-		alert("Not Signed In", "You must be signed in to send crypto.");
-		console.log("No user signed in. Cannot fetch cryptocurrencies.");
-		logoutUser();
+		alert("Not Signed In", "You must be signed in to send crypto.")
+			.then(() => {
+				logoutUser();	
+			});
 	}
 }
 
