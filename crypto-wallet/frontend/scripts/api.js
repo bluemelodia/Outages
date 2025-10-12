@@ -3,7 +3,7 @@ import { logger } from "./logger.js";
 async function apiCall(url, options = {}) {
 	logger.info(`API Call: ${url}`, { method: options.method || 'GET' });
 
-	try {		
+	try {
 		const response = await fetch(url, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -13,13 +13,10 @@ async function apiCall(url, options = {}) {
 		});
 
 		if (!response.ok) {
-			console.error("===> non-HTTP status code");
 			logger.error(`HTTP ${response.status}: ${response.statusText}`);
-			return; // Bug: doesn't throw or return promise
+			return;
 		}
 
-		console.error("===> the response is great");
-		
 		// Handle both JSON and text responses
 		const contentType = response.headers.get('content-type');
 		if (contentType && contentType.includes('application/json')) {

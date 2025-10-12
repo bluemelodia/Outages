@@ -53,14 +53,10 @@ function setupFirebase() {
 			const welcomeEl = document.getElementById("welcome-message");
 			const nameOrEmail = user.displayName || user.email || "User";
 			welcomeEl.textContent = `Welcome, ${nameOrEmail}!`;
-
-			logger.info("User logged in", { user: nameOrEmail });
 		} else {
 			// No user → show login page
 			hideMenu();
 			document.getElementById("login-page").classList.add("active");
-
-			logger.info("No user logged in");
 		}
 	});
 }

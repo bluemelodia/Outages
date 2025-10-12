@@ -55,7 +55,6 @@ async function loadTransactions() {
 	const parent = document.getElementById('transactions-page');
 	const errorEl = document.getElementById('transactions-error');
 
-	// Clear previous transactions list...
 	showSpinner();
 
 	parent.querySelectorAll('.btn-secondary').forEach(el => {
@@ -89,9 +88,10 @@ async function loadTransactions() {
 			hideSpinner();
 		}
 	} else {
-		alert("Not Signed In", "You must be signed in to view transactions.");
-		console.log("No user signed in. Cannot fetch transactions.");
-		logoutUser();
+		alert("Not Signed In", "You must be signed in to view transactions.")
+			.then(() => {
+				logoutUser();
+			});
 	}
 }
 

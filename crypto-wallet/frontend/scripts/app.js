@@ -14,11 +14,11 @@ import { loadCoinMarketTable } from "./market-table.js";
 function initializeApp() {
 	console.log('Initializing app...');
 	setupAlerts();
-	setupLoginForm();
 	setupFirebase();
+	setupLogger();
+	setupLoginForm();
 	// Note: Must be called *after* Firebase is set up.
 	fetchAllKeys();
-	setupLogger();
 	loadCoinMarketTable();
 	initializeEventListeners();
 

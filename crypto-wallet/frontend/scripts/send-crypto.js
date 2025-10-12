@@ -18,8 +18,9 @@ function loadSendCryptoPage() {
 		.catch((error) => {
 			console.error("Error during identity verification or loading data:", error);
 			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
-			// If modal is dismissed or verification fails, go back to menu
-			navigateTo('menu');
+				.then(() => {
+					navigateTo('menu');
+				});			
 		});
 }
 
