@@ -50,7 +50,7 @@ function getVerifyIdentityURL() {
 function getLoggingURL(sourceID) {
 	let baseURL = ""
 	if (isProduction()) {
-		baseURL = "https://api.logflare.app/api/logs";
+		baseURL = "https://api.logflare.app/api/";
 	} else {
 		baseURL = "http://localhost:8010/proxy";
 	}
