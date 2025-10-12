@@ -3,6 +3,7 @@ import { fetchAllKeys } from "./keys.js";
 import { logger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
 import { hideMenu, navigateTo, showMenu } from "./navigation.js";
+import { hideSpinner, showSpinner } from "./utils.js";
 
 let auth = null;
 
@@ -97,6 +98,8 @@ function loginUser() {
 		return;
 	}
 
+	showSpinner();
+
 	auth.signInWithEmailAndPassword(email, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
@@ -115,6 +118,9 @@ function loginUser() {
 
 			// Display the custom, user-friendly message
 			showAuthError('login-error', customErrorMessage);
+		})
+		.finally(() => {
+			hideSpinner();
 		});
 }
 
