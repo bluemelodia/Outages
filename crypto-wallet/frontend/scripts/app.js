@@ -3,7 +3,7 @@ import { loginUser, setupFirebase } from "./auth.js";
 import { fetchAllKeys } from "./keys.js";
 import { logger, setupLogger } from "./logger.js";
 import { setupLoginForm } from "./login-form.js";
-import { loadCoinMarketTable } from "./market-table.js";
+import { createTableSpinnerOverlay, loadCoinMarketTable } from "./market-table.js";
 
 /**
  * Tech debt: the initilization sequence is very
@@ -13,6 +13,7 @@ import { loadCoinMarketTable } from "./market-table.js";
  */
 function initializeApp() {
 	console.log('Initializing app...');
+	createTableSpinnerOverlay();
 	setupAlerts();
 	setupFirebase();
 	setupLogger();

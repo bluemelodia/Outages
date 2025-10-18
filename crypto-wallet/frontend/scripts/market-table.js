@@ -4,6 +4,7 @@ import { logger } from "./logger.js";
 
 let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
+let tableSpinnerOverlay = null;
 
 function loadCoinMarketTable() {
 	getConfig().then(cfg => {
@@ -12,8 +13,51 @@ function loadCoinMarketTable() {
 	});
 }
 
+function createTableSpinnerOverlay() {
+	if (tableSpinnerOverlay) return;
+	
+	const overlay = document.createElement('div');
+	overlay.className = 'table-spinner-overlay';
+	
+	const spinner = document.createElement('div');
+	spinner.className = 'spinner';
+	
+	overlay.appendChild(spinner);
+	
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	if (tableWrapper) {
+		tableWrapper.insertBefore(overlay, tableWrapper.firstChild);
+		tableSpinnerOverlay = overlay;
+		
+		// Show it immediately
+		overlay.classList.add('active');
+		spinner.classList.add('active');
+	}
+}
+
+function showInlineSpinner() {
+	if (tableSpinnerOverlay) {
+		tableSpinnerOverlay.classList.add('active');
+		const spinner = tableSpinnerOverlay.querySelector('.spinner');
+		if (spinner) {
+			spinner.classList.add('active');
+		}
+	}
+}
+
+function hideInlineSpinner() {
+	if (tableSpinnerOverlay) {
+		tableSpinnerOverlay.classList.remove('active');
+		const spinner = tableSpinnerOverlay.querySelector('.spinner');
+		if (spinner) {
+			spinner.classList.remove('active');
+		}
+	}
+}
+
 function doLoadCoinMarketTable(config) {
-		fetch(config.coinGecko.url, {
+	showInlineSpinner()
+	fetch(config.coinGecko.url, {
 		headers: {
 			'x_cg_demo_api_key': config.coinGecko.apiKey
 		}
@@ -58,6 +102,7 @@ function doLoadCoinMarketTable(config) {
 }
 
 function renderCoinTable() {
+	hideInlineSpinner();
 	console.debug(`Successfully received crypto table data: ${coinTableData.count}`);
 
 	const table = document.getElementById('coin-market-table');
@@ -156,5 +201,6 @@ function renderCoinTable() {
 }
 
 export {
+	createTableSpinnerOverlay,
 	loadCoinMarketTable
 };
