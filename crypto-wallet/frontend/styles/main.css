@@ -26,9 +26,9 @@ body {
   overflow: hidden;
 }
 
-.main-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
+.main-flex {
+  display: flex;
+  align-items: flex-start;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -37,22 +37,25 @@ body {
   height: calc(100vh - 4rem); /* fill almost full viewport minus body padding */
 }
 
-.card-container,
-.table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* inherit from main-grid */
+.card-container {
+  width: 40%;
 }
 
 .table-container {
-  align-items: center;
-  justify-content: center;
+  width: 60%;
+}
+
+.card-container,
+.table-container {
+  height: 100%; /* inherit from main-flex */
 }
 
 /* On mobile: center card/table and constrain height */
 @media (max-width: 768px) {
-  .main-grid {
-    grid-template-columns: 1fr;
+  .main-flex {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     height: auto;
   }
 
@@ -78,29 +81,24 @@ body {
   }
 
   .table-scroll-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
     height: 400px; /* show only as many rows as fit card height */
-    width: 100%;
-    max-height: 100%;
-
-	overflow-y: auto; /* vertical scroll for overflow */
+    overflow-y: auto; /* vertical scroll for overflow */
     overflow-x: auto; /* horizontal scroll */
-    border-radius: 16px;
-  }
-
-  .table-scroll-wrapper.loading {
-    overflow-x: hidden;
-    overflow-y: hidden;
   }
 
   /* Instead of padding on scroll-wrapper, add margin to table */
   .coin-table {
     margin: 0 0.75rem; /* left/right spacing matching card */
   }
+}
+
+/* Table wrapper for horizontal scrolling */
+.table-scroll-wrapper {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto; /* vertical scroll */
+  overflow-x: auto; /* horizontal scroll */
+  border-radius: 16px;
 }
 
 .container {
