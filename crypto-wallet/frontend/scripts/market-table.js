@@ -14,44 +14,20 @@ function loadCoinMarketTable() {
 }
 
 function createTableSpinnerOverlay() {
-	if (tableSpinnerOverlay) return;
-	
-	const overlay = document.createElement('div');
-	overlay.className = 'table-spinner-overlay';
-	
-	const spinner = document.createElement('div');
-	spinner.className = 'spinner';
-	
-	overlay.appendChild(spinner);
-	
-	const tableWrapper = document.querySelector('.table-scroll-wrapper');
-	if (tableWrapper) {
-		tableWrapper.insertBefore(overlay, tableWrapper.firstChild);
-		tableSpinnerOverlay = overlay;
-		
-		// Show it immediately
-		overlay.classList.add('active');
-		spinner.classList.add('active');
-	}
+	tableSpinnerOverlay = document.querySelector('.table-spinner-overlay');
 }
 
 function showInlineSpinner() {
-	if (tableSpinnerOverlay) {
-		tableSpinnerOverlay.classList.add('active');
-		const spinner = tableSpinnerOverlay.querySelector('.spinner');
-		if (spinner) {
-			spinner.classList.add('active');
-		}
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	if (tableWrapper) {
+		tableWrapper.classList.add('loading');
 	}
 }
 
 function hideInlineSpinner() {
-	if (tableSpinnerOverlay) {
-		tableSpinnerOverlay.classList.remove('active');
-		const spinner = tableSpinnerOverlay.querySelector('.spinner');
-		if (spinner) {
-			spinner.classList.remove('active');
-		}
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	if (tableWrapper) {
+		tableWrapper.classList.remove('loading');
 	}
 }
 

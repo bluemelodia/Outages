@@ -11,22 +11,26 @@
   table-layout: auto; /* let columns size naturally */
 }
 
-.table-spinner-overlay {
+.table-loading {
   display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 100;
-  justify-content: center;
-  align-items: center;
-  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
 }
 
-.table-spinner-overlay.active {
-  display: flex;
+.table-scroll-wrapper.loading .table-loading {
+  display: block;
+}
+
+.table-scroll-wrapper.loading .coin-table {
+  display: none;
 }
 
 .table-scroll-wrapper {
   position: relative;
+  display: grid;
+  grid-template-rows: 1fr;
+  height: 100%;
+  place-items: center;
 }
 
 .table-container {
@@ -41,6 +45,10 @@
   overflow-x: hidden; /* horizontal scroll inside wrapper */
   display: block; /* Remove flex properties */
   position: relative;
+}
+
+.table-scroll-wrapper.loading {
+  overflow: hidden;
 }
 
 /* Purple scrollbar for coin table */
@@ -66,7 +74,7 @@
 /* Scroll wrapper handles horizontal scrolling only */
 .table-scroll-wrapper {
   overflow-x: auto; /* horizontal scroll */
-  overflow-y: visible; /* allow sticky top to work */
+  overflow-y: auto; /* allow sticky top to work */
 }
 
 /* Table header sticks vertically */
