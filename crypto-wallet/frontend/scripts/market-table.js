@@ -12,8 +12,23 @@ function loadCoinMarketTable() {
 	});
 }
 
+function showInlineSpinner() {
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	tableWrapper.classList.add("loading");
+	tableWrapper.querySelector(".spinner").classList.add("active");
+}
+
+function hideInlineSpinner() {
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	tableWrapper.querySelector(".spinner").classList.remove("active");
+	tableWrapper.classList.remove("loading");
+	tableWrapper.style.overflowY = 'auto';
+	tableWrapper.style.overflowX = 'auto';
+}
+
 function doLoadCoinMarketTable(config) {
-		fetch(config.coinGecko.url, {
+	//showInlineSpinner()
+	fetch(config.coinGecko.url, {
 		headers: {
 			'x_cg_demo_api_key': config.coinGecko.apiKey
 		}
@@ -59,6 +74,8 @@ function doLoadCoinMarketTable(config) {
 
 function renderCoinTable() {
 	console.debug(`Successfully received crypto table data: ${coinTableData.count}`);
+
+	//hideInlineSpinner();
 
 	const table = document.getElementById('coin-market-table');
 	if (table == null) {
