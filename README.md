@@ -14,7 +14,7 @@ Aim to optimize the code and replace tactical fixes with maintainable code when 
 
 ## Background
 
-The code behaves differently in development (localhost) versus production. Why? Because of CORs.
+The code behaves differently in development (localhost) versus production. Why? Because of CORS.
 
 <b>What is CORS?</b>
 
@@ -26,7 +26,7 @@ Per the [auth0](https://auth0.com/blog/cors-tutorial-a-guide-to-cross-origin-res
 
     This helps keep users safe from cross-origin requets that could compromise their data.
 
-<b>Does this mean I will encounter CORs errors for every request?</b>
+<b>Does this mean I will encounter CORS errors for every request?</b>
 
     No. Servers can be configured to allow cross-origin resource sharing via special headers like the <b>Access-Control-Allow-Origin</b> header, which determines which origins can access a resource.
 
