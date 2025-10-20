@@ -24,6 +24,14 @@ const authErrorMessageMap = {
 	'default': 'An unexpected error occurred during login. Please try again.'
 };
 
+const passwordValidations = {
+	minCharacters: 6,
+}
+
+const errorMessages = {
+	passwordTooShort: `Password must be at least ${passwordValidations.minCharacters} characters long.`
+}
+
 function setupFirebase() {
 	// Initialize Firebase
 	// It's fine to make this information public, as it
@@ -87,14 +95,14 @@ function loginUser() {
 	// Prevent empty fields
 	if (!email || !password) {
 		showAuthError('login-error', "Please enter both username and password.");
-		logger.warn("Empty login attempt", { username });
+		logger.warn("Empty login attempt", { email });
 		return;
 	}
 
 	// Password length validation
-	if (password.length <= 3) {
-		showAuthError('login-error', "Password must be at least 3 characters long.");
-		logger.warn("Weak password attempt", { username });
+	if (password.length < passwordValidations.minCharacters) {
+		showAuthError('login-error', errorMessages.passwordTooShort);
+		logger.warn("Weak password attempt", { email });
 		return;
 	}
 
@@ -182,8 +190,8 @@ function registerUser() {
 		return;
 	}
 
-	if (password.length < 6) {
-		showAuthError('register-error', 'Password must be at least 6 characters');
+	if (password.length < passwordValidations.minCharacters) {
+		showAuthError('register-error', errorMessages.passwordTooShort);
 		return;
 	}
 

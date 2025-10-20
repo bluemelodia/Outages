@@ -11,6 +11,28 @@
   table-layout: auto; /* let columns size naturally */
 }
 
+.table-loading {
+  display: none;
+  padding: 2rem;
+  text-align: center;
+}
+
+.table-scroll-wrapper.loading .table-loading {
+  display: block;
+}
+
+.table-scroll-wrapper.loading .coin-table {
+  display: none;
+}
+
+.table-scroll-wrapper {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr;
+  height: 100%;
+  place-items: center;
+}
+
 .table-container {
   flex: 1 1 0;
   min-width: 420px;
@@ -25,10 +47,14 @@
   position: relative;
 }
 
+.table-scroll-wrapper.loading {
+  overflow: hidden;
+}
+
 /* Purple scrollbar for coin table */
 .table-scroll-wrapper::-webkit-scrollbar {
   height: 8px; /* horizontal scrollbar height */
-  width: 8px;  /* vertical scrollbar width if vertical scrolling is present */
+  width: 8px; /* vertical scrollbar width if vertical scrolling is present */
 }
 
 .table-scroll-wrapper::-webkit-scrollbar-track {
@@ -48,7 +74,7 @@
 /* Scroll wrapper handles horizontal scrolling only */
 .table-scroll-wrapper {
   overflow-x: auto; /* horizontal scroll */
-  overflow-y: visible; /* allow sticky top to work */
+  overflow-y: auto; /* allow sticky top to work */
 }
 
 /* Table header sticks vertically */
@@ -79,6 +105,7 @@
   left: 0;
   background: #fff;
   z-index: 2; /* cells under top-left header */
+  border-right: 1px solid #e5e7eb;
 }
 
 /* First column sticky both horizontally and vertically */
@@ -93,7 +120,6 @@
   white-space: normal; /* allow wrapping */
   word-break: break-word; /* wrap long text */
   z-index: 4; /* under top-left header */
-  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 /* First column wrapper */

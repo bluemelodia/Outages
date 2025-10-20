@@ -4,6 +4,7 @@ import { logger } from "./logger.js";
 
 let coinTableData = [];
 let coinTableSort = { key: 'market_cap_rank', dir: 'asc' };
+let tableSpinnerOverlay = null;
 
 function loadCoinMarketTable() {
 	getConfig().then(cfg => {
@@ -12,8 +13,27 @@ function loadCoinMarketTable() {
 	});
 }
 
+function createTableSpinnerOverlay() {
+	tableSpinnerOverlay = document.querySelector('.table-spinner-overlay');
+}
+
+function showInlineSpinner() {
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	if (tableWrapper) {
+		tableWrapper.classList.add('loading');
+	}
+}
+
+function hideInlineSpinner() {
+	const tableWrapper = document.querySelector('.table-scroll-wrapper');
+	if (tableWrapper) {
+		tableWrapper.classList.remove('loading');
+	}
+}
+
 function doLoadCoinMarketTable(config) {
-		fetch(config.coinGecko.url, {
+	showInlineSpinner()
+	fetch(config.coinGecko.url, {
 		headers: {
 			'x_cg_demo_api_key': config.coinGecko.apiKey
 		}
@@ -58,6 +78,7 @@ function doLoadCoinMarketTable(config) {
 }
 
 function renderCoinTable() {
+	hideInlineSpinner();
 	console.debug(`Successfully received crypto table data: ${coinTableData.count}`);
 
 	const table = document.getElementById('coin-market-table');
@@ -156,5 +177,6 @@ function renderCoinTable() {
 }
 
 export {
+	createTableSpinnerOverlay,
 	loadCoinMarketTable
 };

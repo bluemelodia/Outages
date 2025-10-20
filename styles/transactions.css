@@ -4,7 +4,6 @@
 }
 
 #transactions-list {
-  max-height: 500px;
   overflow-x: hidden;
   margin-bottom: 1rem;
 }
@@ -190,7 +189,7 @@
 .transaction-id {
   display: inline-block;
   white-space: normal;
-  width: 100%; /* or any fixed width */ 
+  width: 100%; /* or any fixed width */
   word-wrap: break-word;
 }
 
@@ -221,7 +220,10 @@
 }
 
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  #transactions-list {
+    max-height: 500px;
+  }
   .transaction-item {
     padding: 1rem;
   }

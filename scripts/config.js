@@ -41,7 +41,7 @@ async function getConfig() {
 
 function getVerifyIdentityURL() {
 	if (isProduction()) {
-		return "...";
+		return "https://outage-lb.fly.dev";
 	} else {
 		return "http://localhost:8011/proxy";
 	}
