@@ -36,7 +36,7 @@ function createValidateTransactionModal() {
 
 	// Message
 	const message = document.createElement('p');
-	message.textContent = 'Verifying your identity...';
+	message.textContent = 'Validating transaction...';
 	message.style.marginTop = '1rem';
 	message.style.color = '#374151';
 	message.style.fontWeight = '600';
@@ -59,7 +59,6 @@ function validateTransaction(modal) {
 
 		withTimeout(apiCall(url), 5000)
 			.then(data => {
-				console.log("Transaction validated:", data);
 				removeModal(modal);
 				resolve(data);
 			})

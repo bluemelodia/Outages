@@ -22,7 +22,7 @@ function setupAlerts() {
 		}
 
 		titleEl.textContent = title;
-		messageEl.textContent = message;
+		messageEl.innerHTML = message.replace(/\n/g, '<br>');
 
 		modal.classList.add("active");
 

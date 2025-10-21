@@ -176,26 +176,28 @@ function initiateSendCrypto() {
 	console.log("Transaction to be submitted:", transaction);
 
 	showValidateTransactionModal()
-		.then(() => {
-			doAddTransaction(transaction);
+		.then((confirmation) => {
+			doAddTransaction(confirmation, transaction);
 		})
 		.catch((error) => {
 			console.error("Error during transaction validation:", error);
 			alert("Service Unavailable", "Could not complete send crypto transaction at this time. Try again later.")
 				.then(() => {
 					navigateTo('menu');
-				});			
+				});
 		});
 }
 
-function doAddTransaction(transaction) {
+function doAddTransaction(confirmation, transaction) {
 	showSpinner();
 
 	addTransaction(transaction)
 		.then(docId => {
 			console.log("Transaction submitted successfully with ID:", docId);
 
-			alert("Transaction Sent", "Your transaction was submitted successfully.")
+			const successMessage = `Confirmation number\n${confirmation.confirmation_number}\nLimits\n${confirmation.limit_message}`
+
+			alert("Transaction Submitted", successMessage)
 				.then(() => {
 					// Reload fresh send crypto form
 					Promise.all([loadCryptocurrencies(), loadAddresses()])
