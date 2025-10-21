@@ -184,7 +184,7 @@ function initiateSendCrypto() {
 			alert("Service Unavailable", "Could not complete send crypto transaction at this time. Try again later.")
 				.then(() => {
 					navigateTo('menu');
-				});			
+				});
 		});
 }
 
@@ -195,7 +195,7 @@ function doAddTransaction(confirmation, transaction) {
 		.then(docId => {
 			console.log("Transaction submitted successfully with ID:", docId);
 
-			const successMessage = `Confirmation number: ${confirmation.confirmation_number}\nLimits: ${confirmation.limit_message}`
+			const successMessage = `Confirmation number\n${confirmation.confirmation_number}\nLimits\n${confirmation.limit_message}`
 
 			alert("Transaction Submitted", successMessage)
 				.then(() => {
