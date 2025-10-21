@@ -1,5 +1,6 @@
 import { keys, fetchAllKeys } from "./keys.js";
 import { isProduction } from "./logger.js";
+import { isCryptoRewrite } from "./piloting.js";
 
 let cachedConfig = null;
 let ignoreCache = true;
@@ -19,9 +20,6 @@ async function getConfig() {
 
 	// Build config
 	cachedConfig = {
-		verifyIdentity: {
-			url: getVerifyIdentityURL()
-		},
 		logger: {
 			accessToken: keys.LOGGER_API_ACCESS_TOKEN,
 			apiKey: keys.LOGGER_API_KEY,
@@ -39,11 +37,12 @@ async function getConfig() {
 	return cachedConfig;
 }
 
-function getVerifyIdentityURL() {
-	if (isProduction()) {
-		return "https://outage-lb.fly.dev";
+async function getValidateTransactionURL() {
+	const isRewrite = await isCryptoRewrite();
+	if (isRewrite) {
+		return "https://outage-lb.fly.dev/";
 	} else {
-		return "http://localhost:8011/proxy";
+		return "https://outage-lb.fly.dev/";
 	}
 }
 
@@ -60,5 +59,6 @@ function getLoggingURL(sourceID) {
 
 export {
 	clearConfigCache,
-	getConfig
+	getConfig,
+	getValidateTransactionURL
 };
