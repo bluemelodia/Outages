@@ -1,7 +1,7 @@
 import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
-import { addTransaction, validateTransaction } from "./transactions.js";
+import { addTransaction } from "./transactions.js";
 import { hideSpinner, showError, showSpinner } from "./utils.js";
 import { showValidateTransactionModal } from "./validate-transaction.js";
 

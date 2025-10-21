@@ -1,6 +1,5 @@
-import { apiCall, withTimeout } from './api.js';
+import { withTimeout } from './api.js';
 import { auth } from './auth.js';
-import { getValidateTransactionURL } from './config.js';
 import { formatTransactionDate } from './formatters.js';
 import { logger } from './logger.js';
 import { navigateTo } from './navigation.js';
@@ -130,20 +129,6 @@ async function doLoadTransactions() {
 	}
 }
 
-async function validateTransaction() {
-	const modal = createValidateTransactionModal();
-	const url = getValidateTransactionURL();
-
-	withTimeout(apiCall(url), 5000)
-		.then(data => {
-			console.log("Success:", data);
-			resolve(data);
-		})
-		.catch(error => {
-			reject(error);
-		});
-}
-
 async function addTransaction(transactionData) {
 	const db = firebase.firestore();
 	const transactionsRef = db.collection("transactions");
@@ -178,6 +163,5 @@ async function addTransaction(transactionData) {
 
 export {
 	loadTransactions,
-	addTransaction,
-	validateTransaction
+	addTransaction
 };
