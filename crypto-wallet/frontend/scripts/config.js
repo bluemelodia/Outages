@@ -1,5 +1,6 @@
 import { keys, fetchAllKeys } from "./keys.js";
 import { isProduction } from "./logger.js";
+import { isCryptoRewrite } from "./piloting.js";
 
 let cachedConfig = null;
 let ignoreCache = true;
@@ -47,6 +48,15 @@ function getVerifyIdentityURL() {
 	}
 }
 
+async function getValidateTransactionURL() {
+	const isRewrite = await isCryptoRewrite();
+	if (isRewrite) {
+		return "https://outage-lb.fly.dev/";
+	} else {
+		return "https://outage-lb.fly.dev/";
+	}
+}
+
 function getLoggingURL(sourceID) {
 	let baseURL = ""
 	if (isProduction()) {
@@ -60,5 +70,6 @@ function getLoggingURL(sourceID) {
 
 export {
 	clearConfigCache,
-	getConfig
+	getConfig,
+	getValidateTransactionURL
 };

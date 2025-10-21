@@ -1,20 +1,20 @@
 import { loadAddresses } from "./addresses.js";
 import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
-import { addTransaction } from "./transactions.js";
+import { addTransaction, validateTransaction } from "./transactions.js";
 import { hideSpinner, showError, showSpinner } from "./utils.js";
 import { showVerifyIdentityModal } from "./verify-identity.js";
 
 function loadSendCryptoPage() {
 	// Verify the user's identity.
-	showVerifyIdentityModal()
+	/*showVerifyIdentityModal()
 		.catch((error) => {
 			console.error("Error during identity verification or loading data:", error);
 			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
 				.then(() => {
 					navigateTo('menu');
 				});			
-		});
+		});*/
 
 	// At the same time, load the form in the background.
 	Promise.all([loadCryptocurrencies(), loadAddresses()])
@@ -186,7 +186,11 @@ function initiateSendCrypto() {
 	};
 
 	console.log("Transaction to be submitted:", transaction);
-	doAddTransaction(transaction);
+
+	validateTransaction(transaction)
+		.then(() => {
+			doAddTransaction(transaction);
+		});
 }
 
 function doAddTransaction(transaction) {
