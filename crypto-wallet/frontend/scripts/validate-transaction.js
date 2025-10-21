@@ -1,18 +1,13 @@
 import { apiCall, withTimeout } from "./api.js";
-import { getConfig } from "./config.js";
-import { logger } from "./logger.js";
+import { getValidateTransactionURL } from "./config.js";
 import { navigateTo } from "./navigation.js";
 
-function showVerifyIdentityModal() {
-	const modal = createVerifyIdentityModal();
-
-	return getConfig().then(cfg => {
-		logger.info('Initiate identity verification...');
-		return verifyIdentity(cfg, modal);
-	});
+function showValidateTransactionModal() {
+	const modal = createValidateTransactionModal();
+	return validateTransaction(modal);
 }
 
-function createVerifyIdentityModal() {
+function createValidateTransactionModal() {
 	// Create modal
 	const modal = document.createElement('div');
 	modal.className = 'modal active';
@@ -58,12 +53,13 @@ function createVerifyIdentityModal() {
 	return modal;
 }
 
-function verifyIdentity(config, modal) {
+function validateTransaction(modal) {
 	return new Promise((resolve, reject) => {
-        // Call backend API with timeout
-		withTimeout(apiCall(config.verifyIdentity.url), 5000)
+		const url = getValidateTransactionURL();
+
+		withTimeout(apiCall(url), 5000)
 			.then(data => {
-				console.log("Identity verified:", data);
+				console.log("Transaction validated:", data);
 				removeModal(modal);
 				resolve(data);
 			})
@@ -71,7 +67,7 @@ function verifyIdentity(config, modal) {
 				removeModal(modal);
 				reject(error);
 			});
-    });
+	});
 }
 
 function removeModal(modal) {
@@ -80,5 +76,5 @@ function removeModal(modal) {
 }
 
 export {
-	showVerifyIdentityModal
+	showValidateTransactionModal
 };

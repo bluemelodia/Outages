@@ -30,16 +30,6 @@ function initializeApp() {
 }
 
 function initializeEventListeners() {
-	// Add Enter key support for verification modal
-	const verificationInput = document.getElementById('verification-code');
-	if (verificationInput) {
-		verificationInput.addEventListener('keypress', function (e) {
-			if (e.key === 'Enter') {
-				verifyIdentity();
-			}
-		});
-	}
-
 	// Add Enter key support for login form
 	const loginInputs = document.querySelectorAll('#login-username, #login-password');
 	loginInputs.forEach(input => {

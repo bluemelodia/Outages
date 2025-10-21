@@ -3,19 +3,9 @@ import { loadCryptocurrencies } from "./cryptocurrencies.js";
 import { navigateTo } from "./navigation.js";
 import { addTransaction, validateTransaction } from "./transactions.js";
 import { hideSpinner, showError, showSpinner } from "./utils.js";
-import { showVerifyIdentityModal } from "./verify-identity.js";
+import { showValidateTransactionModal } from "./validate-transaction.js";
 
 function loadSendCryptoPage() {
-	// Verify the user's identity.
-	/*showVerifyIdentityModal()
-		.catch((error) => {
-			console.error("Error during identity verification or loading data:", error);
-			alert("Service Unavailable", "Send crypto is unavailable at this time. Try again later.")
-				.then(() => {
-					navigateTo('menu');
-				});			
-		});*/
-
 	// At the same time, load the form in the background.
 	Promise.all([loadCryptocurrencies(), loadAddresses()])
 		.then(([cryptoOptions, addresses]) => {
@@ -155,8 +145,6 @@ function initiateSendCrypto() {
 		return;
 	}
 
-	showSpinner();
-
 	// Create transaction object
 	const timestamp = new Date();
 	const formattedDate = timestamp.toLocaleString('en-US', {
@@ -187,13 +175,22 @@ function initiateSendCrypto() {
 
 	console.log("Transaction to be submitted:", transaction);
 
-	validateTransaction(transaction)
+	showValidateTransactionModal()
 		.then(() => {
 			doAddTransaction(transaction);
+		})
+		.catch((error) => {
+			console.error("Error during transaction validation:", error);
+			alert("Service Unavailable", "Could not complete send crypto transaction at this time. Try again later.")
+				.then(() => {
+					navigateTo('menu');
+				});			
 		});
 }
 
 function doAddTransaction(transaction) {
+	showSpinner();
+
 	addTransaction(transaction)
 		.then(docId => {
 			console.log("Transaction submitted successfully with ID:", docId);

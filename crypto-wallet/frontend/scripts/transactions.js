@@ -1,4 +1,4 @@
-import { withTimeout } from './api.js';
+import { apiCall, withTimeout } from './api.js';
 import { auth } from './auth.js';
 import { getValidateTransactionURL } from './config.js';
 import { formatTransactionDate } from './formatters.js';
@@ -131,6 +131,7 @@ async function doLoadTransactions() {
 }
 
 async function validateTransaction() {
+	const modal = createValidateTransactionModal();
 	const url = getValidateTransactionURL();
 
 	withTimeout(apiCall(url), 5000)

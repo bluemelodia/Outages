@@ -20,9 +20,6 @@ async function getConfig() {
 
 	// Build config
 	cachedConfig = {
-		verifyIdentity: {
-			url: getVerifyIdentityURL()
-		},
 		logger: {
 			accessToken: keys.LOGGER_API_ACCESS_TOKEN,
 			apiKey: keys.LOGGER_API_KEY,
@@ -38,14 +35,6 @@ async function getConfig() {
 	ignoreCache = false;
 
 	return cachedConfig;
-}
-
-function getVerifyIdentityURL() {
-	if (isProduction()) {
-		return "https://outage-lb.fly.dev";
-	} else {
-		return "http://localhost:8011/proxy";
-	}
 }
 
 async function getValidateTransactionURL() {

@@ -25,10 +25,9 @@ async function fetchCoinGeckoApiKey() {
 
 // Fetch private Logger keys
 async function fetchPrivateLoggerApiKeys() {
-	const authInstance = firebase.auth();
 	const db = firebase.firestore();
 
-	const currentUser = authInstance.currentUser;
+	const currentUser = auth.currentUser;
 	if (!currentUser) {
 		console.warn("User is not authenticated. Cannot fetch private Logger API keys.");
 		return null;

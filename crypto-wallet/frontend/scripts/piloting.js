@@ -1,5 +1,6 @@
-import { isProduction } from "./logger";
-import { createEnum } from "./utils";
+import { auth } from "./auth.js";
+import { isProduction } from "./logger.js";
+import { createEnum } from "./utils.js";
 
 const pilots = createEnum([
 	"CRYPTO_V1",
@@ -7,6 +8,8 @@ const pilots = createEnum([
 ]);
 
 async function getUserPilotMembership() {
+	const db = firebase.firestore();
+
 	const user = auth.currentUser;
 	if (!user) {
 		console.error("User not logged in.");
@@ -16,18 +19,16 @@ async function getUserPilotMembership() {
 	const userUUID = user.uid;
 	let pilotGroup = pilots.CRYPTO_V2;
 
-	const collectionName = isProduction() ? "pilotMemberships_prod" : "pilotMemberships_qa";
+	const collectionName = isProduction() ? "cryptoPilots_prod" : "cryptoPilots_qa";
 
 	try {
-		const userDocRef = doc(db, collectionName, userUUID);
-		const userDocSnap = await getDoc(userDocRef);
-
-		if (userDocSnap.exists()) {
-			const docData = userDocSnap.data();
+		const userDocSnapshot = await db.collection(collectionName).doc(userUUID).get();
+		if (userDocSnapshot.exists) {
+			const docData = userDocSnapshot.data();
 			if (typeof docData.pilotGroup === 'string') {
 				pilotGroup = docData.pilotGroup;
 			} else {
-				console.warn(`'pilotGroup' field not found or not a string for user ${userUUID}. Using default.`);
+				console.error("Failed to retrieve user pilot information.");
 			}
 		} else {
 			console.log(`Pilot membership document not found for user ${userUUID} in ${collectionName}. Using default.`);
@@ -39,7 +40,7 @@ async function getUserPilotMembership() {
 	return pilotGroup;
 }
 
-async function isCryptoRewrite(pilot) {
+async function isCryptoRewrite() {
 	let pilot = await getUserPilotMembership();
 	return pilot == pilots.CRYPTO_V2;
 }
