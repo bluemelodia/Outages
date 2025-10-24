@@ -17,9 +17,7 @@ function getEnvironment() {
 	const hostname = window.location.hostname;
 	environment = (
 		hostname === "localhost" ||
-		hostname === "127.0.0.1" ||
-		hostname.endsWith(".local") ||
-		hostname.startsWith("192.168.")
+		hostname === "127.0.0.1"
 	) ? environments.development : environments.production;
 
 	return environment;

@@ -7,7 +7,7 @@ async function loadAddresses() {
 	if (user) {
 		try {
 			let addresses = await withTimeout(doLoadAddresses());
-			if (addresses.length === 0) {
+			if (addresses == null) {
 				return [];
 			} else {
 				return addresses;

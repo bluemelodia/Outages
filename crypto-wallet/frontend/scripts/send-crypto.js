@@ -73,7 +73,7 @@ function doLoadSendCryptoPage(cryptoOptions, addresses) {
 	cryptoSelect.id = 'crypto-type';
 
 	console.log("Crypto options:", cryptoOptions);
-	if (cryptoOptions.length === 0) {
+	if (cryptoOptions == null || cryptoOptions.length === 0) {
 		cryptoSelect.disabled = true;
 	} else {
 		cryptoOptions.forEach(opt => {

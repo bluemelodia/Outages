@@ -6,7 +6,7 @@ async function loadCryptocurrencies() {
 	if (user) {
 		try {
 			let cryptocurrencies = await doLoadCryptocurrencies();
-			if (cryptocurrencies.length === 0) {
+			if (cryptocurrencies == null) {
 				return [];
 			} else {
 				return cryptocurrencies;
