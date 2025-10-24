@@ -1,3 +1,10 @@
+.table-scroll-wrapper {
+  position: relative;
+  overflow: auto;
+  display: block;
+  height: 100%;
+}
+
 .coin-table {
   width: 100%;
   min-width: 1200px;
@@ -8,9 +15,10 @@
   font-size: 0.97rem;
   margin: 0;
   box-shadow: none;
-  table-layout: auto; /* let columns size naturally */
+  table-layout: auto;
 }
 
+/* Loading state */
 .table-loading {
   display: none;
   padding: 2rem;
@@ -25,36 +33,10 @@
   display: none;
 }
 
-.table-scroll-wrapper {
-  position: relative;
-  display: grid;
-  grid-template-rows: 1fr;
-  height: 100%;
-  place-items: center;
-}
-
-.table-container {
-  flex: 1 1 0;
-  min-width: 420px;
-  box-sizing: border-box;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.07);
-  margin: 0;
-  overflow-y: auto; /* vertical scroll here */
-  overflow-x: hidden; /* horizontal scroll inside wrapper */
-  display: block; /* Remove flex properties */
-  position: relative;
-}
-
-.table-scroll-wrapper.loading {
-  overflow: hidden;
-}
-
-/* Purple scrollbar for coin table */
+/* Scrollbar styling */
 .table-scroll-wrapper::-webkit-scrollbar {
-  height: 8px; /* horizontal scrollbar height */
-  width: 8px; /* vertical scrollbar width if vertical scrolling is present */
+  height: 8px;
+  width: 8px;
 }
 
 .table-scroll-wrapper::-webkit-scrollbar-track {
@@ -71,23 +53,31 @@
   background: #5a67d8;
 }
 
-/* Scroll wrapper handles horizontal scrolling only */
-.table-scroll-wrapper {
-  overflow-x: auto; /* horizontal scroll */
-  overflow-y: auto; /* allow sticky top to work */
-}
-
-/* Table header sticks vertically */
+/* Sticky header */
 .coin-table thead th {
   position: sticky;
   top: 0;
   background: #fff;
   color: #667eea;
   font-weight: 600;
-  z-index: 3;
+  z-index: 2;
 }
 
-/* Table cells */
+/* Sticky first column */
+.coin-table th:first-child,
+.coin-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 3;
+  width: 200px;
+  min-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* Normal cell styling */
 .coin-table th,
 .coin-table td {
   padding: 0.7em 1em;
@@ -98,61 +88,33 @@
   text-overflow: ellipsis;
 }
 
-/* First column sticks horizontally */
-.coin-table th:first-child,
-.coin-table td:first-child {
-  position: sticky;
-  left: 0;
-  background: #fff;
-  z-index: 2; /* cells under top-left header */
-  border-right: 1px solid #e5e7eb;
-}
-
-/* First column sticky both horizontally and vertically */
-.coin-table th:first-child,
-.coin-table td:first-child {
-  position: sticky;
-  left: 0;
-  top: 0; /* aligns with header */
-  background: #fff;
-  min-width: 150px;
-  max-width: 200px; /* enforce max width */
-  white-space: normal; /* allow wrapping */
-  word-break: break-word; /* wrap long text */
-  z-index: 4; /* under top-left header */
-}
-
-/* First column wrapper */
+/* Content inside first column */
 .coin-table th:first-child > div,
 .coin-table td:first-child > div {
   display: flex;
-  align-items: center; /* vertically center icon + text */
-  gap: 0.5rem; /* space between icon and text */
-  white-space: normal; /* text can wrap */
+  align-items: center;
+  gap: 0.5rem;
+  white-space: normal;
 }
 
-/* Icon styling */
-.coin-table th:first-child > div .coin-icon,
-.coin-table td:first-child > div .coin-icon {
-  flex-shrink: 0; /* icon never shrinks */
+.coin-table .coin-icon {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
 }
 
-/* Text styling */
-.coin-table th:first-child > div .coin-name,
-.coin-table td:first-child > div .coin-name {
-  flex: 1; /* take remaining space */
+.coin-table .coin-name {
+  flex: 1;
   line-height: 1.2;
   word-break: break-word;
 }
 
-/* Top-left corner (header + first column) */
+/* Emphasize sticky header of first column */
 .coin-table thead th:first-child {
-  z-index: 6; /* above everything else */
+  z-index: 4;
 }
 
-/* Positive / negative coloring */
+/* Color coding */
 .coin-table td.positive {
   color: #16a34a;
   font-weight: 600;
@@ -163,7 +125,6 @@
   font-weight: 600;
 }
 
-/* Remove border on last row */
 .coin-table tr:last-child td {
   border-bottom: none;
 }

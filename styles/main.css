@@ -85,11 +85,6 @@ body {
     overflow-y: auto; /* vertical scroll for overflow */
     overflow-x: auto; /* horizontal scroll */
   }
-
-  /* Instead of padding on scroll-wrapper, add margin to table */
-  .coin-table {
-    margin: 0 0.75rem; /* left/right spacing matching card */
-  }
 }
 
 /* Table wrapper for horizontal scrolling */
