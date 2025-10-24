@@ -71,7 +71,7 @@ async function loadTransactions() {
 	if (user) {
 		try {
 			const transactions = await withTimeout(doLoadTransactions());
-			if (transactions.length === 0) {
+			if (transactions == null || transactions.length === 0) {
 				container.innerHTML = `<div>📭 No transactions yet</div>`;
 			} else {
 				console.debug("Fetched transactions:", transactions);
