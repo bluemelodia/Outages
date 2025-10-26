@@ -44,7 +44,7 @@ async function getValidateTransactionURL() {
 	return new Promise(resolve => {
 		let url = ""
 		if (isProd) {
-			const serviceName = isRewrite ? "two" : "one";
+			const serviceName = isRewrite ? "v2" : "v1";
 			url = `https://crypto-svc-${serviceName}.fly.dev/api/transaction`;
 		} else {
 			const port = isRewrite ? 8013 : 8012;
