@@ -28,7 +28,7 @@ function parseResponse(data, resolve) {
 	if (data.confirmationNumber && data.limit) {
 		const result = {
 			confirmation_number: data.confirmationNumber,
-			limit_message: `You can still send: ${data.limit} worth of cryptocurrency today.`
+			limit_message: `You can still send: $${data.limit} worth of cryptocurrency today.`
 		};
 		resolve(result);
 	}
