@@ -15,7 +15,7 @@ Aim to optimize the code and replace tactical fixes with maintainable code when 
 ```mermaid
 graph TB
     subgraph "User Interface"
-        UI[Frontend UI<br/>bluemelodia.github.io/Outages/]
+        UI[Frontend UI]
         SendCrypto[Send Crypto Page<br/>Form Submission]
     end
     
@@ -25,8 +25,8 @@ graph TB
     end
     
     subgraph "Transaction APIs"
-        V1[Transaction API v1<br/>localhost:8081]
-        V2[Transaction API v2<br/>localhost:8082<br/>rewrite]
+        V1[Transaction API v1<br/>]
+        V2[Transaction API v2<br/><br/>rewrite]
     end
     
     UI --> SendCrypto
