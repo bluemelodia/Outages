@@ -12,6 +12,45 @@ All of these are issues that you may encounter in real production code bases.
 
 Aim to optimize the code and replace tactical fixes with maintainable code when you can, but production stability always comes first.
 
+```mermaid
+graph TB
+    subgraph "User Interface"
+        UI[Frontend UI<br/>bluemelodia.github.io/Outages/]
+        SendCrypto[Send Crypto Page<br/>Form Submission]
+    end
+    
+    subgraph "External Services"
+        Logflare[Logflare API<br/>Logging Service<br/>non-prod only]
+        Firebase[Firebase<br/>Transaction Logging]
+    end
+    
+    subgraph "Transaction APIs"
+        V1[Transaction API v1<br/>localhost:8081]
+        V2[Transaction API v2<br/>localhost:8082<br/>rewrite]
+    end
+    
+    UI --> SendCrypto
+    UI -.->|Non-prod logs| Logflare
+    
+    SendCrypto -->|Check pilot status| Decision{User Pilot<br/>Status?}
+    
+    Decision -->|v1 user| V1
+    Decision -->|v2 user| V2
+    
+    V1 -->|200 OK<br/>confirmation #<br/>limit message| Response[Process Response]
+    V2 -->|200 OK<br/>confirmation #<br/>limit message| Response
+    
+    Response -->|Log transaction| Firebase
+    
+    style UI fill:#e1f5ff
+    style SendCrypto fill:#e1f5ff
+    style V1 fill:#fff4e1
+    style V2 fill:#fff4e1
+    style Logflare fill:#f0e1ff
+    style Firebase fill:#e1ffe1
+    style Decision fill:#ffe1e1
+```
+
 ## Background
 
 The code behaves differently in development (localhost) versus production. Why? Because of CORS.
