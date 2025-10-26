@@ -15,10 +15,7 @@ async function apiCall(url, options = {}) {
 
 			// Handle both JSON and text responses
 			//const data = await response.json();
-			const data = {
-				confirmation_number: "1234-5678-9999-0000",
-				limit_message: "You can send $99,999.99 more crypto today."
-			}
+			const data = await response.json();
 			parseResponse(data, resolve);
 		} catch (error) {
 			logger.info('API call failed:', error);
@@ -28,10 +25,10 @@ async function apiCall(url, options = {}) {
 }
 
 function parseResponse(data, resolve) {
-	if (data.confirmation_number && data.limit_message) {
+	if (data.confirmationNumber && data.limit) {
 		const result = {
-			confirmation_number: data.confirmation_number,
-			limit_message: data.limit_message
+			confirmation_number: data.confirmationNumber,
+			limit_message: `You can still send: ${data.limit} worth of cryptocurrency today.`
 		};
 		resolve(result);
 	}

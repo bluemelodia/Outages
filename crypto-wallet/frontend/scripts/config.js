@@ -38,12 +38,20 @@ async function getConfig() {
 }
 
 async function getValidateTransactionURL() {
+	const isProd = isProduction();
 	const isRewrite = await isCryptoRewrite();
-	if (isRewrite) {
-		return "https://outage-lb.fly.dev/";
-	} else {
-		return "https://outage-lb.fly.dev/";
-	}
+
+	return new Promise(resolve => {
+		let url = ""
+		if (isProd) {
+			url = isRewrite ? "" : "https://outage-lb.fly.dev/";
+		} else {
+			const port = isRewrite ? 8013 : 8012;
+			url = `http://localhost:${port}/proxy/api/transaction`;
+		}
+
+		resolve(url);
+	});
 }
 
 function getLoggingURL(sourceID) {
