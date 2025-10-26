@@ -26,11 +26,11 @@ graph TB
     
     subgraph "Transaction APIs"
         V1[Transaction API v1<br/>]
-        V2[Transaction API v2<br/><br/>rewrite]
+        V2[Transaction API v2<br/>rewrite]
     end
     
     UI --> SendCrypto
-    UI -.->|Non-prod logs| Logflare
+    UI -.->|Log messages| Logflare
     
     SendCrypto -->|Check pilot status| Decision{User Pilot<br/>Status?}
     
