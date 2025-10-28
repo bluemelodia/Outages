@@ -96,17 +96,9 @@ npm i
 npm start
 ```
 
-## Deployment
+## Production
 
-To deploy the frontend code, run:
-
-```bash
-npm run deploy
-```
-
-Check for updates at:
-
-[https://bluemelodia.github.io/Outages/](https://bluemelodia.github.io/Outages/)
+To run the production version of the app, visit: https://crypto-wallet-fragrant-cherry-3610.fly.dev
 
 ## Logging
 
