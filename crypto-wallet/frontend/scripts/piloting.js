@@ -16,13 +16,20 @@ async function getUserPilotMembership() {
 		return null;
 	}
 
-	const userUUID = user.uid;
+	const userEmail = user.email;
+	if (!userEmail) {
+		console.error("User email not available.");
+		return null;
+	}
 	let pilotGroup = pilots.CRYPTO_V2;
 
 	const collectionName = isProduction() ? "cryptoPilots_prod" : "cryptoPilots_qa";
 
 	try {
-		const userDocSnapshot = await db.collection(collectionName).doc(userUUID).get();
+		const userDocSnapshot = await db.collection(collectionName)
+			.where("email", "==", userEmail)
+			.limit(1)
+			.get();
 		if (userDocSnapshot.exists) {
 			const docData = userDocSnapshot.data();
 			if (typeof docData.pilotGroup === 'string') {
