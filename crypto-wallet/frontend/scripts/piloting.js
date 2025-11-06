@@ -26,16 +26,18 @@ async function getUserPilotMembership() {
 	const collectionName = isProduction() ? "cryptoPilots_prod" : "cryptoPilots_qa";
 
 	try {
-		const userDocSnapshot = await db.collection(collectionName)
+		const querySnapshot = await db.collection(collectionName)
 			.where("email", "==", userEmail)
 			.limit(1)
 			.get();
-		if (userDocSnapshot.exists) {
+		if (!querySnapshot.empty) {
+			const userDocSnapshot = querySnapshot.docs[0];
+
 			const docData = userDocSnapshot.data();
 			if (typeof docData.pilotGroup === 'string') {
 				pilotGroup = docData.pilotGroup;
 			} else {
-				console.error("Failed to retrieve user pilot information.");
+				console.error("Failed to retrieve user pilot information for email:", userEmail);
 			}
 		} else {
 			console.log(`Pilot membership document not found for user ${userUUID} in ${collectionName}. Using default.`);
