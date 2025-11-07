@@ -18,30 +18,30 @@ graph TB
         UI[Frontend UI]
         SendCrypto[Send Crypto Page<br/>Form Submission]
     end
-    
+
     subgraph "External Services"
         Logflare[Logflare API<br/>Logging Service<br/>non-prod only]
         Firebase[Firebase<br/>Transaction Logging]
     end
-    
+
     subgraph "Transaction APIs"
         V1[Transaction API v1<br/>]
         V2[Transaction API v2<br/>rewrite]
     end
-    
+
     UI --> SendCrypto
     UI -.->|Log messages| Logflare
-    
+
     SendCrypto -->|Check pilot status| Decision{User Pilot<br/>Status?}
-    
+
     Decision -->|v1 user| V1
     Decision -->|v2 user| V2
-    
+
     V1 -->|200 OK<br/>confirmation #<br/>limit message| Response[Process Response]
     V2 -->|200 OK<br/>confirmation #<br/>limit message| Response
-    
+
     Response -->|Log transaction| Firebase
-    
+
     style UI fill:#e1f5ff
     style SendCrypto fill:#e1f5ff
     style V1 fill:#fff4e1
@@ -95,18 +95,6 @@ npm i
 ```bash
 npm start
 ```
-
-## Deployment
-
-To deploy the frontend code, run:
-
-```bash
-npm run deploy
-```
-
-Check for updates at:
-
-[https://bluemelodia.github.io/Outages/](https://bluemelodia.github.io/Outages/)
 
 ## Logging
 
