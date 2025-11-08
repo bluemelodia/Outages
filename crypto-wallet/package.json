@@ -5,8 +5,9 @@
   "main": "index.html",
   "homepage": "https://bluemelodia.github.io/Outages",
   "scripts": {
-    "start": "npm run start:frontend",
+    "start": "concurrently -n FRONTEND,LOGFLARE -c cyan,magenta \"npm run start:frontend\" \"npm run proxy:logflare\"",
     "start:frontend": "live-server frontend --open=index.html --port=3000 --host=localhost",
+    "proxy:logflare": "npx lcp --proxyUrl https://api.logflare.app --port 8010",
     "predeploy": "npm run build",
     "deploy": "npx gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git --message \"force deploy\"",
     "build": "echo 'Nothing to build, copying frontend as-is'"
@@ -15,7 +16,8 @@
     "@flydotio/dockerfile": "^0.7.10",
     "concurrently": "9.2.1",
     "gh-pages": "6.3.0",
-    "live-server": "1.2.2"
+    "live-server": "1.2.2",
+    "local-cors-proxy": "1.1.0"
   },
   "engines": {
     "node": ">=16.0.0"
