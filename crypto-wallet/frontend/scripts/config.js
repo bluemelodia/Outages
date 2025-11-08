@@ -47,8 +47,8 @@ async function getValidateTransactionURL() {
 			const serviceName = isRewrite ? "v2" : "v1";
 			url = `https://crypto-svc-${serviceName}.fly.dev/api/transaction`;
 		} else {
-			const port = isRewrite ? 8013 : 8012;
-			url = `http://localhost:${port}/proxy/api/transaction`;
+			const port = isRewrite ? 8082 : 8081;
+			url = `http://localhost:${port}/api/transaction`;
 		}
 
 		resolve(url);

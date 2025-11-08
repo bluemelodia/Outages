@@ -1,15 +1,12 @@
 {
   "name": "crypto-wallet-frontend",
   "version": "1.0.0",
-  "description": "Crypto wallet frontend",
+  "description": "Crypto wallet front-end",
   "main": "index.html",
   "homepage": "https://bluemelodia.github.io/Outages",
   "scripts": {
-    "start": "concurrently -n FRONTEND,LOGFLARE,API_V1,API_V2 -c cyan,magenta,green,yellow \"npm run start:frontend\" \"npm run proxy:logflare\" \"npm run proxy:v1\" \"npm run proxy:v2\"",
+    "start": "npm run start:frontend",
     "start:frontend": "live-server frontend --open=index.html --port=3000 --host=localhost",
-    "proxy:logflare": "npx lcp --proxyUrl https://api.logflare.app --port 8010",
-    "proxy:v1": "npx lcp --proxyUrl http://localhost:8081 --port 8012",
-    "proxy:v2": "npx lcp --proxyUrl http://localhost:8082 --port 8013",
     "predeploy": "npm run build",
     "deploy": "npx gh-pages -d frontend --branch gh-pages --repo https://github.com/bluemelodia/Outages.git --message \"force deploy\"",
     "build": "echo 'Nothing to build, copying frontend as-is'"
@@ -18,8 +15,7 @@
     "@flydotio/dockerfile": "^0.7.10",
     "concurrently": "9.2.1",
     "gh-pages": "6.3.0",
-    "live-server": "1.2.2",
-    "local-cors-proxy": "1.1.0"
+    "live-server": "1.2.2"
   },
   "engines": {
     "node": ">=16.0.0"
